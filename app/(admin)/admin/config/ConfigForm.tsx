@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
+import { AdminInlineNotice } from '@/components/features/admin/AdminInlineNotice';
 import {
   ADMIN_FORM_PANEL_CLASS,
   ADMIN_INPUT_CLASS,
@@ -18,10 +19,16 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
   const formId = 'admin-config-form';
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState<{
+    variant: 'success' | 'error';
+    title: string;
+    description: string;
+  } | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+    setFeedback(null);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as Record<string, string>;
 
@@ -34,8 +41,18 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
           title: 'Configuracoes atualizadas',
           description: 'As alteracoes ja estao disponiveis no site.',
         });
+        setFeedback({
+          variant: 'success',
+          title: 'Configuracoes atualizadas',
+          description: 'As alteracoes ja estao disponiveis no site.',
+        });
       } else {
         showToast({
+          variant: 'error',
+          title: 'Nao foi possivel salvar',
+          description: result.error || 'Verifique os campos e tente novamente.',
+        });
+        setFeedback({
           variant: 'error',
           title: 'Nao foi possivel salvar',
           description: result.error || 'Verifique os campos e tente novamente.',
@@ -44,6 +61,11 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
     } catch (error) {
       console.error(error);
       showToast({
+        variant: 'error',
+        title: 'Erro ao atualizar configuracoes',
+        description: 'Tente novamente em instantes.',
+      });
+      setFeedback({
         variant: 'error',
         title: 'Erro ao atualizar configuracoes',
         description: 'Tente novamente em instantes.',
@@ -104,6 +126,14 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
             )}
           </div>
         ))}
+
+        {feedback && (
+          <AdminInlineNotice
+            variant={feedback.variant}
+            title={feedback.title}
+            description={feedback.description}
+          />
+        )}
 
         <div className="border-t border-border-soft pt-8">
           <Button type="submit" disabled={loading} className="hidden w-full lg:inline-flex">

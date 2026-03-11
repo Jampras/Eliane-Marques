@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Heading } from '@/components/ui/Typography';
 import { DeleteConfirmButton } from '@/components/features/admin/DeleteConfirmButton';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
+import { AdminInlineNotice } from '@/components/features/admin/AdminInlineNotice';
 import { ImageUpload } from '@/components/features/admin/ImageUpload';
 import {
   ADMIN_FORM_PANEL_CLASS,
@@ -23,7 +24,7 @@ interface ProductFormProps {
 
 export default function ProductForm({ product }: ProductFormProps) {
   const formId = 'admin-product-form';
-  const { loading, handleSubmit, handleDelete, handleCancel } = useAdminEntityForm({
+  const { feedback, loading, handleSubmit, handleDelete, handleCancel } = useAdminEntityForm({
     entityId: product?.id,
     redirectTo: '/admin/produtos',
     saveAction: upsertProduct,
@@ -162,6 +163,14 @@ export default function ProductForm({ product }: ProductFormProps) {
             Produto Ativo no Site
           </label>
         </div>
+
+        {feedback && (
+          <AdminInlineNotice
+            variant={feedback.variant}
+            title={feedback.title}
+            description={feedback.description}
+          />
+        )}
 
         <div className="flex flex-wrap gap-4 border-t border-border-soft pt-8">
           <Button type="submit" disabled={loading} className="hidden w-full md:w-auto lg:inline-flex">

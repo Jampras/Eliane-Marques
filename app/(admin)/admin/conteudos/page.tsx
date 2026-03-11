@@ -7,6 +7,7 @@ import { PaginationNav } from '@/components/ui/PaginationNav';
 import { Heading } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { LinkButton } from '@/components/ui/LinkButton';
+import { AdminEmptyState } from '@/components/features/admin/AdminEmptyState';
 import { requireAdmin } from '@/lib/server/admin-auth';
 import {
   ADMIN_EMPTY_STATE_CLASS,
@@ -79,17 +80,22 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
               {new Date(post.createdAt).toLocaleDateString('pt-BR')}
             </p>
 
-            <Link
-              href={`/admin/conteudos/${post.id}/editar`}
-              className="text-primary inline-flex items-center text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
-            >
+            <LinkButton href={`/admin/conteudos/${post.id}/editar`} variant="outline" size="sm">
               Editar Artigo
-            </Link>
+            </LinkButton>
           </div>
         ))}
 
         {posts.length === 0 && (
-          <div className={ADMIN_EMPTY_STATE_CLASS}>Nenhum conteudo cadastrado.</div>
+          <div className={ADMIN_EMPTY_STATE_CLASS}>
+            <AdminEmptyState
+              badge="Editorial"
+              title="Nenhum conteudo cadastrado"
+              description="Crie o primeiro artigo para ativar o blog e reforcar a captacao organica."
+              actionLabel="Criar Artigo"
+              actionHref="/admin/conteudos/novo"
+            />
+          </div>
         )}
       </div>
 
@@ -135,12 +141,13 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
                   </Badge>
                 </td>
                 <td className="p-6 text-right">
-                  <Link
+                  <LinkButton
                     href={`/admin/conteudos/${post.id}/editar`}
-                    className="text-primary text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
+                    variant="outline"
+                    size="sm"
                   >
                     Editar
-                  </Link>
+                  </LinkButton>
                 </td>
               </tr>
             ))}
@@ -148,7 +155,15 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
         </table>
 
         {posts.length === 0 && (
-          <div className={ADMIN_EMPTY_STATE_DESKTOP_CLASS}>Nenhum conteudo cadastrado.</div>
+          <div className={ADMIN_EMPTY_STATE_DESKTOP_CLASS}>
+            <AdminEmptyState
+              badge="Editorial"
+              title="Nenhum conteudo cadastrado"
+              description="Crie o primeiro artigo para ativar o blog e reforcar a captacao organica."
+              actionLabel="Criar Artigo"
+              actionHref="/admin/conteudos/novo"
+            />
+          </div>
         )}
       </div>
 

@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/Button';
 import { Heading } from '@/components/ui/Typography';
 import { DeleteConfirmButton } from '@/components/features/admin/DeleteConfirmButton';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
+import { AdminInlineNotice } from '@/components/features/admin/AdminInlineNotice';
 import {
+  ADMIN_FORM_PANEL_CLASS,
   ADMIN_INPUT_CLASS,
   ADMIN_LABEL_CLASS,
   ADMIN_TEXTAREA_CLASS,
@@ -30,7 +32,7 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
     ]
   );
 
-  const { loading, handleSubmit, handleDelete, handleCancel } = useAdminEntityForm({
+  const { feedback, loading, handleSubmit, handleDelete, handleCancel } = useAdminEntityForm({
     entityId: checklist?.id,
     redirectTo: '/admin/checklists',
     saveAction: upsertChecklist,
@@ -98,7 +100,7 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
       </div>
 
       <form id={formId} onSubmit={handleSubmit} className="space-y-12 pb-28 lg:pb-0">
-        <div className="bg-surface space-y-8 border border-border-soft p-4 sm:p-6 lg:p-12">
+        <div className={ADMIN_FORM_PANEL_CLASS.replace(' pb-28', '').replace(' lg:pb-12', '')}>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <div className="space-y-2">
               <label className={ADMIN_LABEL_CLASS}>Titulo</label>
@@ -208,6 +210,14 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
             ))}
           </div>
         </div>
+
+        {feedback && (
+          <AdminInlineNotice
+            variant={feedback.variant}
+            title={feedback.title}
+            description={feedback.description}
+          />
+        )}
 
         <div className="flex flex-wrap gap-4 border-t border-border-soft pt-8">
           <Button type="submit" disabled={loading} className="hidden w-full md:w-auto lg:inline-flex">

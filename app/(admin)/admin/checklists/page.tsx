@@ -7,6 +7,7 @@ import { PaginationNav } from '@/components/ui/PaginationNav';
 import { Heading } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { LinkButton } from '@/components/ui/LinkButton';
+import { AdminEmptyState } from '@/components/features/admin/AdminEmptyState';
 import { requireAdmin } from '@/lib/server/admin-auth';
 import {
   ADMIN_EMPTY_STATE_CLASS,
@@ -83,17 +84,26 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
               /{checklist.slug}
             </p>
 
-            <Link
+            <LinkButton
               href={`/admin/checklists/${checklist.id}/editar`}
-              className="text-primary inline-flex items-center text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
+              variant="outline"
+              size="sm"
             >
               Editar Checklist
-            </Link>
+            </LinkButton>
           </div>
         ))}
 
         {checklists.length === 0 && (
-          <div className={ADMIN_EMPTY_STATE_CLASS}>Nenhuma checklist cadastrada.</div>
+          <div className={ADMIN_EMPTY_STATE_CLASS}>
+            <AdminEmptyState
+              badge="Metodologia"
+              title="Nenhuma checklist cadastrada"
+              description="Crie uma checklist para apoiar a jornada da cliente e ampliar o funil de entrada."
+              actionLabel="Criar Checklist"
+              actionHref="/admin/checklists/novo"
+            />
+          </div>
         )}
       </div>
 
@@ -145,12 +155,13 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
                   /{checklist.slug}
                 </td>
                 <td className="p-6 text-right">
-                  <Link
+                  <LinkButton
                     href={`/admin/checklists/${checklist.id}/editar`}
-                    className="text-primary text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
+                    variant="outline"
+                    size="sm"
                   >
                     Editar
-                  </Link>
+                  </LinkButton>
                 </td>
               </tr>
             ))}
@@ -158,7 +169,15 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
         </table>
 
         {checklists.length === 0 && (
-          <div className={ADMIN_EMPTY_STATE_DESKTOP_CLASS}>Nenhuma checklist cadastrada.</div>
+          <div className={ADMIN_EMPTY_STATE_DESKTOP_CLASS}>
+            <AdminEmptyState
+              badge="Metodologia"
+              title="Nenhuma checklist cadastrada"
+              description="Crie uma checklist para apoiar a jornada da cliente e ampliar o funil de entrada."
+              actionLabel="Criar Checklist"
+              actionHref="/admin/checklists/novo"
+            />
+          </div>
         )}
       </div>
 

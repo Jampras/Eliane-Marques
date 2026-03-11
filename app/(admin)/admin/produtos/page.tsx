@@ -8,6 +8,7 @@ import { PaginationNav } from '@/components/ui/PaginationNav';
 import { Heading } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { LinkButton } from '@/components/ui/LinkButton';
+import { AdminEmptyState } from '@/components/features/admin/AdminEmptyState';
 import { requireAdmin } from '@/lib/server/admin-auth';
 import {
   ADMIN_EMPTY_STATE_CLASS,
@@ -90,17 +91,22 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
               {currencyFormatter.format(product.price)}
             </p>
 
-            <Link
-              href={`/admin/produtos/${product.id}/editar`}
-              className="text-primary inline-flex items-center text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
-            >
+            <LinkButton href={`/admin/produtos/${product.id}/editar`} variant="outline" size="sm">
               Editar Produto
-            </Link>
+            </LinkButton>
           </div>
         ))}
 
         {products.length === 0 && (
-          <div className={ADMIN_EMPTY_STATE_CLASS}>Nenhum produto cadastrado.</div>
+          <div className={ADMIN_EMPTY_STATE_CLASS}>
+            <AdminEmptyState
+              badge="Catalogo"
+              title="Nenhum produto cadastrado"
+              description="Crie a primeira oferta para o site publico e para o funil comercial do admin."
+              actionLabel="Criar Produto"
+              actionHref="/admin/produtos/novo"
+            />
+          </div>
         )}
       </div>
 
@@ -159,12 +165,13 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
                   {currencyFormatter.format(product.price)}
                 </td>
                 <td className="p-6 text-right">
-                  <Link
+                  <LinkButton
                     href={`/admin/produtos/${product.id}/editar`}
-                    className="text-primary text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
+                    variant="outline"
+                    size="sm"
                   >
                     Editar
-                  </Link>
+                  </LinkButton>
                 </td>
               </tr>
             ))}
@@ -172,7 +179,15 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
         </table>
 
         {products.length === 0 && (
-          <div className={ADMIN_EMPTY_STATE_DESKTOP_CLASS}>Nenhum produto cadastrado.</div>
+          <div className={ADMIN_EMPTY_STATE_DESKTOP_CLASS}>
+            <AdminEmptyState
+              badge="Catalogo"
+              title="Nenhum produto cadastrado"
+              description="Crie a primeira oferta para o site publico e para o funil comercial do admin."
+              actionLabel="Criar Produto"
+              actionHref="/admin/produtos/novo"
+            />
+          </div>
         )}
       </div>
 
