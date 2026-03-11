@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import prisma from '@/lib/core/prisma';
 import { parsePageParam } from '@/lib/core/pagination';
@@ -13,6 +14,11 @@ const PAGE_SIZE = 12;
 type AdminChecklistsPageProps = {
   searchParams?: Promise<{ page?: string }>;
 };
+
+const publishedBadgeClass =
+  'border-[color:var(--sage)]/30 bg-[color:var(--sage)]/15 text-[color:var(--espresso)]';
+const draftBadgeClass =
+  'border-[color:var(--linho)] bg-[color:var(--manteiga)] text-[color:var(--taupe)]';
 
 export default async function AdminChecklistsPage({ searchParams }: AdminChecklistsPageProps) {
   await requireAdmin();
@@ -43,41 +49,32 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
       </div>
 
       <div className="space-y-3 lg:hidden">
-        {checklists.map((c) => (
+        {checklists.map((checklist) => (
           <div
-            key={c.id}
-            className="bg-surface space-y-3 border border-border-soft p-4 transition-transform active:scale-[0.995]"
+            key={checklist.id}
+            className="space-y-3 border border-[color:var(--linho)] bg-[color:var(--aveia)] p-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-transform active:scale-[0.995]"
           >
             <div className="flex items-start justify-between gap-3">
-              <p className="leading-tight font-bold text-text-1">{c.title}</p>
+              <p className="leading-tight font-bold text-text-1">{checklist.title}</p>
               <div className="flex shrink-0 items-center gap-2">
-                <Badge
-                  className={
-                    c.published
-                      ? 'border-green-500/20 bg-green-500/10 text-green-500'
-                      : 'text-text-secondary border-border bg-primary/5'
-                  }
-                >
-                  {c.published ? 'Publicada' : 'Rascunho'}
+                <Badge className={checklist.published ? publishedBadgeClass : draftBadgeClass}>
+                  {checklist.published ? 'Publicada' : 'Rascunho'}
                 </Badge>
                 <div className="text-text-secondary flex items-center gap-1">
-                  <span
-                    aria-hidden="true"
-                    className="material-symbols-outlined text-primary text-sm"
-                  >
+                  <span aria-hidden="true" className="material-symbols-outlined text-primary text-sm">
                     checklist
                   </span>
-                  <span className="text-sm">{c._count.items}</span>
+                  <span className="text-sm">{checklist._count.items}</span>
                 </div>
               </div>
             </div>
 
-            <p className="text-text-secondary text-[10px] tracking-widest break-all uppercase italic">
-              /{c.slug}
+            <p className="text-text-secondary break-all text-[10px] tracking-widest uppercase italic">
+              /{checklist.slug}
             </p>
 
             <Link
-              href={`/admin/checklists/${c.id}/editar`}
+              href={`/admin/checklists/${checklist.id}/editar`}
               className="text-primary inline-flex items-center text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
             >
               Editar Checklist
@@ -86,16 +83,16 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
         ))}
 
         {checklists.length === 0 && (
-          <div className="bg-surface border border-border-soft p-10 text-center italic opacity-30">
+          <div className="border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-10 text-center italic text-[color:var(--taupe)]">
             Nenhuma checklist cadastrada.
           </div>
         )}
       </div>
 
-      <div className="bg-surface hidden border border-border-soft lg:block">
+      <div className="hidden border border-[color:var(--linho)] bg-[color:var(--aveia)] lg:block">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-border-soft">
+            <tr className="border-b border-[color:var(--linho)]">
               <th className="text-text-secondary p-6 text-[10px] font-bold tracking-widest uppercase">
                 Titulo
               </th>
@@ -114,36 +111,31 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
             </tr>
           </thead>
           <tbody>
-            {checklists.map((c) => (
-              <tr key={c.id} className="border-b border-border-soft transition-colors hover:bg-primary/5">
+            {checklists.map((checklist) => (
+              <tr
+                key={checklist.id}
+                className="border-b border-[color:var(--linho)] transition-colors hover:bg-[color:var(--manteiga)]"
+              >
                 <td className="p-6">
-                  <p className="font-bold text-text-1">{c.title}</p>
+                  <p className="font-bold text-text-1">{checklist.title}</p>
                 </td>
                 <td className="p-6">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary text-sm">
-                      checklist
-                    </span>
-                    <span className="text-text-secondary">{c._count.items}</span>
+                    <span className="material-symbols-outlined text-primary text-sm">checklist</span>
+                    <span className="text-text-secondary">{checklist._count.items}</span>
                   </div>
                 </td>
                 <td className="p-6">
-                  <Badge
-                    className={
-                      c.published
-                        ? 'border-green-500/20 bg-green-500/10 text-green-500'
-                        : 'text-text-secondary border-border bg-primary/5'
-                    }
-                  >
-                    {c.published ? 'Publicada' : 'Rascunho'}
+                  <Badge className={checklist.published ? publishedBadgeClass : draftBadgeClass}>
+                    {checklist.published ? 'Publicada' : 'Rascunho'}
                   </Badge>
                 </td>
                 <td className="text-text-secondary p-6 text-[10px] tracking-widest uppercase italic">
-                  /{c.slug}
+                  /{checklist.slug}
                 </td>
                 <td className="p-6 text-right">
                   <Link
-                    href={`/admin/checklists/${c.id}/editar`}
+                    href={`/admin/checklists/${checklist.id}/editar`}
                     className="text-primary text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
                   >
                     Editar
@@ -153,8 +145,11 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
             ))}
           </tbody>
         </table>
+
         {checklists.length === 0 && (
-          <div className="p-20 text-center italic opacity-30">Nenhuma checklist cadastrada.</div>
+          <div className="p-20 text-center italic text-[color:var(--taupe)]">
+            Nenhuma checklist cadastrada.
+          </div>
         )}
       </div>
 

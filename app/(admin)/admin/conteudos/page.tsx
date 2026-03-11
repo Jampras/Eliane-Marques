@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import prisma from '@/lib/core/prisma';
 import { parsePageParam } from '@/lib/core/pagination';
@@ -13,6 +14,11 @@ const PAGE_SIZE = 12;
 type AdminContentsPageProps = {
   searchParams?: Promise<{ page?: string }>;
 };
+
+const publishedBadgeClass =
+  'border-[color:var(--sage)]/30 bg-[color:var(--sage)]/15 text-[color:var(--espresso)]';
+const draftBadgeClass =
+  'border-[color:var(--linho)] bg-[color:var(--manteiga)] text-[color:var(--taupe)]';
 
 export default async function AdminContentsPage({ searchParams }: AdminContentsPageProps) {
   await requireAdmin();
@@ -45,20 +51,14 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
         {posts.map((post) => (
           <div
             key={post.id}
-            className="bg-surface space-y-3 border border-border-soft p-4 transition-transform active:scale-[0.995]"
+            className="space-y-3 border border-[color:var(--linho)] bg-[color:var(--aveia)] p-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-transform active:scale-[0.995]"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="leading-tight font-bold text-text-1">{post.title}</p>
                 <p className="text-text-secondary mt-1 line-clamp-2 text-[10px]">{post.excerpt}</p>
               </div>
-              <Badge
-                className={
-                  post.published
-                    ? 'border-green-500/20 bg-green-500/10 text-green-500'
-                    : 'text-text-secondary border-border bg-primary/5'
-                }
-              >
+              <Badge className={post.published ? publishedBadgeClass : draftBadgeClass}>
                 {post.published ? 'Publicado' : 'Rascunho'}
               </Badge>
             </div>
@@ -77,16 +77,16 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
         ))}
 
         {posts.length === 0 && (
-          <div className="bg-surface border border-border-soft p-10 text-center italic opacity-30">
+          <div className="border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-10 text-center italic text-[color:var(--taupe)]">
             Nenhum conteudo cadastrado.
           </div>
         )}
       </div>
 
-      <div className="bg-surface hidden border border-border-soft lg:block">
+      <div className="hidden border border-[color:var(--linho)] bg-[color:var(--aveia)] lg:block">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-border-soft">
+            <tr className="border-b border-[color:var(--linho)]">
               <th className="text-text-secondary p-6 text-[10px] font-bold tracking-widest uppercase">
                 Titulo
               </th>
@@ -103,7 +103,10 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
           </thead>
           <tbody>
             {posts.map((post) => (
-              <tr key={post.id} className="border-b border-border-soft transition-colors hover:bg-primary/5">
+              <tr
+                key={post.id}
+                className="border-b border-[color:var(--linho)] transition-colors hover:bg-[color:var(--manteiga)]"
+              >
                 <td className="p-6">
                   <p className="font-bold text-text-1">{post.title}</p>
                   <p className="text-text-secondary mt-1 line-clamp-1 text-[10px]">{post.excerpt}</p>
@@ -112,13 +115,7 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
                   {new Date(post.createdAt).toLocaleDateString('pt-BR')}
                 </td>
                 <td className="p-6">
-                  <Badge
-                    className={
-                      post.published
-                        ? 'border-green-500/20 bg-green-500/10 text-green-500'
-                        : 'text-text-secondary border-border bg-primary/5'
-                    }
-                  >
+                  <Badge className={post.published ? publishedBadgeClass : draftBadgeClass}>
                     {post.published ? 'Publicado' : 'Rascunho'}
                   </Badge>
                 </td>
@@ -134,8 +131,11 @@ export default async function AdminContentsPage({ searchParams }: AdminContentsP
             ))}
           </tbody>
         </table>
+
         {posts.length === 0 && (
-          <div className="p-20 text-center italic opacity-30">Nenhum conteudo cadastrado.</div>
+          <div className="p-20 text-center italic text-[color:var(--taupe)]">
+            Nenhum conteudo cadastrado.
+          </div>
         )}
       </div>
 
