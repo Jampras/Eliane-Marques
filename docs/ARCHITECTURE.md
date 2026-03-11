@@ -48,6 +48,10 @@ flowchart TD
 ### Mutacoes
 - `lib/actions/admin-crud.ts` centraliza upsert/delete de produto, post e checklist
 - apos mutacao, as listagens e as paginas de detalhe sao revalidadas
+- produtos agora persistem tambem a estrategia de conversao:
+  - `ctaMode`
+  - `ctaUrl`
+  - `ctaLabel`
 
 ### Midia
 - upload autenticado em `app/api/upload/route.ts`
@@ -103,6 +107,20 @@ Isso tambem alimenta:
 - canonical
 - sitemap
 - revalidacao de detalhe
+
+### 4.2.1 CTA de produto centralizado
+O destino principal de conversao por produto foi centralizado em `lib/core/product-cta.ts`.
+
+Regra atual:
+- `ctaMode=WHATSAPP` -> CTA usa WhatsApp
+- `ctaMode=EXTERNAL` + `ctaUrl` -> CTA usa link externo
+- cards de `CURSO` e `EBOOK/CHECKLIST` mantem fallback para pagina de detalhe quando nao ha link externo
+
+Isso alimenta:
+- `ProductDetailView`
+- listagem de `servicos`
+- listagem de `cursos`
+- listagem de `materiais`
 
 ### 4.3 Pipeline de imagem
 As imagens publicas usam `next/image` com otimizacao quando a origem permite.
@@ -165,6 +183,7 @@ Resolvido na rodada recente:
 - revalidacao de paginas de detalhe
 - home componentizada
 - loading e toasts alinhados ao design system
+- CTA por produto configuravel no admin
 
 Pendente:
 - analytics de conversao

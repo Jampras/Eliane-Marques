@@ -25,6 +25,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - home componentizada por secao
 - catalogos paginados
 - detalhes de produto com URLs canonicas por tipo
+- CTA por produto configuravel: WhatsApp ou link externo
 - imagens publicas com pipeline de otimizacao condicional
 - fontes principais via `next/font`
 - upload com driver `local` ou `supabase`
@@ -104,6 +105,23 @@ npm run db:seed
 Importante:
 - em producao serverless, configure `SUPABASE_*`
 - nao dependa de `public/uploads` como persistencia final
+
+## CTA por produto
+- configuracao no admin em `/admin/produtos`
+- cada produto pode usar:
+  - `WHATSAPP`
+  - `EXTERNAL`
+- campos persistidos em banco:
+  - `ctaMode`
+  - `ctaUrl`
+  - `ctaLabel`
+- regra central em:
+  - `lib/core/product-cta.ts`
+
+Comportamento:
+- `servicos`: CTA do card e da pagina de detalhe respeitam o modo configurado
+- `cursos`: card abre link externo quando configurado; caso contrario segue para detalhe
+- `materiais`: card abre link externo quando configurado; caso contrario segue para detalhe
 
 ## Build e ambiente
 `npm run build` depende de banco acessivel porque paginas publicas executam queries durante prerender.

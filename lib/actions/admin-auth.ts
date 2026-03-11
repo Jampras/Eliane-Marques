@@ -11,6 +11,7 @@ import {
   registerLoginFailure,
 } from '@/lib/server/rate-limit';
 import { logServerError } from '@/lib/server/errors';
+import { ensureDistributedRateLimitConfigured } from '@/lib/server/production-guards';
 
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const LOGIN_DELAY_MS = 350;
@@ -41,6 +42,13 @@ function sleep(ms: number) {
 }
 
 export async function loginAction(formData: FormData) {
+  try {
+    ensureDistributedRateLimitConfigured();
+  } catch (error) {
+    logServerError('loginAction', error);
+    return { error: 'Erro de configuracao do servidor. Contate o suporte.' };
+  }
+
   const expectedPassword = process.env.ADMIN_PASSWORD;
 
   if (!expectedPassword) {

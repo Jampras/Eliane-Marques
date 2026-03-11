@@ -65,7 +65,7 @@ export async function getSession() {
   return await decrypt(session);
 }
 
-export async function updateSession(request: NextRequest) {
+export async function updateSession(request: NextRequest, requestHeaders?: Headers) {
   const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   if (!session) return;
 
@@ -76,7 +76,9 @@ export async function updateSession(request: NextRequest) {
   }
 
   const expires = new Date(Date.now() + SESSION_TTL_MS);
-  const res = NextResponse.next();
+  const res = requestHeaders
+    ? NextResponse.next({ request: { headers: requestHeaders } })
+    : NextResponse.next();
   res.cookies.set({
     name: SESSION_COOKIE_NAME,
     value: await encrypt({ ...parsed, expires: expires.toISOString() }),

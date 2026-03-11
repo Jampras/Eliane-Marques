@@ -1,5 +1,5 @@
 # Documentacao Tecnica - Eliane Marques Website
-**Versao:** 1.1  
+**Versao:** 1.2  
 **Data:** 11/03/2026  
 **Responsavel pela analise:** Codex AI  
 **Status do projeto:** Manutencao ativa
@@ -25,7 +25,7 @@
 
 ### 1.1 Descricao
 - Site comercial e editorial da marca Eliane Marques para consultoria de imagem, etiqueta corporativa, cursos, materiais digitais e checklists.
-- Objetivo de negocio: converter para contato via WhatsApp e sustentar a venda de servicos premium.
+- Objetivo de negocio: converter para contato via WhatsApp, venda direta externa (ex.: Hotmart) e sustentar a oferta de servicos premium.
 - Publico tecnico: frontend, full-stack, QA e manutencao operacional.
 - URL de producao: `Informacao insuficiente - requer revisao manual pelo time`.
 - Hospedagem identificavel: arquitetura compativel com Vercel + PostgreSQL/Supabase.
@@ -47,6 +47,7 @@
 | Fontes | `next/font` | n/a | Playfair, Jost e Cormorant |
 | Icones | Material Symbols | n/a | Ainda externo |
 | Upload | API Next + storage abstraction | n/a | `local` ou `supabase` |
+| CTA por produto | configuracao persistida em banco | n/a | `ctaMode`, `ctaUrl`, `ctaLabel` |
 | Analytics | Nao implementado | n/a | BT-009 pendente |
 
 ### 1.3 Diagrama de Arquitetura
@@ -68,6 +69,7 @@ flowchart TD
     ST --> LOCAL["public/uploads"]
     ST --> SUPA["Supabase Storage"]
     PUB --> WA["WhatsApp deeplink"]
+    PUB --> EXT["Links externos de conversao"]
     PUB --> IMG["next/image"]
 ```
 
@@ -280,6 +282,18 @@ tailwind.config.js            # tokens CSS -> Tailwind
 **Acoes para este componente**
 - Concluir rollout de storage e revisar copy restante.
 
+### 3.15 CTA de Produto
+- **Localizacao:** `app/(admin)/admin/produtos/ProductForm.tsx`, `lib/core/product-cta.ts`, `components/features/products/ProductDetailView.tsx`
+- **Descricao:** cada produto pode escolher entre CTA via WhatsApp ou link externo, com rotulo customizavel.
+- **Dependencias:** colunas `ctaMode`, `ctaUrl`, `ctaLabel` na tabela `Product`.
+- **Responsividade:** comportamento identico em desktop e mobile; cards de servicos, cursos e materiais respeitam o mesmo destino.
+- **Problema identificado:** alteracao de schema foi aplicada via SQL direto no ambiente local por instabilidade do schema engine do Prisma no Windows.
+- **Sugestao de melhoria:** validar `prisma migrate deploy` em ambiente Unix/CI para normalizar o fluxo de migration.
+
+**Acoes para este componente**
+- Usar `ctaMode=EXTERNAL` apenas com URL valida preenchida.
+- Centralizar qualquer nova regra comercial em `lib/core/product-cta.ts`.
+
 ---
 
 ## 4. INTEGRACOES EXTERNAS
@@ -300,12 +314,19 @@ tailwind.config.js            # tokens CSS -> Tailwind
 - **Implementacao:** deep link `wa.me`
 - **Dados trafegados:** numero e template contextual
 
-### 4.4 Material Symbols
+### 4.4 Links externos por produto
+- **Tipo:** conversao / checkout externo
+- **Implementacao:** configuracao persistida no `Product`
+- **Dados trafegados:** `ctaMode`, `ctaUrl`, `ctaLabel`
+- **Risco:** link invalido ou expirado quebra conversao direta
+- **Mitigacao:** validar URL no admin e revisar periodicamente os produtos apontando para checkout externo
+
+### 4.5 Material Symbols
 - **Tipo:** icones
 - **Implementacao:** stylesheet externo em `app/layout.tsx`
 - **Risco:** dependencia residual de CDN
 
-### 4.5 Unsplash
+### 4.6 Unsplash
 - **Tipo:** imagens remotas e fallback
 - **Implementacao:** URLs remotas com `remotePatterns`
 
@@ -458,6 +479,7 @@ npm.cmd run test:e2e
 ### 9.2 O Que NAO Fazer
 - nao depender de `public/uploads` como storage final de producao
 - nao espalhar regra de URLs de produto fora de `getProductDetailPath()`
+- nao espalhar regra de destino de CTA fora de `lib/core/product-cta.ts`
 - nao reintroduzir `unoptimized` sem necessidade real
 - nao alterar tokens globais diretamente em varios componentes
 
@@ -513,6 +535,8 @@ npm.cmd run test:e2e
 - **Checklist interativa:** entidade propria separada de produto
 - **SiteConfig:** tabela de configuracao global
 - **Funil WhatsApp:** principal fluxo de conversao
+- **CTA externo:** botao de produto apontando para checkout externo como Hotmart
+- **ctaMode:** seletor persistido no produto para decidir entre WhatsApp e link externo
 - **Admin:** backoffice protegido em `/admin`
 
 ---
@@ -523,6 +547,7 @@ npm.cmd run test:e2e
 |---|---|---|---|
 | 1.0 | 11/03/2026 | Codex AI | Documentacao inicial gerada por analise automatizada |
 | 1.1 | 11/03/2026 | Codex AI | Documento atualizado apos execucao do backlog BT-001 a BT-010, com BT-009 ainda pendente |
+| 1.2 | 11/03/2026 | Codex AI | Documentacao atualizada com CTA por produto configuravel, incluindo `ctaMode`, `ctaUrl` e `ctaLabel` |
 
 ---
 

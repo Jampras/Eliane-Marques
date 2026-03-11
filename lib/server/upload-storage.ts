@@ -1,6 +1,10 @@
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
+import {
+  ensureProductionUploadConfig,
+  ensureServiceRoleKeyNotCompromised,
+} from './production-guards';
 
 const LOCAL_UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
 
@@ -97,6 +101,13 @@ async function uploadToSupabase({
 }
 
 export async function uploadImage(input: UploadImageInput): Promise<UploadImageResult> {
+  ensureServiceRoleKeyNotCompromised();
+
+  if (process.env.NODE_ENV === 'production') {
+    ensureProductionUploadConfig();
+    return uploadToSupabase(input);
+  }
+
   if (resolveDriver() === 'supabase') {
     return uploadToSupabase(input);
   }
