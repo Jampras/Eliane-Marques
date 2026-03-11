@@ -40,3 +40,5 @@ dist-ssr
 *.tsbuildinfo
 /.agent/
 /skills.zip
+
+.vercel
