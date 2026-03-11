@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { upsertProduct, deleteProduct } from '@/lib/actions/admin-crud';
 import { Button } from '@/components/ui/Button';
@@ -23,6 +24,10 @@ interface ProductFormProps {
 }
 
 export default function ProductForm({ product }: ProductFormProps) {
+  const initialCtaMode = product?.ctaMode || (product?.ctaUrl ? 'EXTERNAL' : 'WHATSAPP');
+  const [ctaMode, setCtaMode] = useState<'WHATSAPP' | 'EXTERNAL'>(
+    initialCtaMode === 'EXTERNAL' ? 'EXTERNAL' : 'WHATSAPP'
+  );
   const formId = 'admin-product-form';
   const { feedback, loading, handleSubmit, handleDelete, handleCancel } = useAdminEntityForm({
     entityId: product?.id,
@@ -68,29 +73,15 @@ export default function ProductForm({ product }: ProductFormProps) {
         </Heading>
       </div>
 
-      <form
-        id={formId}
-        onSubmit={handleSubmit}
-        className={ADMIN_FORM_PANEL_CLASS}
-      >
+      <form id={formId} onSubmit={handleSubmit} className={ADMIN_FORM_PANEL_CLASS}>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="space-y-2">
             <label className={ADMIN_LABEL_CLASS}>Titulo</label>
-            <input
-              name="title"
-              defaultValue={product?.title}
-              required
-              className={ADMIN_INPUT_CLASS}
-            />
+            <input name="title" defaultValue={product?.title} required className={ADMIN_INPUT_CLASS} />
           </div>
           <div className="space-y-2">
             <label className={ADMIN_LABEL_CLASS}>Slug (URL)</label>
-            <input
-              name="slug"
-              defaultValue={product?.slug}
-              required
-              className={ADMIN_INPUT_CLASS}
-            />
+            <input name="slug" defaultValue={product?.slug} required className={ADMIN_INPUT_CLASS} />
           </div>
           <div className="space-y-2">
             <label className={ADMIN_LABEL_CLASS}>Tipo</label>
@@ -141,6 +132,53 @@ export default function ProductForm({ product }: ProductFormProps) {
           />
         </div>
 
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="space-y-2">
+            <label className={ADMIN_LABEL_CLASS}>Destino do CTA</label>
+            <select
+              name="ctaMode"
+              value={ctaMode}
+              onChange={(event) => setCtaMode(event.target.value as 'WHATSAPP' | 'EXTERNAL')}
+              className={ADMIN_SELECT_CLASS}
+            >
+              <option value="WHATSAPP">WhatsApp</option>
+              <option value="EXTERNAL">Link externo</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className={ADMIN_LABEL_CLASS}>Texto do CTA (opcional)</label>
+            <input
+              name="ctaLabel"
+              defaultValue={product?.ctaLabel || ''}
+              placeholder={ctaMode === 'EXTERNAL' ? 'Comprar agora' : 'Falar no WhatsApp'}
+              className={ADMIN_INPUT_CLASS}
+            />
+          </div>
+        </div>
+
+        {ctaMode === 'EXTERNAL' ? (
+          <div className="space-y-2">
+            <label className={ADMIN_LABEL_CLASS}>Link externo do CTA</label>
+            <input
+              name="ctaUrl"
+              type="url"
+              defaultValue={product?.ctaUrl || ''}
+              placeholder="https://checkout.hotmart.com/..."
+              className={ADMIN_INPUT_CLASS}
+            />
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <label className={ADMIN_LABEL_CLASS}>Mensagem de WhatsApp</label>
+            <input
+              name="whatsappMessageTemplate"
+              defaultValue={product?.whatsappMessageTemplate || ''}
+              placeholder="Ola! Gostaria de saber mais sobre {productTitle}."
+              className={ADMIN_INPUT_CLASS}
+            />
+          </div>
+        )}
+
         <div className="space-y-2">
           <label className={ADMIN_LABEL_CLASS}>Descricao Longa (Markdown)</label>
           <textarea
@@ -159,10 +197,18 @@ export default function ProductForm({ product }: ProductFormProps) {
             defaultChecked={product?.active ?? true}
             className="accent-primary h-5 w-5"
           />
-          <label htmlFor="active" className="cursor-pointer text-sm font-bold tracking-widest uppercase">
+          <label
+            htmlFor="active"
+            className="cursor-pointer text-sm font-bold tracking-widest uppercase"
+          >
             Produto Ativo no Site
           </label>
         </div>
+
+        <p className="text-text-secondary text-[11px] leading-6">
+          Use WhatsApp para atendimento manual. Use Link externo para Hotmart, checkout proprio ou
+          qualquer pagina externa de conversao.
+        </p>
 
         {feedback && (
           <AdminInlineNotice

@@ -130,6 +130,9 @@ export async function upsertProduct(id: string | null, data: unknown): Promise<A
     buildPayload: (validated) => ({
       ...validated,
       coverImage: normalizeOptionalText(validated.coverImage),
+      ctaUrl: normalizeOptionalText(validated.ctaUrl),
+      ctaLabel: normalizeOptionalText(validated.ctaLabel),
+      whatsappMessageTemplate: normalizeOptionalText(validated.whatsappMessageTemplate),
     }),
     update: async (productId, payload) => {
       await prisma.product.update({ where: { id: productId }, data: payload });

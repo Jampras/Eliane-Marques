@@ -30,6 +30,10 @@ export const productSchema = z.object({
   type: z.enum(['CONSULTORIA', 'CURSO', 'EBOOK', 'CHECKLIST']),
   audience: z.enum(['PESSOAS', 'EMPRESAS', 'AMBOS']),
   coverImage: optionalUrlSchema,
+  ctaMode: z.enum(['WHATSAPP', 'EXTERNAL']).default('WHATSAPP'),
+  ctaUrl: optionalUrlSchema,
+  ctaLabel: z.string().trim().max(80).optional(),
+  whatsappMessageTemplate: z.string().trim().max(300).optional(),
   active: z.boolean().default(true),
 });
 

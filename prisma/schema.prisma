@@ -19,6 +19,9 @@ model Product {
   audience                String?
   active                  Boolean     @default(true)
   coverImage              String?
+  ctaMode                 String      @default("WHATSAPP")
+  ctaUrl                  String?
+  ctaLabel                String?
   whatsappMessageTemplate String?
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt

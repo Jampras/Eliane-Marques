@@ -3,9 +3,11 @@ import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
+import { LinkButton } from '@/components/ui/LinkButton';
 import { WhatsAppButton } from '@/components/shared/whatsapp/WhatsAppButton';
 import { shouldOptimizeImage } from '@/lib/core/images';
-import { getProductCtaLabel, getProductSectionLabel } from '@/lib/core/product-paths';
+import { getProductSectionLabel } from '@/lib/core/product-paths';
+import { getProductCta } from '@/lib/core/product-cta';
 
 interface ProductDetailViewProps {
   product: {
@@ -16,6 +18,9 @@ interface ProductDetailViewProps {
     price: number;
     type: string;
     coverImage: string | null;
+    ctaMode: string;
+    ctaUrl: string | null;
+    ctaLabel: string | null;
     whatsappMessageTemplate: string | null;
   };
   waConfig: { number: string; defaultMessage: string };
@@ -23,6 +28,7 @@ interface ProductDetailViewProps {
 
 export function ProductDetailView({ product, waConfig }: ProductDetailViewProps) {
   const fallbackIcon = product.type === 'CHECKLIST' ? '✦' : '◇';
+  const cta = getProductCta(product, waConfig);
   const formattedPrice = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -60,12 +66,16 @@ export function ProductDetailView({ product, waConfig }: ProductDetailViewProps)
             </Heading>
 
             <div className="mt-8 border-y border-[color:var(--linho)] py-5">
-              <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">Investimento</p>
+              <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
+                Investimento
+              </p>
               <p className="mt-3 font-ornament text-[2.5rem] leading-none text-[color:var(--cacau)] sm:text-[3rem] xl:text-[3.4rem]">
                 <sup className="mr-1 text-[0.35em] opacity-70">R$</sup>
                 {formattedPrice.replace('R$', '')}
               </p>
-              <Text className="mt-3 text-[12px] text-[color:var(--taupe)]">Pagamento unico • acesso vitalicio</Text>
+              <Text className="mt-3 text-[12px] text-[color:var(--taupe)]">
+                Pagamento unico · acesso vitalicio
+              </Text>
             </div>
 
             <Text className="mt-8 whitespace-pre-wrap text-[14px] text-[color:var(--taupe)]">
@@ -73,17 +83,29 @@ export function ProductDetailView({ product, waConfig }: ProductDetailViewProps)
             </Text>
 
             <div className="mt-10">
-              <WhatsAppButton
-                number={waConfig.number}
-                template={
-                  product.whatsappMessageTemplate ||
-                  'Ola! Gostaria de saber mais sobre {productTitle}. Vi na pagina {pageUrl}'
-                }
-                productTitle={product.title}
-                label={getProductCtaLabel(product.type)}
-                className="w-full sm:w-auto"
-                size="lg"
-              />
+              {cta.external ? (
+                <LinkButton
+                  href={cta.href}
+                  className="w-full sm:w-auto"
+                  size="lg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {cta.label}
+                </LinkButton>
+              ) : (
+                <WhatsAppButton
+                  number={waConfig.number}
+                  template={
+                    product.whatsappMessageTemplate ||
+                    'Ola! Gostaria de saber mais sobre {productTitle}. Vi na pagina {pageUrl}'
+                  }
+                  productTitle={product.title}
+                  label={cta.label}
+                  className="w-full sm:w-auto"
+                  size="lg"
+                />
+              )}
             </div>
           </div>
         </div>

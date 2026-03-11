@@ -1,18 +1,19 @@
 export const revalidate = 300;
 
-import React from 'react';
+import type { CSSProperties } from 'react';
 import Image from 'next/image';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { PaginationNav } from '@/components/ui/PaginationNav';
+import { LinkButton } from '@/components/ui/LinkButton';
 import { WhatsAppLink } from '@/components/shared/whatsapp/WhatsAppLink';
 import { parsePageParam } from '@/lib/core/pagination';
 import { getPaginatedProductsByType } from '@/lib/data/products';
-import { buildWhatsAppUrl } from '@/lib/core/whatsapp';
 import { getWhatsAppConfig } from '@/lib/data/config';
 import { shouldOptimizeImage } from '@/lib/core/images';
+import { getProductCta } from '@/lib/core/product-cta';
 
 export const metadata = {
   title: 'Servicos | Eliane Marques',
@@ -50,17 +51,13 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
 
         <div className="mt-10 grid grid-cols-1 gap-4 xl:grid-cols-2">
           {services.map((service, index) => {
-            const waUrl = buildWhatsAppUrl({
-              number: wa.number,
-              template: 'Ola Eliane! Gostaria de saber mais sobre a consultoria: {productTitle}',
-              context: { productTitle: service.title },
-            });
+            const cta = getProductCta(service, wa);
 
             return (
               <article
                 key={service.id}
                 className="fade-up relative overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)] shadow-[2px_3px_12px_rgba(58,36,24,0.06)]"
-                style={{ '--delay': `${index * 0.08}s` } as React.CSSProperties}
+                style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >
                 <span className="absolute inset-x-0 top-0 h-[3px] bg-[color:var(--argila)]" />
 
@@ -84,9 +81,7 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
                   <div className="px-5 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-9">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <Badge className="mb-5">
-                          {service.audience || 'Consultoria privada'}
-                        </Badge>
+                        <Badge className="mb-5">{service.audience || 'Consultoria privada'}</Badge>
                         <Heading as="h2" className="text-[1.6rem] lg:text-[1.9rem]">
                           {service.title}
                         </Heading>
@@ -115,11 +110,24 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
                         </p>
                       </div>
 
-                      <WhatsAppLink href={waUrl} className="inline-flex w-full sm:w-auto">
-                        <span className="inline-flex w-full justify-center rounded-[1px] border border-[color:var(--linho)] px-5 py-3 text-[9px] uppercase tracking-[0.18em] text-[color:var(--cacau)] transition-colors hover:border-[color:var(--argila)] hover:text-[color:var(--argila)] sm:w-auto">
-                          Agendar agora
-                        </span>
-                      </WhatsAppLink>
+                      {cta.external ? (
+                        <LinkButton
+                          href={cta.href}
+                          variant="outline"
+                          size="sm"
+                          className="w-full sm:w-auto"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {cta.label}
+                        </LinkButton>
+                      ) : (
+                        <WhatsAppLink href={cta.href} className="inline-flex w-full sm:w-auto">
+                          <span className="inline-flex w-full justify-center rounded-[1px] border border-[color:var(--linho)] px-5 py-3 text-[9px] uppercase tracking-[0.18em] text-[color:var(--cacau)] transition-colors hover:border-[color:var(--argila)] hover:text-[color:var(--argila)] sm:w-auto">
+                            {cta.label}
+                          </span>
+                        </WhatsAppLink>
+                      )}
                     </div>
                   </div>
                 </div>
