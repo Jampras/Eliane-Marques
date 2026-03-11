@@ -7,6 +7,13 @@ import { Heading } from '@/components/ui/Typography';
 import { DeleteConfirmButton } from '@/components/features/admin/DeleteConfirmButton';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
 import { ImageUpload } from '@/components/features/admin/ImageUpload';
+import {
+  ADMIN_FORM_PANEL_CLASS,
+  ADMIN_INPUT_CLASS,
+  ADMIN_LABEL_CLASS,
+  ADMIN_MONO_TEXTAREA_CLASS,
+  ADMIN_SELECT_CLASS,
+} from '@/components/features/admin/formStyles';
 import { useAdminEntityForm } from '@/lib/hooks/useAdminEntityForm';
 import type { Product } from '@prisma/client';
 
@@ -63,39 +70,33 @@ export default function ProductForm({ product }: ProductFormProps) {
       <form
         id={formId}
         onSubmit={handleSubmit}
-        className="bg-surface space-y-8 border border-border-soft p-4 pb-28 sm:p-6 lg:p-12 lg:pb-12"
+        className={ADMIN_FORM_PANEL_CLASS}
       >
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Titulo
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Titulo</label>
             <input
               name="title"
               defaultValue={product?.title}
               required
-              className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_INPUT_CLASS}
             />
           </div>
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Slug (URL)
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Slug (URL)</label>
             <input
               name="slug"
               defaultValue={product?.slug}
               required
-              className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_INPUT_CLASS}
             />
           </div>
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Tipo
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Tipo</label>
             <select
               name="type"
               defaultValue={product?.type || 'CONSULTORIA'}
-              className="focus:border-primary w-full appearance-none border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_SELECT_CLASS}
             >
               <option value="CONSULTORIA">Consultoria</option>
               <option value="CURSO">Curso</option>
@@ -104,13 +105,11 @@ export default function ProductForm({ product }: ProductFormProps) {
             </select>
           </div>
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Publico
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Publico</label>
             <select
               name="audience"
               defaultValue={product?.audience || 'AMBOS'}
-              className="focus:border-primary w-full appearance-none border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_SELECT_CLASS}
             >
               <option value="PESSOAS">Pessoas</option>
               <option value="EMPRESAS">Empresas</option>
@@ -118,42 +117,36 @@ export default function ProductForm({ product }: ProductFormProps) {
             </select>
           </div>
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Preco (BRL)
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Preco (BRL)</label>
             <input
               name="price"
               type="number"
               step="0.01"
               defaultValue={product?.price}
               required
-              className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_INPUT_CLASS}
             />
           </div>
           <ImageUpload name="coverImage" defaultValue={product?.coverImage || ''} label="Imagem de Capa" />
         </div>
 
         <div className="space-y-2">
-          <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-            Descricao Curta
-          </label>
+          <label className={ADMIN_LABEL_CLASS}>Descricao Curta</label>
           <input
             name="shortDesc"
             defaultValue={product?.shortDesc}
             required
-            className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+            className={ADMIN_INPUT_CLASS}
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-            Descricao Longa (Markdown)
-          </label>
+          <label className={ADMIN_LABEL_CLASS}>Descricao Longa (Markdown)</label>
           <textarea
             name="longDesc"
             defaultValue={product?.longDesc || ''}
             rows={6}
-            className="focus:border-primary w-full resize-none border border-border bg-bg p-4 text-sm outline-none"
+            className={ADMIN_MONO_TEXTAREA_CLASS}
           />
         </div>
 

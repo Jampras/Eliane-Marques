@@ -6,6 +6,13 @@ import { Button } from '@/components/ui/Button';
 import { Heading } from '@/components/ui/Typography';
 import { DeleteConfirmButton } from '@/components/features/admin/DeleteConfirmButton';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
+import { ImageUpload } from '@/components/features/admin/ImageUpload';
+import {
+  ADMIN_FORM_PANEL_CLASS,
+  ADMIN_INPUT_CLASS,
+  ADMIN_LABEL_CLASS,
+  ADMIN_MONO_TEXTAREA_CLASS,
+} from '@/components/features/admin/formStyles';
 import { useAdminEntityForm } from '@/lib/hooks/useAdminEntityForm';
 import type { Post } from '@prisma/client';
 
@@ -64,67 +71,49 @@ export default function ContentForm({ post }: ContentFormProps) {
       <form
         id={formId}
         onSubmit={handleSubmit}
-        className="bg-surface space-y-8 border border-border-soft p-4 pb-28 sm:p-6 lg:p-12 lg:pb-12"
+        className={ADMIN_FORM_PANEL_CLASS}
       >
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Titulo
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Titulo</label>
             <input
               name="title"
               defaultValue={post?.title}
               required
-              className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_INPUT_CLASS}
             />
           </div>
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Slug
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Slug</label>
             <input
               name="slug"
               defaultValue={post?.slug}
               required
-              className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_INPUT_CLASS}
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-            Imagem de Capa (URL)
-          </label>
-          <input
-            name="coverImage"
-            defaultValue={post?.coverImage || ''}
-            className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
-            placeholder="https://..."
-          />
-        </div>
+        <ImageUpload name="coverImage" defaultValue={post?.coverImage || ''} label="Imagem de Capa" />
 
         <div className="space-y-2">
-          <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-            Resumo / Excerpt
-          </label>
+          <label className={ADMIN_LABEL_CLASS}>Resumo / Excerpt</label>
           <input
             name="excerpt"
             defaultValue={post?.excerpt}
             required
-            className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+            className={ADMIN_INPUT_CLASS}
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-            Conteudo Completo (Markdown)
-          </label>
+          <label className={ADMIN_LABEL_CLASS}>Conteudo Completo (Markdown)</label>
           <textarea
             name="content"
             defaultValue={post?.content}
             rows={15}
             required
-            className="focus:border-primary w-full resize-none border border-border bg-bg p-4 font-mono text-sm outline-none"
+            className={ADMIN_MONO_TEXTAREA_CLASS}
           />
         </div>
 

@@ -7,6 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { Heading } from '@/components/ui/Typography';
 import { DeleteConfirmButton } from '@/components/features/admin/DeleteConfirmButton';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
+import {
+  ADMIN_INPUT_CLASS,
+  ADMIN_LABEL_CLASS,
+  ADMIN_TEXTAREA_CLASS,
+} from '@/components/features/admin/formStyles';
 import { useAdminEntityForm } from '@/lib/hooks/useAdminEntityForm';
 import type { Checklist, ChecklistItem } from '@prisma/client';
 
@@ -96,37 +101,31 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
         <div className="bg-surface space-y-8 border border-border-soft p-4 sm:p-6 lg:p-12">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-                Titulo
-              </label>
+              <label className={ADMIN_LABEL_CLASS}>Titulo</label>
               <input
                 name="title"
                 defaultValue={checklist?.title}
                 required
-                className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+                className={ADMIN_INPUT_CLASS}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-                Slug
-              </label>
+              <label className={ADMIN_LABEL_CLASS}>Slug</label>
               <input
                 name="slug"
                 defaultValue={checklist?.slug}
                 required
-                className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+                className={ADMIN_INPUT_CLASS}
               />
             </div>
           </div>
           <div className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              Descricao
-            </label>
+            <label className={ADMIN_LABEL_CLASS}>Descricao</label>
             <textarea
               name="description"
               defaultValue={checklist?.description || ''}
               rows={3}
-              className="focus:border-primary w-full resize-none border border-border bg-bg p-4 text-sm outline-none"
+              className={ADMIN_TEXTAREA_CLASS}
             />
           </div>
 
@@ -189,13 +188,13 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
                     placeholder="Label do item"
                     value={item.label}
                     onChange={(e) => updateItem(index, 'label', e.target.value)}
-                    className="focus:border-primary border border-border bg-bg p-4 text-sm outline-none"
+                    className={ADMIN_INPUT_CLASS}
                   />
                   <input
                     placeholder="Link recomendado (opcional)"
                     value={item.linkUrl}
                     onChange={(e) => updateItem(index, 'linkUrl', e.target.value)}
-                    className="focus:border-primary border border-border bg-bg p-4 text-sm outline-none"
+                    className={ADMIN_INPUT_CLASS}
                   />
                 </div>
                 <button

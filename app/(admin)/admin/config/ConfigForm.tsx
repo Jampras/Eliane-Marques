@@ -6,6 +6,12 @@ import { Button } from '@/components/ui/Button';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
+import {
+  ADMIN_FORM_PANEL_CLASS,
+  ADMIN_INPUT_CLASS,
+  ADMIN_LABEL_CLASS,
+  ADMIN_TEXTAREA_CLASS,
+} from '@/components/features/admin/formStyles';
 import { useToast } from '@/components/ui/ToastProvider';
 
 export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<string, string> }) {
@@ -61,45 +67,39 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
       type: 'text',
       placeholder: 'contato@seudominio.com',
     },
-    { key: 'heroHeadline', label: 'Título Hero (Home)', type: 'textarea' },
-    { key: 'heroSubheadline', label: 'Subtítulo Hero (Home)', type: 'textarea' },
+    { key: 'heroHeadline', label: 'Titulo Hero (Home)', type: 'textarea' },
+    { key: 'heroSubheadline', label: 'Subtitulo Hero (Home)', type: 'textarea' },
     { key: 'siteName', label: 'Nome da Marca', type: 'text' },
     { key: 'instagramLink', label: 'Instagram URL', type: 'text' },
-  ];
+  ] as const;
 
   return (
     <div className="mx-auto max-w-4xl p-4 sm:p-6 lg:p-12">
       <div className="mb-8 sm:mb-10 lg:mb-12">
         <Badge className="mb-4">Global</Badge>
         <Heading as="h1" className="text-3xl sm:text-4xl">
-          Configurações Gerais
+          Configuracoes Gerais
         </Heading>
-        <Text className="mt-2">Controle o conteúdo principal e contatos do ecossistema.</Text>
+        <Text className="mt-2">Controle o conteudo principal e contatos do ecossistema.</Text>
       </div>
 
-      <form
-        id={formId}
-        onSubmit={handleSubmit}
-        className="bg-surface space-y-8 border border-border-soft p-4 pb-28 sm:p-6 lg:p-12 lg:pb-12"
-      >
-        {fields.map((f) => (
-          <div key={f.key} className="space-y-2">
-            <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-              {f.label}
-            </label>
-            {f.type === 'textarea' ? (
+      <form id={formId} onSubmit={handleSubmit} className={ADMIN_FORM_PANEL_CLASS}>
+        {fields.map((field) => (
+          <div key={field.key} className="space-y-2">
+            <label className={ADMIN_LABEL_CLASS}>{field.label}</label>
+            {field.type === 'textarea' ? (
               <textarea
-                name={f.key}
-                defaultValue={initialConfigs[f.key]}
+                name={field.key}
+                defaultValue={initialConfigs[field.key]}
                 rows={3}
-                className="focus:border-primary w-full resize-none border border-border bg-bg p-4 text-sm outline-none"
+                className={ADMIN_TEXTAREA_CLASS}
               />
             ) : (
               <input
-                name={f.key}
-                defaultValue={initialConfigs[f.key]}
-                placeholder={f.placeholder}
-                className="focus:border-primary w-full border border-border bg-bg p-4 text-sm outline-none"
+                name={field.key}
+                defaultValue={initialConfigs[field.key]}
+                placeholder={'placeholder' in field ? field.placeholder : undefined}
+                className={ADMIN_INPUT_CLASS}
               />
             )}
           </div>
@@ -107,7 +107,7 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
 
         <div className="border-t border-border-soft pt-8">
           <Button type="submit" disabled={loading} className="hidden w-full lg:inline-flex">
-            {loading ? 'Salvando...' : 'Publicar Alterações'}
+            {loading ? 'Salvando...' : 'Publicar Alteracoes'}
           </Button>
         </div>
       </form>
