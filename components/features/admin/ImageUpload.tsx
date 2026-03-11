@@ -2,6 +2,7 @@
 
 import React, { useCallback, useRef, useState } from 'react';
 import Image from 'next/image';
+import { ADMIN_INPUT_CLASS, ADMIN_LABEL_CLASS } from './formStyles';
 
 interface ImageUploadProps {
   name: string;
@@ -9,14 +10,6 @@ interface ImageUploadProps {
   label?: string;
 }
 
-/**
- * Image upload component with:
- * - File picker (mobile gallery support via accept="image/*")
- * - Drag & drop
- * - Preview thumbnail
- * - URL fallback input
- * - Upload progress indicator
- */
 export const ImageUpload: React.FC<ImageUploadProps> = ({
   name,
   defaultValue = '',
@@ -76,9 +69,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   return (
     <div className="space-y-3">
-      <label className="text-text-secondary text-[10px] tracking-widest uppercase">
-        {label}
-      </label>
+      <label className={ADMIN_LABEL_CLASS}>{label}</label>
 
       <input type="hidden" name={name} value={url} />
 
@@ -92,7 +83,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center bg-state-error text-[10px] text-white"
               title="Remover imagem"
             >
-              ×
+              x
             </button>
           </div>
         )}
@@ -124,9 +115,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               <span className="text-text-2 text-xs font-medium">
                 Toque para escolher ou arraste
               </span>
-              <span className="text-text-muted mt-1 text-[10px]">
-                JPG, PNG, WebP · max 5MB
-              </span>
+              <span className="text-text-muted mt-1 text-[10px]">JPG, PNG, WebP · max 5MB</span>
             </>
           )}
 
@@ -147,7 +136,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://..."
-          className="focus:border-primary w-full border border-border bg-bg p-2 text-xs outline-none"
+          className={`${ADMIN_INPUT_CLASS} p-2 text-xs`}
         />
       </div>
 

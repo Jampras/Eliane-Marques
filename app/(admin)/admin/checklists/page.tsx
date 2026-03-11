@@ -8,17 +8,24 @@ import { Heading } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { requireAdmin } from '@/lib/server/admin-auth';
+import {
+  ADMIN_EMPTY_STATE_CLASS,
+  ADMIN_EMPTY_STATE_DESKTOP_CLASS,
+  ADMIN_MOBILE_CARD_CLASS,
+  ADMIN_PAGE_HEADER_CLASS,
+  ADMIN_PAGE_WRAPPER_CLASS,
+  ADMIN_STATUS_DRAFT_BADGE_CLASS,
+  ADMIN_STATUS_PUBLISHED_BADGE_CLASS,
+  ADMIN_TABLE_HEAD_ROW_CLASS,
+  ADMIN_TABLE_ROW_CLASS,
+  ADMIN_TABLE_WRAPPER_CLASS,
+} from '@/components/features/admin/listStyles';
 
 const PAGE_SIZE = 12;
 
 type AdminChecklistsPageProps = {
   searchParams?: Promise<{ page?: string }>;
 };
-
-const publishedBadgeClass =
-  'border-[color:var(--sage)]/30 bg-[color:var(--sage)]/15 text-[color:var(--espresso)]';
-const draftBadgeClass =
-  'border-[color:var(--linho)] bg-[color:var(--manteiga)] text-[color:var(--taupe)]';
 
 export default async function AdminChecklistsPage({ searchParams }: AdminChecklistsPageProps) {
   await requireAdmin();
@@ -35,8 +42,8 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
   });
 
   return (
-    <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-12">
-      <div className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between lg:mb-12">
+    <div className={ADMIN_PAGE_WRAPPER_CLASS}>
+      <div className={ADMIN_PAGE_HEADER_CLASS}>
         <div>
           <Badge className="mb-4">Metodologia</Badge>
           <Heading as="h1" className="text-3xl sm:text-4xl">
@@ -50,14 +57,17 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
 
       <div className="space-y-3 lg:hidden">
         {checklists.map((checklist) => (
-          <div
-            key={checklist.id}
-            className="space-y-3 border border-[color:var(--linho)] bg-[color:var(--aveia)] p-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-transform active:scale-[0.995]"
-          >
+          <div key={checklist.id} className={ADMIN_MOBILE_CARD_CLASS}>
             <div className="flex items-start justify-between gap-3">
               <p className="leading-tight font-bold text-text-1">{checklist.title}</p>
               <div className="flex shrink-0 items-center gap-2">
-                <Badge className={checklist.published ? publishedBadgeClass : draftBadgeClass}>
+                <Badge
+                  className={
+                    checklist.published
+                      ? ADMIN_STATUS_PUBLISHED_BADGE_CLASS
+                      : ADMIN_STATUS_DRAFT_BADGE_CLASS
+                  }
+                >
                   {checklist.published ? 'Publicada' : 'Rascunho'}
                 </Badge>
                 <div className="text-text-secondary flex items-center gap-1">
@@ -83,16 +93,14 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
         ))}
 
         {checklists.length === 0 && (
-          <div className="border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-10 text-center italic text-[color:var(--taupe)]">
-            Nenhuma checklist cadastrada.
-          </div>
+          <div className={ADMIN_EMPTY_STATE_CLASS}>Nenhuma checklist cadastrada.</div>
         )}
       </div>
 
-      <div className="hidden border border-[color:var(--linho)] bg-[color:var(--aveia)] lg:block">
+      <div className={ADMIN_TABLE_WRAPPER_CLASS}>
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-[color:var(--linho)]">
+            <tr className={ADMIN_TABLE_HEAD_ROW_CLASS}>
               <th className="text-text-secondary p-6 text-[10px] font-bold tracking-widest uppercase">
                 Titulo
               </th>
@@ -112,10 +120,7 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
           </thead>
           <tbody>
             {checklists.map((checklist) => (
-              <tr
-                key={checklist.id}
-                className="border-b border-[color:var(--linho)] transition-colors hover:bg-[color:var(--manteiga)]"
-              >
+              <tr key={checklist.id} className={ADMIN_TABLE_ROW_CLASS}>
                 <td className="p-6">
                   <p className="font-bold text-text-1">{checklist.title}</p>
                 </td>
@@ -126,7 +131,13 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
                   </div>
                 </td>
                 <td className="p-6">
-                  <Badge className={checklist.published ? publishedBadgeClass : draftBadgeClass}>
+                  <Badge
+                    className={
+                      checklist.published
+                        ? ADMIN_STATUS_PUBLISHED_BADGE_CLASS
+                        : ADMIN_STATUS_DRAFT_BADGE_CLASS
+                    }
+                  >
                     {checklist.published ? 'Publicada' : 'Rascunho'}
                   </Badge>
                 </td>
@@ -147,9 +158,7 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
         </table>
 
         {checklists.length === 0 && (
-          <div className="p-20 text-center italic text-[color:var(--taupe)]">
-            Nenhuma checklist cadastrada.
-          </div>
+          <div className={ADMIN_EMPTY_STATE_DESKTOP_CLASS}>Nenhuma checklist cadastrada.</div>
         )}
       </div>
 

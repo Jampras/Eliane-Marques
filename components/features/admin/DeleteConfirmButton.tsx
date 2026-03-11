@@ -32,15 +32,15 @@ export const DeleteConfirmButton: React.FC<DeleteConfirmButtonProps> = ({
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-left-2 flex items-center gap-2">
-      <Text className="mr-2 text-[10px] font-bold tracking-widest text-red-500 uppercase underline decoration-red-500/20 underline-offset-4">
-        Confirmar?
+    <div className="animate-in fade-in slide-in-from-left-2 flex flex-wrap items-center gap-2 border border-[color:rgba(184,132,90,0.28)] bg-[color:rgba(184,132,90,0.08)] px-3 py-2">
+      <Text className="mr-2 text-[10px] font-bold tracking-widest text-[color:#8d5d39] uppercase">
+        Confirmar exclusao?
       </Text>
       <Button
         type="button"
         onClick={onConfirm}
         disabled={loading}
-        className="!border-red-600 !bg-red-600 px-4 py-1 text-[10px] !text-white hover:!bg-red-700"
+        className="!border-[color:var(--cacau)] !bg-[color:var(--cacau)] px-4 py-1 text-[10px] !text-[color:var(--aveia)] hover:!bg-[color:var(--espresso)]"
       >
         Sim
       </Button>
@@ -51,7 +51,7 @@ export const DeleteConfirmButton: React.FC<DeleteConfirmButtonProps> = ({
         disabled={loading}
         className="border-border px-4 py-1 text-[10px]"
       >
-        Nao
+        Cancelar
       </Button>
     </div>
   );

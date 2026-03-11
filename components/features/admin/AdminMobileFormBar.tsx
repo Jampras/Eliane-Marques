@@ -21,7 +21,7 @@ export const AdminMobileFormBar: React.FC<AdminMobileFormBarProps> = ({
   cancelLabel = 'Cancelar',
 }) => {
   return (
-    <div className="bg-bg/95 fixed inset-x-0 bottom-0 z-40 border-t border-border px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] backdrop-blur-md lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--linho)] bg-[color:rgba(247,240,230,0.97)] px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-[0_-10px_24px_rgba(58,36,24,0.08)] backdrop-blur-sm lg:hidden">
       <div className="flex gap-3">
         {onCancel && (
           <Button
