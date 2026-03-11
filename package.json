@@ -1,0 +1,62 @@
+{
+    "name": "eliane-marques---personal-branding-&-etiquette",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "prisma": {
+        "seed": "npx tsx prisma/seed.ts"
+    },
+    "scripts": {
+        "dev": "next dev --webpack",
+        "build": "next build",
+        "start": "next start",
+        "db:generate": "prisma generate",
+        "db:migrate": "prisma migrate dev",
+        "db:deploy": "prisma migrate deploy",
+        "db:push": "prisma db push",
+        "db:seed": "prisma db seed",
+        "db:seed:reset": "cross-env SEED_RESET=true prisma db seed",
+        "setup": "npm run db:generate && npm run db:deploy && npm run db:seed",
+        "dev:full": "npm run db:generate && npm run db:deploy && npm run db:seed && npm run dev",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "prepare": "husky",
+        "test:e2e": "npx playwright test"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.22.0",
+        "@upstash/redis": "^1.35.6",
+        "clsx": "^2.1.1",
+        "jose": "^6.1.3",
+        "next": "^16.1.6",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
+        "server-only": "^0.0.1",
+        "tailwind-merge": "^2.3.0",
+        "tailwindcss": "^4.1.18",
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.58.2",
+        "@tailwindcss/postcss": "^4.1.18",
+        "@types/node": "^22.14.0",
+        "@types/react": "19.2.13",
+        "cross-env": "^7.0.3",
+        "dotenv": "^17.2.3",
+        "eslint-config-next": "^16.1.6",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.3.2",
+        "postcss": "^8.5.6",
+        "prettier": "^3.8.1",
+        "prettier-plugin-tailwindcss": "^0.7.2",
+        "prisma": "^5.22.0",
+        "tsx": "^4.19.0",
+        "typescript": "~5.8.2"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx,json,css,md}": [
+            "prettier --write"
+        ]
+    }
+}

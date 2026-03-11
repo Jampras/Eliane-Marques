@@ -1,0 +1,169 @@
+export const dynamic = 'force-dynamic';
+import Link from 'next/link';
+import prisma from '@/lib/core/prisma';
+import { parsePageParam } from '@/lib/core/pagination';
+import { PaginationNav } from '@/components/ui/PaginationNav';
+import { Heading } from '@/components/ui/Typography';
+import { Badge } from '@/components/ui/Badge';
+import { LinkButton } from '@/components/ui/LinkButton';
+import { requireAdmin } from '@/lib/server/admin-auth';
+
+const PAGE_SIZE = 12;
+
+type AdminChecklistsPageProps = {
+  searchParams?: Promise<{ page?: string }>;
+};
+
+export default async function AdminChecklistsPage({ searchParams }: AdminChecklistsPageProps) {
+  await requireAdmin();
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const requestedPage = parsePageParam(resolvedSearchParams.page);
+  const totalItems = await prisma.checklist.count();
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const currentPage = Math.min(requestedPage, totalPages);
+  const checklists = await prisma.checklist.findMany({
+    include: { _count: { select: { items: true } } },
+    orderBy: { createdAt: 'desc' },
+    skip: (currentPage - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+  });
+
+  return (
+    <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-12">
+      <div className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between lg:mb-12">
+        <div>
+          <Badge className="mb-4">Metodologia</Badge>
+          <Heading as="h1" className="text-3xl sm:text-4xl">
+            Checklists
+          </Heading>
+        </div>
+        <LinkButton href="/admin/checklists/novo" className="w-full sm:w-auto">
+          Nova Checklist
+        </LinkButton>
+      </div>
+
+      <div className="space-y-3 lg:hidden">
+        {checklists.map((c) => (
+          <div
+            key={c.id}
+            className="bg-surface space-y-3 border border-border-soft p-4 transition-transform active:scale-[0.995]"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <p className="leading-tight font-bold text-text-1">{c.title}</p>
+              <div className="flex shrink-0 items-center gap-2">
+                <Badge
+                  className={
+                    c.published
+                      ? 'border-green-500/20 bg-green-500/10 text-green-500'
+                      : 'text-text-secondary border-border bg-primary/5'
+                  }
+                >
+                  {c.published ? 'Publicada' : 'Rascunho'}
+                </Badge>
+                <div className="text-text-secondary flex items-center gap-1">
+                  <span
+                    aria-hidden="true"
+                    className="material-symbols-outlined text-primary text-sm"
+                  >
+                    checklist
+                  </span>
+                  <span className="text-sm">{c._count.items}</span>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-text-secondary text-[10px] tracking-widest break-all uppercase italic">
+              /{c.slug}
+            </p>
+
+            <Link
+              href={`/admin/checklists/${c.id}/editar`}
+              className="text-primary inline-flex items-center text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
+            >
+              Editar Checklist
+            </Link>
+          </div>
+        ))}
+
+        {checklists.length === 0 && (
+          <div className="bg-surface border border-border-soft p-10 text-center italic opacity-30">
+            Nenhuma checklist cadastrada.
+          </div>
+        )}
+      </div>
+
+      <div className="bg-surface hidden border border-border-soft lg:block">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-border-soft">
+              <th className="text-text-secondary p-6 text-[10px] font-bold tracking-widest uppercase">
+                Titulo
+              </th>
+              <th className="text-text-secondary p-6 text-[10px] font-bold tracking-widest uppercase">
+                Itens
+              </th>
+              <th className="text-text-secondary p-6 text-[10px] font-bold tracking-widest uppercase">
+                Status
+              </th>
+              <th className="text-text-secondary p-6 text-[10px] font-bold tracking-widest uppercase">
+                Slug
+              </th>
+              <th className="text-text-secondary p-6 text-right text-[10px] font-bold tracking-widest uppercase">
+                Acoes
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {checklists.map((c) => (
+              <tr key={c.id} className="border-b border-border-soft transition-colors hover:bg-primary/5">
+                <td className="p-6">
+                  <p className="font-bold text-text-1">{c.title}</p>
+                </td>
+                <td className="p-6">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary text-sm">
+                      checklist
+                    </span>
+                    <span className="text-text-secondary">{c._count.items}</span>
+                  </div>
+                </td>
+                <td className="p-6">
+                  <Badge
+                    className={
+                      c.published
+                        ? 'border-green-500/20 bg-green-500/10 text-green-500'
+                        : 'text-text-secondary border-border bg-primary/5'
+                    }
+                  >
+                    {c.published ? 'Publicada' : 'Rascunho'}
+                  </Badge>
+                </td>
+                <td className="text-text-secondary p-6 text-[10px] tracking-widest uppercase italic">
+                  /{c.slug}
+                </td>
+                <td className="p-6 text-right">
+                  <Link
+                    href={`/admin/checklists/${c.id}/editar`}
+                    className="text-primary text-[10px] font-bold tracking-widest uppercase transition-colors hover:text-primary"
+                  >
+                    Editar
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {checklists.length === 0 && (
+          <div className="p-20 text-center italic opacity-30">Nenhuma checklist cadastrada.</div>
+        )}
+      </div>
+
+      <PaginationNav
+        currentPage={currentPage}
+        totalPages={totalPages}
+        pathname="/admin/checklists"
+        searchParams={resolvedSearchParams}
+      />
+    </div>
+  );
+}
