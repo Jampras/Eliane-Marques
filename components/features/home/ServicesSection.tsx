@@ -10,7 +10,7 @@ interface ServicesSectionProps {
   services: Service[];
 }
 
-const ornaments = ['✦', '◈', '◇'];
+const ornaments = ['\u2726', '\u25c8', '\u25c7'];
 
 function inferCategory(title: string) {
   const lower = title.toLowerCase();
@@ -60,7 +60,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                 />
                 <div className="mb-5 flex items-center justify-between gap-4">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[15px] text-[color:var(--argila)]">
-                    {ornaments[index] ?? '✦'}
+                    {ornaments[index] ?? '\u2726'}
                   </span>
                   <span className="text-[9px] uppercase tracking-[0.2em] text-[color:var(--taupe)]">
                     {inferCategory(service.title)}

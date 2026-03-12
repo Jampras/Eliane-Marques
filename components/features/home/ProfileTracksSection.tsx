@@ -8,17 +8,17 @@ const profileTracks = [
   {
     title: 'Executivas em ascensao',
     desc: 'Para quem quer liderar com presenca, firmeza e etiqueta em ambientes de alta exigencia.',
-    icon: '◇',
+    icon: '\u25c7',
   },
   {
     title: 'Empreendedoras e marcas pessoais',
     desc: 'Para quem precisa alinhar imagem e comunicacao para cobrar melhor e atrair clientes certos.',
-    icon: '✦',
+    icon: '\u2726',
   },
   {
     title: 'Empresas e equipes',
     desc: 'Para negocios que desejam padrao de atendimento premium e comportamento coerente com a marca.',
-    icon: '◈',
+    icon: '\u25c8',
   },
 ];
 
