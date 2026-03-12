@@ -11,6 +11,7 @@ import { Icon } from '@/components/ui/Icon';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { AdminEmptyState } from '@/components/features/admin/AdminEmptyState';
 import { requireAdmin } from '@/lib/server/admin-auth';
+import { EDITORIAL_POLICY } from '@/lib/core/editorial-highlights';
 import {
   ADMIN_EMPTY_STATE_CLASS,
   ADMIN_EMPTY_STATE_DESKTOP_CLASS,
@@ -50,6 +51,10 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
           <Heading as="h1" className="text-3xl sm:text-4xl">
             Gestao de Produtos
           </Heading>
+          <p className="text-text-secondary mt-3 max-w-2xl text-[12px] leading-6">
+            <strong className="text-text-1">Destaque:</strong> {EDITORIAL_POLICY.featured}{' '}
+            <strong className="text-text-1">Mais vendido:</strong> {EDITORIAL_POLICY.bestSeller}
+          </p>
         </div>
         <LinkButton href="/admin/produtos/novo" className="w-full sm:w-auto">
           Novo Produto

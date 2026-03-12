@@ -6,6 +6,7 @@ import { Heading, Text } from '@/components/ui/Typography';
 import { TrackedLink } from '@/components/analytics/TrackedLink';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import type { Service } from '@/lib/core/types';
+import { isServicesFeatured } from '@/lib/core/editorial-highlights';
 
 interface ServicesSectionProps {
   services: Service[];
@@ -22,8 +23,6 @@ function inferCategory(title: string) {
 }
 
 export function ServicesSection({ services }: ServicesSectionProps) {
-  const fallbackFeatured = services.findIndex((service) => service.featured) === -1 ? 1 : -1;
-
   return (
     <Section className="bg-[color:var(--aveia)]">
       <Container>
@@ -44,7 +43,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service, index) => {
-            const featured = service.featured || index === fallbackFeatured;
+            const featured = isServicesFeatured(services, index);
 
             return (
               <article

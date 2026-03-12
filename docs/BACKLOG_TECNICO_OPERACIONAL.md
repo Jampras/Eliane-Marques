@@ -12,6 +12,11 @@
 - **Impacto:** alto.
 - **Risco atual:** credencial sensivel ja exposta anteriormente fora do repositorio.
 
+#### BT-016 - Integrar leads com CRM ou automacao comercial
+- **Objetivo:** tirar o processo comercial do modo manual.
+- **Impacto:** alto.
+- **Risco atual:** leads capturados exigem operacao manual no painel.
+
 ### P1 - Executar em seguida
 
 #### BT-013 - Revisar featured comercial por configuracao
@@ -23,12 +28,6 @@
 - **Impacto:** medio.
 
 ### P2 - Backlog de melhoria
-
-#### BT-015 - Adicionar schema estruturado adicional
-- **Objetivo:** expandir o SEO estruturado para outras areas alem de home e detalhe.
-
-#### BT-016 - CRM ou formulario estruturado
-- **Objetivo:** integrar os leads persistidos a um CRM externo ou automacao comercial.
 
 #### BT-017 - Dashboard comercial no admin
 - **Objetivo:** evoluir o dashboard atual com agregacoes, periodos e funil.
@@ -57,6 +56,9 @@ Concluidos no codigo:
 - busca e filtros nas listagens publicas
 - flags comerciais por produto
 - icones locais em SVG
+- politica editorial documentada para `featured` e `bestSeller`
+- QA visual automatizado com snapshots Playwright
+- auditoria de acessibilidade e performance documentada
 - favicon
 - limpeza visual e padronizacao do admin
 
@@ -66,22 +68,22 @@ Concluidos no codigo:
 
 ### Sprint 1
 - BT-011
+- BT-016
 
 ### Sprint 2
 - BT-013
 
 ### Sprint 3
 - BT-014
-- BT-015
 
 ### Sprint 4
-- BT-016
 - BT-017
 
 ---
 
 ## 4. Checklist Operacional Atual
 - [ ] rotacionar credencial sensivel do Supabase
+- [ ] integrar leads com CRM ou automacao comercial
 - [ ] decidir regra editorial definitiva de destaque comercial
-- [ ] ampliar suite de QA/E2E nos fluxos de conversao
-- [ ] avaliar integracao de leads com CRM externo
+- [ ] manter snapshots visuais atualizados quando a UI mudar
+- [ ] evoluir dashboard com filtros temporais mais avancados e agregacao

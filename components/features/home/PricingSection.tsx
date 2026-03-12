@@ -7,6 +7,7 @@ import { WhatsAppLink } from '@/components/shared/whatsapp/WhatsAppLink';
 import { buildPricingInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import type { Service } from '@/lib/core/types';
+import { isPricingFeatured } from '@/lib/core/editorial-highlights';
 
 interface PricingSectionProps {
   services: Service[];
@@ -31,8 +32,6 @@ function extractPrice(price: string) {
 }
 
 export function PricingSection({ services, waConfig }: PricingSectionProps) {
-  const fallbackFeatured = services.findIndex((service) => service.featured || service.bestSeller) === -1 ? 1 : -1;
-
   return (
     <Section
       id="investimentos"
@@ -56,8 +55,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service, index) => {
-            const featured =
-              service.bestSeller || service.featured || index === fallbackFeatured;
+            const featured = isPricingFeatured(services, index);
             const pricing = extractPrice(service.price);
             const waUrl = buildPricingInquiryWhatsAppUrl({
               number: waConfig?.number,

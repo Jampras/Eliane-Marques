@@ -6,6 +6,7 @@ import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Icon, type IconName } from '@/components/ui/Icon';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import { requireAdmin } from '@/lib/server/admin-auth';
 
 const quickActions = [
@@ -15,8 +16,106 @@ const quickActions = [
   { label: 'Site Config', href: '/admin/config', icon: 'tune' },
 ] as const;
 
-export default async function AdminDashboard() {
+const rangeOptions = [
+  { value: '7d', label: '7 dias', days: 7 },
+  { value: '30d', label: '30 dias', days: 30 },
+  { value: '90d', label: '90 dias', days: 90 },
+  { value: 'all', label: 'Tudo' },
+] as const;
+
+const sourceOptions = [
+  { value: 'all', label: 'Todos os canais' },
+  { value: ANALYTICS_SOURCES.HOME_PRICING, label: 'Home / pricing' },
+  { value: ANALYTICS_SOURCES.HOME_SERVICES, label: 'Home / servicos' },
+  { value: ANALYTICS_SOURCES.PRODUCT_DETAIL, label: 'Detalhe de produto' },
+  { value: ANALYTICS_SOURCES.PRODUCT_LIST, label: 'Listagens' },
+  { value: ANALYTICS_SOURCES.NAVBAR, label: 'Navbar' },
+  { value: ANALYTICS_SOURCES.MOBILE_NAV, label: 'Menu mobile' },
+  { value: ANALYTICS_SOURCES.FLOATING_WHATSAPP, label: 'WhatsApp flutuante' },
+  { value: ANALYTICS_SOURCES.CONTACT_FORM, label: 'Formulario de contato' },
+  { value: ANALYTICS_SOURCES.CONTACT_PAGE, label: 'Pagina de contato' },
+] as const;
+
+type RangeValue = (typeof rangeOptions)[number]['value'];
+type SourceValue = (typeof sourceOptions)[number]['value'];
+
+type AdminDashboardProps = {
+  searchParams?: Promise<{ range?: string; source?: string }>;
+};
+
+function isRangeValue(value: string | undefined): value is RangeValue {
+  return rangeOptions.some((option) => option.value === value);
+}
+
+function isSourceValue(value: string | undefined): value is SourceValue {
+  return sourceOptions.some((option) => option.value === value);
+}
+
+function getRangeStart(range: RangeValue) {
+  let days: number | undefined;
+
+  switch (range) {
+    case '7d':
+      days = 7;
+      break;
+    case '30d':
+      days = 30;
+      break;
+    case '90d':
+      days = 90;
+      break;
+    default:
+      days = undefined;
+  }
+
+  if (days === undefined) return undefined;
+
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return date;
+}
+
+function getDashboardHref(range: RangeValue, source: SourceValue) {
+  const params = new URLSearchParams();
+
+  if (range !== 'all') {
+    params.set('range', range);
+  }
+
+  if (source !== 'all') {
+    params.set('source', source);
+  }
+
+  const query = params.toString();
+  return query ? `/admin?${query}` : '/admin';
+}
+
+function getButtonClass(active: boolean) {
+  return active
+    ? 'border-primary bg-primary/10 text-primary'
+    : 'border-border-soft text-text-secondary hover:border-primary/40 hover:text-text-1';
+}
+
+export default async function AdminDashboard({ searchParams }: AdminDashboardProps) {
   await requireAdmin();
+
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const selectedRange: RangeValue = isRangeValue(resolvedSearchParams.range)
+    ? resolvedSearchParams.range
+    : '30d';
+  const selectedSource: SourceValue = isSourceValue(resolvedSearchParams.source)
+    ? resolvedSearchParams.source
+    : 'all';
+
+  const rangeStart = getRangeStart(selectedRange);
+  const analyticsWhere = {
+    ...(rangeStart ? { createdAt: { gte: rangeStart } } : {}),
+    ...(selectedSource !== 'all' ? { source: selectedSource } : {}),
+  };
+  const leadsWhere = {
+    ...(rangeStart ? { createdAt: { gte: rangeStart } } : {}),
+    ...(selectedSource !== 'all' ? { source: selectedSource } : {}),
+  };
 
   const [
     totalProducts,
@@ -36,20 +135,26 @@ export default async function AdminDashboard() {
     prisma.post.count({ where: { published: true } }),
     prisma.checklist.count({ where: { published: true } }),
     prisma.siteConfig.count(),
-    prisma.lead.count(),
+    prisma.lead.count({ where: leadsWhere }),
     prisma.lead.findMany({
+      where: leadsWhere,
       orderBy: { createdAt: 'desc' },
       take: 5,
     }),
-    prisma.analyticsEvent.count(),
+    prisma.analyticsEvent.count({ where: analyticsWhere }),
     prisma.analyticsEvent.count({
-      where: { name: 'whatsapp_click' },
+      where: { ...analyticsWhere, name: 'whatsapp_click' },
     }),
     prisma.analyticsEvent.count({
-      where: { name: 'cta_click' },
+      where: {
+        ...analyticsWhere,
+        name: 'cta_click',
+        destination: { startsWith: 'http' },
+      },
     }),
     prisma.analyticsEvent.findMany({
       where: {
+        ...analyticsWhere,
         productSlug: { not: null },
       },
       select: {
@@ -101,8 +206,56 @@ export default async function AdminDashboard() {
           <Heading as="h1" className="font-display text-3xl sm:text-4xl lg:text-5xl">
             Dashboard Administrativo
           </Heading>
+          <Text className="mt-3 max-w-2xl text-[12px] leading-6">
+            Use os filtros para analisar a tracao comercial por periodo e origem, sem misturar comportamento de home, listagens e formulario.
+          </Text>
         </div>
       </div>
+
+      <Card className="mb-8 border-border-soft !p-5 sm:!p-6 lg:!p-8">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
+          <div>
+            <Text className="mb-3 text-[10px] tracking-widest uppercase">Periodo</Text>
+            <div className="flex flex-wrap gap-2">
+              {rangeOptions.map((option) => (
+                <Link
+                  key={option.value}
+                  href={getDashboardHref(option.value, selectedSource)}
+                  className={`inline-flex min-h-10 items-center border px-4 py-2 text-[10px] font-bold tracking-[0.18em] uppercase transition-colors ${getButtonClass(
+                    selectedRange === option.value
+                  )}`}
+                >
+                  {option.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Text className="mb-3 text-[10px] tracking-widest uppercase">Origem</Text>
+            <div className="flex flex-wrap gap-2">
+              {sourceOptions.map((option) => (
+                <Link
+                  key={option.value}
+                  href={getDashboardHref(selectedRange, option.value)}
+                  className={`inline-flex min-h-10 items-center border px-4 py-2 text-[10px] font-bold tracking-[0.18em] uppercase transition-colors ${getButtonClass(
+                    selectedSource === option.value
+                  )}`}
+                >
+                  {option.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <Link
+            href="/admin"
+            className="inline-flex min-h-10 items-center justify-center border border-border-soft px-4 py-2 text-[10px] font-bold tracking-[0.18em] uppercase text-text-secondary transition-colors hover:border-primary/40 hover:text-text-1"
+          >
+            Limpar filtros
+          </Link>
+        </div>
+      </Card>
 
       <div className="mb-10 grid grid-cols-2 gap-3 sm:mb-12 sm:gap-4 lg:mb-16 lg:grid-cols-4 lg:gap-6">
         {quickActions.map((action) => (
@@ -171,12 +324,12 @@ export default async function AdminDashboard() {
                             /{item.productSlug}
                           </p>
                         </div>
-                          <Badge variant="outline">{item.count} cliques</Badge>
-                        </div>
+                        <Badge variant="outline">{item.count} cliques</Badge>
+                      </div>
                     ))
                   ) : (
                     <Text className="text-[12px] text-text-secondary">
-                      Ainda nao ha dados suficientes de clique.
+                      Ainda nao ha dados suficientes para os filtros aplicados.
                     </Text>
                   )}
                 </div>
@@ -187,10 +340,7 @@ export default async function AdminDashboard() {
                 <div className="space-y-3">
                   {recentLeads.length > 0 ? (
                     recentLeads.map((lead) => (
-                      <div
-                        key={lead.id}
-                        className="border border-border-soft px-4 py-3"
-                      >
+                      <div key={lead.id} className="border border-border-soft px-4 py-3">
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
                             <p className="truncate text-sm font-semibold text-text-1">{lead.name}</p>
@@ -205,7 +355,7 @@ export default async function AdminDashboard() {
                     ))
                   ) : (
                     <Text className="text-[12px] text-text-secondary">
-                      Nenhum lead registrado ainda.
+                      Nenhum lead encontrado para os filtros aplicados.
                     </Text>
                   )}
                 </div>
@@ -217,20 +367,24 @@ export default async function AdminDashboard() {
         <div className="lg:col-span-4">
           <Card className="h-full border-border-soft !p-5 sm:!p-6 lg:!p-8">
             <Heading as="h3" className="mb-6 text-xl">
-              Ajuda Rapida
+              Leitura dos dados
             </Heading>
             <ul className="space-y-4 text-xs">
               <li className="text-text-secondary flex gap-3">
                 <Icon name="info" className="text-primary text-sm" />
-                <span>Use slugs amigaveis para SEO, por exemplo mentoria-presenca.</span>
+                <span>
+                  <strong className="text-text-1">Featured</strong> prioriza vitrine editorial. Use para empurrar a oferta nas listagens e na home.
+                </span>
               </li>
               <li className="text-text-secondary flex gap-3">
                 <Icon name="info" className="text-primary text-sm" />
-                <span>Marque como destaque ou mais vendido para influenciar a ordem das listagens.</span>
+                <span>
+                  <strong className="text-text-1">Mais vendido</strong> deve sinalizar prova comercial real e recebe prioridade no pricing.
+                </span>
               </li>
               <li className="text-text-secondary flex gap-3">
                 <Icon name="info" className="text-primary text-sm" />
-                <span>Revise imagem de capa e destino do CTA antes de salvar para evitar retrabalho.</span>
+                <span>Compare periodo e origem para separar clique de home, detalhe, menu e formulario.</span>
               </li>
             </ul>
           </Card>

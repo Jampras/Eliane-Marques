@@ -31,7 +31,7 @@ export default defineConfig({
   webServer: {
     command: 'cmd /c "set E2E_DISABLE_RATE_LIMIT=true&& npx.cmd next dev --webpack --port 3000"',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });

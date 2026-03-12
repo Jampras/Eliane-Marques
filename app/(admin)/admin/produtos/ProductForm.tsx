@@ -17,6 +17,7 @@ import {
   ADMIN_SELECT_CLASS,
 } from '@/components/features/admin/formStyles';
 import { useAdminEntityForm } from '@/lib/hooks/useAdminEntityForm';
+import { EDITORIAL_POLICY } from '@/lib/core/editorial-highlights';
 import type { Product } from '@prisma/client';
 
 interface ProductFormProps {
@@ -232,6 +233,15 @@ export default function ProductForm({ product }: ProductFormProps) {
           Use WhatsApp para atendimento manual. Use Link externo para Hotmart, checkout proprio ou
           qualquer pagina externa de conversao.
         </p>
+
+        <div className="grid gap-3 border-t border-border-soft pt-6 text-[11px] leading-6 text-text-secondary">
+          <p>
+            <strong className="text-text-1">Featured:</strong> {EDITORIAL_POLICY.featured}
+          </p>
+          <p>
+            <strong className="text-text-1">BestSeller:</strong> {EDITORIAL_POLICY.bestSeller}
+          </p>
+        </div>
 
         {feedback && (
           <AdminInlineNotice

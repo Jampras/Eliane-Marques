@@ -23,7 +23,8 @@
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "prepare": "husky",
-        "test:e2e": "npx playwright test"
+        "test:e2e": "npx playwright test",
+        "test:e2e:visual": "npx playwright test tests/e2e/visual.spec.ts"
     },
     "dependencies": {
         "@prisma/client": "^5.22.0",

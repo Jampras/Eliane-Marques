@@ -44,6 +44,8 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - intents de WhatsApp centralizadas em `lib/contact/whatsapp-intents.ts`
 - fontes principais via `next/font`
 - icones locais em SVG via `components/ui/Icon.tsx`
+- politica editorial centralizada para `featured` e `bestSeller`
+- QA visual automatizado com snapshots Playwright
 - upload persistente em Supabase obrigatorio em producao
 - rate limit distribuido obrigatorio em producao
 - CSP dinamica com nonce por request
@@ -106,6 +108,7 @@ npm run start
 npm run lint
 npx tsc --noEmit
 npm run test:e2e
+npm run test:e2e:visual
 npm run db:generate
 npm run db:deploy
 npm run db:deploy:prisma
@@ -175,6 +178,10 @@ npx playwright install chromium
   - `docs/DOCUMENTACAO_TECNICA_ELIANE_MARQUES.md`
 - manual de uso do admin:
   - `docs/MANUAL_ADMIN_PLATAFORMA.md`
+- politica editorial de destaques:
+  - `docs/POLITICA_EDITORIAL_DESTAQUES.md`
+- auditoria de acessibilidade e performance:
+  - `docs/AUDITORIA_ACESSIBILIDADE_PERFORMANCE.md`
 - backlog operacional:
   - `docs/BACKLOG_TECNICO_OPERACIONAL.md`
 - arquitetura:
@@ -195,3 +202,4 @@ Executado:
 
 Pendente principal:
 - rotacao da credencial sensivel do Supabase
+- integracao dos leads com CRM ou automacao comercial
