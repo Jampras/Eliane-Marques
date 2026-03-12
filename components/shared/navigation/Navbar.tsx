@@ -15,6 +15,7 @@ interface NavbarProps {
 }
 
 const navLinks = [
+  { name: 'Sobre', href: '/sobre' },
   { name: 'Servicos', href: '/servicos' },
   { name: 'Cursos', href: '/cursos' },
   { name: 'Checklists', href: '/checklists' },

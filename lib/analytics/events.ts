@@ -26,6 +26,7 @@ export const ANALYTICS_SOURCES = {
   HOME_SERVICES: 'home-services',
   PRODUCT_DETAIL: 'product-detail',
   PRODUCT_LIST: 'product-list',
+  ABOUT_PAGE: 'about-page',
   FLOATING_WHATSAPP: 'floating-whatsapp',
   CONTACT_PAGE: 'contact-page',
   CONTACT_FORM: 'contact-form',

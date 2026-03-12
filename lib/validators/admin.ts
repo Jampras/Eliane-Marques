@@ -21,6 +21,28 @@ const optionalUrlSchema = z
   ])
   .optional();
 
+const aboutMilestoneSchema = z.object({
+  title: z.string().trim().min(1).max(120),
+  description: z.string().trim().min(1).max(500),
+  year: z.string().trim().max(40).optional(),
+  sortOrder: z.number().default(0),
+});
+
+const aboutSpecializationSchema = z.object({
+  title: z.string().trim().min(1).max(120),
+  description: z.string().trim().min(1).max(500),
+  sortOrder: z.number().default(0),
+});
+
+const aboutCredentialSchema = z.object({
+  title: z.string().trim().min(1).max(140),
+  issuer: z.string().trim().max(120).optional(),
+  year: z.string().trim().max(40).optional(),
+  imageUrl: optionalUrlSchema,
+  kind: z.enum(['CERTIFICATE', 'SEAL', 'SPECIALIZATION']),
+  sortOrder: z.number().default(0),
+});
+
 export const productSchema = z.object({
   title: z.string().trim().min(3, 'Titulo deve ter pelo menos 3 caracteres').max(120),
   slug: slugSchema,
@@ -88,3 +110,20 @@ export const configSchema = z
       .optional(),
   })
   .strict();
+
+export const aboutPageSchema = z.object({
+  heroTitle: z.string().trim().min(3).max(200),
+  heroSubtitle: z.string().trim().max(320).optional(),
+  introTitle: z.string().trim().max(160).optional(),
+  introBody: z.string().trim().max(1600).optional(),
+  manifestoTitle: z.string().trim().max(160).optional(),
+  manifestoBody: z.string().trim().max(2400).optional(),
+  heroImage: optionalUrlSchema,
+  ctaMode: z.enum(['WHATSAPP', 'EXTERNAL']).default('WHATSAPP'),
+  ctaUrl: optionalUrlSchema,
+  ctaLabel: z.string().trim().max(80).optional(),
+  whatsappMessageTemplate: z.string().trim().max(320).optional(),
+  milestones: z.array(aboutMilestoneSchema).max(12),
+  specializations: z.array(aboutSpecializationSchema).max(12),
+  credentials: z.array(aboutCredentialSchema).max(20),
+});

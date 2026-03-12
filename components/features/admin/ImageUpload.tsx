@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Icon } from '@/components/ui/Icon';
 import { ADMIN_INPUT_CLASS, ADMIN_LABEL_CLASS } from './formStyles';
@@ -9,18 +9,32 @@ interface ImageUploadProps {
   name: string;
   defaultValue?: string;
   label?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
   name,
   defaultValue = '',
   label = 'Imagem de Capa',
+  onValueChange,
 }) => {
   const [url, setUrl] = useState(defaultValue);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setUrl(defaultValue);
+  }, [defaultValue]);
+
+  const updateUrl = useCallback(
+    (nextUrl: string) => {
+      setUrl(nextUrl);
+      onValueChange?.(nextUrl);
+    },
+    [onValueChange]
+  );
 
   const uploadFile = useCallback(async (file: File) => {
     setError('');
@@ -42,13 +56,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         return;
       }
 
-      setUrl(data.url);
+      updateUrl(data.url);
     } catch {
       setError('Falha na conexao. Tente novamente.');
     } finally {
       setUploading(false);
     }
-  }, []);
+  }, [updateUrl]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -67,7 +81,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemove = () => {
-    setUrl('');
+    updateUrl('');
     setError('');
     if (inputRef.current) {
       inputRef.current.value = '';
@@ -137,7 +151,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         <input
           type="text"
           value={url}
-          onChange={(event) => setUrl(event.target.value)}
+          onChange={(event) => updateUrl(event.target.value)}
           placeholder="https://..."
           className={`${ADMIN_INPUT_CLASS} p-2 text-xs`}
         />
