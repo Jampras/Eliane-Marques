@@ -42,7 +42,10 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
               Solucoes desenhadas para sofisticacao, confianca e presenca
             </Heading>
           </div>
-          <Text className="fade-up text-[12px] text-[color:var(--taupe)]" style={{ '--delay': '0.1s' } as CSSProperties}>
+          <Text
+            className="fade-up text-[12px] text-[color:var(--taupe)]"
+            style={{ '--delay': '0.1s' } as CSSProperties}
+          >
             Escolha o formato mais aderente ao seu momento. Cada proposta preserva o mesmo cuidado de atelier.
           </Text>
         </div>
@@ -91,7 +94,9 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                   {service.title}
                 </Heading>
 
-                <p className="mt-2 font-ornament text-[11px] italic text-[color:var(--taupe)]">{service.desc}</p>
+                <p className="mt-2 font-ornament text-[11px] italic text-[color:var(--taupe)]">
+                  {service.desc}
+                </p>
 
                 <div className="mt-8">
                   {pricing.prefix && (
