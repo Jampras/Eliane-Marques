@@ -1,7 +1,8 @@
+import { cache } from 'react';
 import { BRAND } from '@/lib/core/constants';
 import { getSiteConfigs } from '@/lib/data/config';
 
-export async function getSiteIdentity() {
+export const getSiteIdentity = cache(async () => {
   const configs = await getSiteConfigs();
 
   return {
@@ -11,4 +12,4 @@ export async function getSiteIdentity() {
     heroHeadline: configs.heroHeadline,
     heroSubheadline: configs.heroSubheadline,
   };
-}
+});

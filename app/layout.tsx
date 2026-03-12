@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { Cormorant_Garamond, Jost, Playfair_Display } from 'next/font/google';
 import './globals.css';
+import { MaterialSymbolsStylesheet } from '@/components/shared/MaterialSymbolsStylesheet';
 import { ToastProvider } from '@/components/ui/ToastProvider';
 import { BRAND } from '@/lib/core/constants';
 import { getSiteIdentity } from '@/lib/data/site';
@@ -86,7 +87,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
-          rel="stylesheet"
+          rel="preload"
+          as="style"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
         />
         <script
@@ -98,6 +100,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`${playfairDisplay.variable} ${jost.variable} ${cormorantGaramond.variable} bg-bg text-text-primary selection:bg-primary font-sans antialiased selection:text-white`}
       >
+        <MaterialSymbolsStylesheet />
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

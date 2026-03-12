@@ -3,7 +3,7 @@ import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { WhatsAppLink } from '@/components/shared/whatsapp/WhatsAppLink';
-import { buildWhatsAppUrl } from '@/lib/core/whatsapp';
+import { buildPricingInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import type { Service } from '@/lib/core/types';
 
 interface PricingSectionProps {
@@ -51,10 +51,9 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
           {services.map((service, index) => {
             const featured = index === 1;
             const pricing = extractPrice(service.price);
-            const waUrl = buildWhatsAppUrl({
+            const waUrl = buildPricingInquiryWhatsAppUrl({
               number: waConfig?.number,
-              template: 'Ola Eliane! Quero entender se o servico {productTitle} e o ideal para meu momento.',
-              context: { productTitle: service.title },
+              productTitle: service.title,
             });
 
             return (

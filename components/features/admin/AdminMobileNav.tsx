@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/core/utils';
+import { cn } from '@/lib/utils/cn';
 import { logoutAction } from '@/lib/actions/admin-auth';
 import { adminMenuItems } from './adminMenuItems';
 

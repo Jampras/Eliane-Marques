@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { buildWhatsAppUrl } from '@/lib/core/whatsapp';
+import { buildDirectContactWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { useToast } from '@/components/ui/ToastProvider';
 import { openWhatsAppUrl } from './openWhatsApp';
 
@@ -10,7 +10,7 @@ export const FloatingWhatsAppButton: React.FC<{ phone: string; message: string }
   message,
 }) => {
   const { showToast } = useToast();
-  const whatsappUrl = buildWhatsAppUrl({ number: phone, template: message });
+  const whatsappUrl = buildDirectContactWhatsAppUrl({ number: phone, message });
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();

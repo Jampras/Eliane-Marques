@@ -1,6 +1,6 @@
 import React from 'react';
 import Link, { type LinkProps } from 'next/link';
-import { cn } from '@/lib/core/utils';
+import { cn } from '@/lib/utils/cn';
 
 interface LinkButtonProps extends LinkProps, Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   children: React.ReactNode;

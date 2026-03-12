@@ -1,4 +1,4 @@
-import { buildWhatsAppUrl } from './whatsapp';
+import { buildProductInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { getProductCtaLabel } from './product-paths';
 
 interface ProductCtaInput {
@@ -53,12 +53,12 @@ export function getProductCta(product: ProductCtaInput, waConfig: WhatsAppConfig
   }
 
   return {
-    href: buildWhatsAppUrl({
+    href: buildProductInquiryWhatsAppUrl({
       number: waConfig.number,
       template:
         product.whatsappMessageTemplate ||
         'Ola! Gostaria de saber mais sobre {productTitle}. Vi na pagina {pageUrl}',
-      context: { productTitle: product.title },
+      productTitle: product.title,
     }),
     label,
     external: true,

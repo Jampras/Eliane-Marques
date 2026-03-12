@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/lib/core/utils';
+import { cn } from '@/lib/utils/cn';
 
 export const Badge: React.FC<{
   children: React.ReactNode;

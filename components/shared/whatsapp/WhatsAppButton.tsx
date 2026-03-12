@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/Button';
-import { buildWhatsAppUrl } from '@/lib/core/whatsapp';
+import { buildProductInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { useToast } from '@/components/ui/ToastProvider';
 import { openWhatsAppUrl } from './openWhatsApp';
 
@@ -34,10 +34,12 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
     e.stopPropagation();
 
     const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
-    const whatsappUrl = buildWhatsAppUrl({
+    const whatsappUrl = buildProductInquiryWhatsAppUrl({
       number,
       template,
-      context: { productTitle, audience, pageUrl },
+      productTitle,
+      audience,
+      pageUrl,
     });
 
     const mode = openWhatsAppUrl(whatsappUrl);
