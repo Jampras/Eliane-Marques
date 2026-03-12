@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
+import { Icon } from '@/components/ui/Icon';
+import { trackAnalyticsEvent } from '@/lib/analytics/client';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import { MobileNav } from './MobileNav';
 
 interface NavbarProps {
@@ -64,6 +67,13 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName = 'Eliane Marques', in
                     key={link.href}
                     href={link.href}
                     data-active={active}
+                    onClick={() =>
+                      trackAnalyticsEvent({
+                        name: 'nav_click',
+                        source: ANALYTICS_SOURCES.NAVBAR,
+                        destination: link.href,
+                      })
+                    }
                     className="nav-underline text-[11px] font-[300] uppercase tracking-[0.18em] text-[color:var(--taupe)] transition-colors hover:text-[color:var(--aveia)]"
                   >
                     {link.name}
@@ -78,14 +88,19 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName = 'Eliane Marques', in
                 aria-label="Entrar no painel administrativo"
                 className="inline-flex h-9 min-w-9 items-center justify-center border border-[color:var(--linho)] text-[color:var(--taupe)] transition-colors hover:border-[color:var(--argila)] hover:text-[color:var(--argila)]"
               >
-                <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
-                  admin_panel_settings
-                </span>
+                <Icon name="admin_panel_settings" className="text-[18px]" />
               </Link>
 
               <button
                 type="button"
-                onClick={() => router.push('/contato')}
+                onClick={() => {
+                  trackAnalyticsEvent({
+                    name: 'cta_click',
+                    source: ANALYTICS_SOURCES.NAVBAR,
+                    destination: '/contato',
+                  });
+                  router.push('/contato');
+                }}
                 className="inline-flex rounded-[2px] border border-[color:var(--argila)] px-[18px] py-[8px] text-[11px] font-[400] uppercase tracking-[0.18em] text-[color:var(--argila)] transition-colors hover:bg-[rgba(184,132,90,0.08)]"
               >
                 Agendar consultoria

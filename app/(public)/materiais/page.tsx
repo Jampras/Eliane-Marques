@@ -7,11 +7,13 @@ import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { PaginationNav } from '@/components/ui/PaginationNav';
-import { LinkButton } from '@/components/ui/LinkButton';
+import { CatalogFilters } from '@/components/features/catalog/CatalogFilters';
+import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
 import { shouldOptimizeImage } from '@/lib/core/images';
 import { getProductListAction } from '@/lib/core/product-cta';
-import { parsePageParam } from '@/lib/core/pagination';
+import { parsePageParam, parseQueryParam } from '@/lib/core/pagination';
 import { getPaginatedProductsByTypes } from '@/lib/data/products';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 export const metadata = {
   title: 'Materiais | Eliane Marques',
@@ -21,13 +23,28 @@ export const metadata = {
 const PAGE_SIZE = 6;
 
 type MaterialsPageProps = {
-  searchParams?: Promise<{ page?: string }>;
+  searchParams?: Promise<{ page?: string; q?: string; audience?: string; featured?: string }>;
 };
 
 export default async function MaterialsPage({ searchParams }: MaterialsPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const currentPage = parsePageParam(resolvedSearchParams.page);
-  const materialsPage = await getPaginatedProductsByTypes(['EBOOK', 'CHECKLIST'], currentPage, PAGE_SIZE);
+  const query = parseQueryParam(resolvedSearchParams.q);
+  const audience = parseQueryParam(resolvedSearchParams.audience);
+  const featuredOnly = parseQueryParam(resolvedSearchParams.featured) === '1';
+  const materialsPage = await getPaginatedProductsByTypes(
+    ['EBOOK', 'CHECKLIST'],
+    currentPage,
+    PAGE_SIZE,
+    {
+      q: query,
+      audience:
+        audience === 'PESSOAS' || audience === 'EMPRESAS' || audience === 'AMBOS'
+          ? audience
+          : undefined,
+      featured: featuredOnly,
+    }
+  );
   const materials = materialsPage.items;
 
   return (
@@ -43,6 +60,16 @@ export default async function MaterialsPage({ searchParams }: MaterialsPageProps
             com aplicacao direta no cotidiano.
           </Text>
         </div>
+
+        <CatalogFilters
+          clearHref="/materiais"
+          searchPlaceholder="Busque por ebook, checklist, impressao..."
+          defaultQuery={query}
+          defaultAudience={audience}
+          defaultFeatured={featuredOnly}
+          showAudience
+          showFeatured
+        />
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {materials.map((item, index) => {
@@ -65,12 +92,16 @@ export default async function MaterialsPage({ searchParams }: MaterialsPageProps
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-[2rem] text-[color:var(--argila)]">
-                      {item.type === 'EBOOK' ? '◇' : '✦'}
+                      {item.type === 'EBOOK' ? '\u25c7' : '\u2726'}
                     </div>
                   )}
                 </div>
                 <div className="flex flex-1 flex-col px-5 py-6 sm:px-6 sm:py-7 lg:px-7 lg:py-8">
-                  <Badge className="mb-5 w-fit">{item.type}</Badge>
+                  <div className="mb-5 flex flex-wrap gap-3">
+                    <Badge className="w-fit">{item.type}</Badge>
+                    {item.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
+                    {item.featured && <Badge variant="outline">Destaque</Badge>}
+                  </div>
                   <Heading as="h2" className="text-[1.35rem]">
                     {item.title}
                   </Heading>
@@ -84,15 +115,23 @@ export default async function MaterialsPage({ searchParams }: MaterialsPageProps
                         .format(item.price)
                         .replace('R$', '')}
                     </p>
-                    <LinkButton
+                    <TrackedLinkButton
                       href={action.href}
                       variant="outline"
                       size="sm"
                       target={action.external ? '_blank' : undefined}
                       rel={action.external ? 'noopener noreferrer' : undefined}
+                      analytics={{
+                        name: action.external ? 'cta_click' : 'product_click',
+                        source: ANALYTICS_SOURCES.PRODUCT_LIST,
+                        destination: action.href,
+                        productId: item.id,
+                        productSlug: item.slug,
+                        productTitle: item.title,
+                      }}
                     >
                       {action.label}
-                    </LinkButton>
+                    </TrackedLinkButton>
                   </div>
                 </div>
               </article>

@@ -45,10 +45,11 @@
 | Rate limit | Upstash Redis REST | 1.35.6 | Obrigatorio em producao para login |
 | Testes | Playwright | 1.58.2 | E2E |
 | Fontes | `next/font` | n/a | Playfair, Jost e Cormorant |
-| Icones | Material Symbols | n/a | Externo, preload + injecao client-side |
+| Icones | SVG local | n/a | `components/ui/Icon.tsx` |
 | Upload | API Next + Supabase Storage | n/a | Fallback local so fora de producao |
 | CTA por produto | configuracao persistida em banco | n/a | `ctaMode`, `ctaUrl`, `ctaLabel` |
-| Analytics | Nao implementado | n/a | BT-009 pendente |
+| Analytics | API route + Prisma | n/a | `AnalyticsEvent` em `/api/track` |
+| Leads | Server Action + Prisma | n/a | `Lead` persistido no contato |
 
 ### 1.3 Diagrama de Arquitetura
 
@@ -66,12 +67,17 @@ flowchart TD
     DATA --> PRISMA["Prisma"]
     ACT --> PRISMA
     PRISMA --> DB["Supabase / PostgreSQL"]
+    PUB --> TRACK["/api/track"]
+    TRACK --> PRISMA
     ACT --> UP["/api/upload"]
     UP --> ST["upload-storage"]
     ST --> SUPA["Supabase Storage"]
+    PUB --> LEAD["LeadCaptureForm"]
+    LEAD --> ACT
     PUB --> WA["WhatsApp intents"]
     PUB --> EXT["Links externos de conversao"]
     PUB --> IMG["next/image"]
+    PUB --> SEO["JSON-LD Product / Article / FAQPage"]
 ```
 
 ---
@@ -97,6 +103,7 @@ components/
   features/products/
 lib/
   actions/
+  analytics/
   contact/
   core/
   data/
@@ -141,10 +148,10 @@ docs/
 - **Localizacao:** `components/shared/navigation/Navbar.tsx`, `MobileNav.tsx`
 - **Descricao:** navbar sticky com CTA principal e acesso ao admin.
 - **Problema identificado:** `Material Symbols` ainda depende de recurso externo.
-- **Sugestao de melhoria:** migrar icones para bundle local.
+- **Sugestao de melhoria:** manter telemetria de navegacao e revisar densidade de links em mobile.
 
 **Acoes para este componente**
-- Medir navegacao por breakpoint quando analytics existir.
+- Acompanhar navegacao por breakpoint usando os eventos ja persistidos.
 
 ### 3.2 Hero Section
 - **Localizacao:** `components/features/home/HeroSection.tsx`
@@ -166,11 +173,11 @@ docs/
 ### 3.4 WhatsApp Buttons / Links
 - **Localizacao:** `components/shared/whatsapp/*`, `lib/contact/whatsapp-intents.ts`
 - **Descricao:** CTAs contextuais com fallback de abertura e camada unica de intents.
-- **Problema identificado:** sem analytics de clique.
-- **Sugestao de melhoria:** instrumentar no BT-009.
+- **Problema identificado:** requer acompanhamento continuo de desempenho de CTA por origem.
+- **Sugestao de melhoria:** revisar funil com base nos eventos persistidos.
 
 **Acoes para este componente**
-- Registrar clique e origem da CTA no futuro.
+- Revisar periodicamente clique e origem das CTAs no dashboard/admin.
 
 ### 3.5 Checklist Interativa
 - **Localizacao:** `components/features/checklist/*`
@@ -179,7 +186,7 @@ docs/
 - **Sugestao de melhoria:** medir taxa de conclusao.
 
 **Acoes para este componente**
-- Instrumentar eventos quando analytics entrar.
+- Revisar eventos de conclusao quando o time quiser aprofundar o funil da checklist.
 
 ### 3.6 Admin / Upload / CRUD
 - **Localizacao:** `app/(admin)/admin/*`, `components/features/admin/*`, `lib/actions/admin-crud.ts`
@@ -216,17 +223,33 @@ docs/
 - **Configuracao:** `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
 - **Observacao:** em producao e obrigatorio para login
 
-### 4.3 WhatsApp
+### 4.3 Analytics interno
+- **Tipo:** telemetria comercial
+- **Implementacao:** wrappers client-side + API route + persistencia Prisma
+- **Localizacao no codigo:** `components/analytics/*`, `app/api/track/route.ts`, `lib/analytics/*`
+- **Dados coletados/enviados:** tipo de evento, origem, rota, slug, produto, destino e metadados limitados
+- **Dependencias de configuracao:** banco acessivel e schema atualizado
+- **Risco:** crescimento da tabela `AnalyticsEvent` sem agregacao futura
+
+### 4.4 Lead capture
+- **Tipo:** formulario / captura de lead
+- **Implementacao:** Server Action + persistencia Prisma
+- **Localizacao no codigo:** `components/features/contact/LeadCaptureForm.tsx`, `lib/actions/lead-capture.ts`
+- **Dados coletados/enviados:** nome, email, telefone opcional, interesse e mensagem
+- **Dependencias de configuracao:** banco acessivel
+- **Risco:** ainda sem integracao automatica com CRM externo
+
+### 4.5 WhatsApp
 - **Tipo:** conversao
 - **Implementacao:** deep link `wa.me` / `api.whatsapp.com`
 
-### 4.4 Links externos por produto
+### 4.6 Links externos por produto
 - **Tipo:** conversao / checkout externo
 - **Implementacao:** configuracao persistida no `Product`
 
-### 4.5 Material Symbols
+### 4.7 Sistema de icones local
 - **Tipo:** icones
-- **Implementacao:** preload + stylesheet injetada em client component
+- **Implementacao:** SVG inline via `components/ui/Icon.tsx`
 - **Risco:** dependencia residual de CDN
 
 ---
@@ -285,23 +308,22 @@ docs/
 
 ### 7.1 Criticos - Resolver Imediatamente
 
-#### 7.1.1 Analytics de conversao ainda inexistente
-- **Problema:** nao ha telemetria para CTA, WhatsApp e links externos.
-- **Impacto:** o produto opera sem visibilidade de conversao.
-- **Solucao recomendada:** executar BT-009.
-
-#### 7.1.2 Credencial sensivel do Supabase permanece pendencia operacional
+#### 7.1.1 Credencial sensivel do Supabase permanece pendencia operacional
 - **Problema:** a seguranca definitiva desse ponto depende de operacao externa.
 - **Impacto:** risco residual na camada de storage.
 - **Solucao recomendada:** rotacao operacional da credencial.
 
 ### 7.2 Importantes - Resolver em Breve
 
-#### 7.2.1 Material Symbols ainda depende de CDN
-- **Solucao recomendada:** migrar para bundle local.
+#### 7.2.1 Dashboard comercial ainda usa agregacao simples
+- **Problema:** metricas comerciais atuais usam agregacao leve em memoria e sem filtro temporal.
+- **Impacto:** limita a leitura de desempenho quando o volume de eventos crescer.
+- **Solucao recomendada:** evoluir para consultas agregadas e filtros por periodo.
 
-#### 7.2.2 Featured comercial ainda e fixo por indice
-- **Solucao recomendada:** tornar configuravel.
+#### 7.2.2 Leads ainda nao integram com CRM externo
+- **Problema:** os contatos sao persistidos, mas o repasse comercial ainda e manual.
+- **Impacto:** operacao comercial menos eficiente.
+- **Solucao recomendada:** integrar com CRM, webhook ou automacao de email.
 
 ---
 
@@ -311,7 +333,6 @@ docs/
 
 | Tarefa | Area | Esforco | Impacto | Responsavel sugerido |
 |---|---|---|---|---|
-| Implementar analytics de conversao | Growth | Medio | Alto | Full-stack |
 | Rotacionar credencial sensivel do Supabase | Infra | Baixo | Alto | Operacao / Owner |
 | QA manual recorrente em rotas criticas | QA | Baixo | Medio | Frontend / QA |
 
@@ -319,16 +340,16 @@ docs/
 
 | Tarefa | Area | Esforco | Impacto | Responsavel sugerido |
 |---|---|---|---|---|
-| Migrar icones para bundle local | Performance | Baixo | Medio | Frontend |
-| Featured comercial configuravel | Conteudo | Baixo | Medio | Full-stack |
-| Schema estruturado adicional | SEO | Medio | Medio | Frontend / Full-stack |
+| Definir regra editorial final para `featured` e `bestSeller` | Conteudo | Baixo | Medio | Full-stack |
+| Integrar leads com CRM ou automacao | Comercial | Medio | Alto | Full-stack |
+| QA visual automatizado de home/admin | QA | Medio | Medio | Frontend / QA |
 
 ### 8.3 Fase 3 - Escala (90-180 dias)
 
 | Tarefa | Area | Esforco | Impacto | Responsavel sugerido |
 |---|---|---|---|---|
-| Dashboard comercial no admin | Produto | Medio | Alto | Full-stack |
-| CRM ou formulario estruturado | Produto | Medio | Medio | Full-stack |
+| Evoluir dashboard comercial com recorte temporal | Produto | Medio | Alto | Full-stack |
+| Agregacao e retencao de `AnalyticsEvent` | Dados | Alto | Alto | Backend |
 | Lighthouse / acessibilidade automatizada | Qualidade | Medio | Medio | QA / Frontend |
 
 ---
@@ -342,6 +363,7 @@ docs/
 - fontes: `app/layout.tsx` via `next/font`
 - WhatsApp: `lib/contact/whatsapp-intents.ts`
 - CTA de produto: `lib/core/product-cta.ts`
+- manual operacional do painel: `docs/MANUAL_ADMIN_PLATAFORMA.md`
 
 ```bash
 npm.cmd run lint
@@ -378,7 +400,7 @@ npm.cmd run test:e2e
 - Playfair Display
 - Jost
 - Cormorant Garamond
-- Material Symbols
+- Icon system local (`components/ui/Icon.tsx`)
 
 ### 10.3 Animacoes Catalogadas
 - `fade-up`
@@ -407,6 +429,7 @@ npm.cmd run test:e2e
 | 1.1 | 11/03/2026 | Codex AI | Documento atualizado apos execucao do backlog BT-001 a BT-010 |
 | 1.2 | 11/03/2026 | Codex AI | Documento atualizado com CTA por produto configuravel |
 | 1.3 | 12/03/2026 | Codex AI | Documento atualizado para refletir seguranca endurecida, fallback de migrations, intent layer de WhatsApp, favicon, cache explicito e estado real de producao |
+| 1.4 | 12/03/2026 | Codex AI | Documento atualizado para refletir analytics, leads, dashboard comercial, filtros, flags e icones locais |
 
 ---
 
@@ -418,6 +441,6 @@ npm.cmd run test:e2e
 - a base tecnica esta estavel e mais limpa;
 - itens centrais ja resolvidos: CSP, auth, storage em producao, rate limit em producao, pipeline de imagem, componentizacao da home, cache de identidade, intents de contato e padronizacao do admin;
 - os riscos remanescentes estao concentrados em:
-  - analytics inexistente;
-  - dependencia residual de icones externos;
-  - pendencia operacional de credencial sensivel do Supabase.
+  - pendencia operacional de credencial sensivel do Supabase;
+  - dashboard comercial ainda sem agregacao/recorte temporal;
+  - leads ainda sem integracao com CRM externo.

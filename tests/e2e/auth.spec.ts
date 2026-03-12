@@ -93,7 +93,14 @@ test.describe('Admin Authentication Flow', () => {
     const logoutButton = page.getByRole('button', { name: /sair|logout/i })
       .or(page.getByRole('link', { name: /sair|logout/i }));
 
-    await logoutButton.click();
+    await logoutButton.evaluate((button) => {
+      const form = (button as HTMLButtonElement).form;
+      if (!form) {
+        throw new Error('Logout form not found');
+      }
+
+      form.requestSubmit();
+    });
 
     await expect(page).toHaveURL(/\/admin\/login/);
 

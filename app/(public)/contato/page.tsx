@@ -4,7 +4,10 @@ import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui/Icon';
+import { LeadCaptureForm } from '@/components/features/contact/LeadCaptureForm';
 import { WhatsAppButton } from '@/components/shared/whatsapp/WhatsAppButton';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import { getSiteConfigs, getWhatsAppConfig } from '@/lib/data/config';
 import { BRAND } from '@/lib/core/constants';
 
@@ -46,7 +49,7 @@ export default async function ContactPage() {
               <div className="mt-8 space-y-5 sm:mt-10 sm:space-y-6">
                 <div className="flex items-start gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:px-5 sm:py-5">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[color:var(--argila)]">
-                    <span className="material-symbols-outlined !text-[18px]">mail</span>
+                    <Icon name="mail" className="!text-[18px]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">Email</p>
@@ -56,7 +59,7 @@ export default async function ContactPage() {
 
                 <div className="flex items-start gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:px-5 sm:py-5">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[color:var(--argila)]">
-                    <span className="material-symbols-outlined !text-[18px]">alternate_email</span>
+                    <Icon name="alternate_email" className="!text-[18px]" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">Instagram</p>
@@ -90,12 +93,15 @@ export default async function ContactPage() {
                   label="Chamar no WhatsApp"
                   className="w-full"
                   size="lg"
+                  analyticsSource={ANALYTICS_SOURCES.CONTACT_PAGE}
                 />
               </div>
 
               <p className="mt-6 text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                 Atendimento em horario comercial
               </p>
+
+              <LeadCaptureForm />
             </div>
           </div>
         </div>

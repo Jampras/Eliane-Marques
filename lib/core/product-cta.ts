@@ -46,6 +46,7 @@ export function getProductCta(product: ProductCtaInput, waConfig: WhatsAppConfig
 
   if (ctaMode === 'EXTERNAL' && trimmedExternalUrl) {
     return {
+      kind: 'external' as const,
       href: trimmedExternalUrl,
       label,
       external: /^https?:\/\//i.test(trimmedExternalUrl),
@@ -53,6 +54,7 @@ export function getProductCta(product: ProductCtaInput, waConfig: WhatsAppConfig
   }
 
   return {
+    kind: 'whatsapp' as const,
     href: buildProductInquiryWhatsAppUrl({
       number: waConfig.number,
       template:
@@ -61,6 +63,6 @@ export function getProductCta(product: ProductCtaInput, waConfig: WhatsAppConfig
       productTitle: product.title,
     }),
     label,
-    external: true,
+    external: false,
   };
 }

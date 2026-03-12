@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
+import { Icon, type IconName } from '@/components/ui/Icon';
 import { logoutAction } from '@/lib/actions/admin-auth';
 import { adminMenuItems } from './adminMenuItems';
 
@@ -46,22 +47,25 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ currentPath: propPat
               (item.href !== '/admin' && currentPath?.startsWith(item.href))) && (
               <span className="bg-primary absolute top-0 bottom-0 left-0 w-1 shadow-[0_0_15px_rgba(0,0,0,0.15)]" />
             )}
-            <span className="material-symbols-outlined shrink-0 !text-[20px] opacity-70 transition-opacity group-hover:opacity-100">
-              {item.icon}
-            </span>
+            <Icon
+              name={item.icon as IconName}
+              className="shrink-0 !text-[20px] opacity-70 transition-opacity group-hover:opacity-100"
+            />
             <span className="truncate">{item.label}</span>
           </Link>
         ))}
       </nav>
 
       <div className="border-t border-border p-6">
-        <button
-          onClick={() => logoutAction()}
-          className="flex w-full items-center justify-center gap-3 rounded-sm border border-red-500/10 px-6 py-4 text-[10px] font-bold tracking-[0.2em] text-red-500/70 uppercase transition-all hover:bg-red-500/5 hover:text-red-500"
-        >
-          <span className="material-symbols-outlined !text-[18px]">logout</span>
-          Sair
-        </button>
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            className="flex w-full items-center justify-center gap-3 rounded-sm border border-red-500/10 px-6 py-4 text-[10px] font-bold tracking-[0.2em] text-red-500/70 uppercase transition-all hover:bg-red-500/5 hover:text-red-500"
+          >
+            <Icon name="logout" className="!text-[18px]" />
+            Sair
+          </button>
+        </form>
       </div>
     </aside>
   );

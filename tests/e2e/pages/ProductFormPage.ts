@@ -10,6 +10,12 @@ export interface ProductFormData {
   audience?: string;
   coverImage?: string;
   active?: boolean;
+  ctaMode?: 'WHATSAPP' | 'EXTERNAL';
+  ctaUrl?: string;
+  ctaLabel?: string;
+  whatsappMessageTemplate?: string;
+  featured?: boolean;
+  bestSeller?: boolean;
 }
 
 export class ProductFormPage {
@@ -22,6 +28,12 @@ export class ProductFormPage {
   readonly typeSelect: Locator;
   readonly audienceSelect: Locator;
   readonly coverImageInput: Locator;
+  readonly ctaModeSelect: Locator;
+  readonly ctaUrlInput: Locator;
+  readonly ctaLabelInput: Locator;
+  readonly whatsappMessageTemplateInput: Locator;
+  readonly featuredCheckbox: Locator;
+  readonly bestSellerCheckbox: Locator;
   readonly activeCheckbox: Locator;
   readonly saveButton: Locator;
   readonly deleteButton: Locator;
@@ -36,6 +48,12 @@ export class ProductFormPage {
     this.typeSelect = page.locator('select[name="type"]');
     this.audienceSelect = page.locator('select[name="audience"]');
     this.coverImageInput = page.locator('input[name="coverImage"]');
+    this.ctaModeSelect = page.locator('select[name="ctaMode"]');
+    this.ctaUrlInput = page.locator('input[name="ctaUrl"]');
+    this.ctaLabelInput = page.locator('input[name="ctaLabel"]');
+    this.whatsappMessageTemplateInput = page.locator('input[name="whatsappMessageTemplate"]');
+    this.featuredCheckbox = page.locator('input[name="featured"]');
+    this.bestSellerCheckbox = page.locator('input[name="bestSeller"]');
     this.activeCheckbox = page.locator('input[name="active"]');
     this.saveButton = page.getByRole('button', { name: /Salvar/i });
     this.deleteButton = page.getByRole('button', { name: /Excluir Produto/i });
@@ -62,6 +80,30 @@ export class ProductFormPage {
 
     if (data.coverImage) {
       await this.coverImageInput.fill(data.coverImage);
+    }
+
+    if (data.ctaMode) {
+      await this.ctaModeSelect.selectOption(data.ctaMode);
+    }
+
+    if (data.ctaLabel !== undefined) {
+      await this.ctaLabelInput.fill(data.ctaLabel);
+    }
+
+    if (data.ctaUrl !== undefined) {
+      await this.ctaUrlInput.fill(data.ctaUrl);
+    }
+
+    if (data.whatsappMessageTemplate !== undefined) {
+      await this.whatsappMessageTemplateInput.fill(data.whatsappMessageTemplate);
+    }
+
+    if (data.featured) {
+      await this.featuredCheckbox.check();
+    }
+
+    if (data.bestSeller) {
+      await this.bestSellerCheckbox.check();
     }
   }
 

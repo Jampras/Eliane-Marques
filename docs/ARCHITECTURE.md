@@ -24,12 +24,16 @@ flowchart TD
     DATA --> PRISMA["Prisma"]
     ACT --> PRISMA
     PRISMA --> DB["PostgreSQL / Supabase"]
+    PUB --> TRACK["/api/track"]
+    TRACK --> PRISMA
+    PUB --> LEAD["Lead capture form"]
+    LEAD --> ACT
     ACT --> UP["/api/upload"]
     UP --> STORAGE["upload-storage"]
     STORAGE --> SUPA["Supabase Storage"]
-    STORAGE --> LOCAL["public/uploads (dev only)"]
     PUB --> WA["WhatsApp intents"]
     PUB --> EXT["Links externos de conversao"]
+    PUB --> SEO["JSON-LD Product / Article / FAQPage"]
 ```
 
 ## 2. Camadas da Aplicacao
@@ -37,8 +41,9 @@ flowchart TD
 ### Frontend
 - `app/(public)` contem as rotas publicas
 - `components/ui` concentra o design system
-- `components/shared` contem navegacao, WhatsApp e a carga de Material Symbols
+- `components/shared` contem navegacao e componentes de contato
 - `components/features/home` contem as secoes da home
+- `components/analytics` contem wrappers de tracking
 
 ### Backoffice
 - `app/(admin)/admin` contem login, dashboard e CRUD
@@ -50,6 +55,7 @@ flowchart TD
 - `safeDataQuery` trata falhas com fallback controlado
 - `getSiteConfigs()` usa `unstable_cache`
 - `getSiteIdentity()` usa `cache`
+- listagens publicas aceitam filtros por query string
 
 ### Mutacoes
 - `lib/actions/admin-crud.ts` centraliza upsert/delete de produto, post e checklist
@@ -58,6 +64,14 @@ flowchart TD
   - `ctaMode`
   - `ctaUrl`
   - `ctaLabel`
+  - `featured`
+  - `bestSeller`
+
+### Analytics e leads
+- eventos de conversao entram por `app/api/track/route.ts`
+- persistencia em `AnalyticsEvent`
+- formulario alternativo de contato persiste em `Lead`
+- dashboard admin consome eventos e leads recentes
 
 ### Midia
 - upload autenticado em `app/api/upload/route.ts`
@@ -156,7 +170,16 @@ Fluxo:
 
 ### 4.7 Tipografia e icones
 - fontes principais em `next/font`
-- `Material Symbols` continua externa, mas agora usa preload + injecao client-side
+- icones locais em SVG via `components/ui/Icon.tsx`
+
+### 4.8 Telemetria comercial
+- tracking client-side centralizado em `lib/analytics/client.ts`
+- ingestao server-side em `lib/analytics/server.ts`
+- componentes tracked em `components/analytics/*`
+
+### 4.9 SEO estruturado
+- `lib/seo/schema.ts` centraliza geracao de JSON-LD
+- `components/seo/StructuredDataScript.tsx` injeta scripts com nonce
 
 ## 5. Riscos Arquiteturais Atuais
 
@@ -165,8 +188,8 @@ Fluxo:
 - build continua dependente de banco acessivel
 
 ### Importantes
-- analytics ainda nao existe
-- `Material Symbols` ainda depende de CDN
+- a credencial sensivel do Supabase segue como pendencia operacional se nao for rotacionada
+- build e testes E2E seguem dependentes de banco acessivel e browser instalado
 
 ## 6. Regras de Evolucao
 - manter Server Components por padrao
@@ -190,7 +213,14 @@ Resolvido na rodada recente:
 - intents de WhatsApp centralizadas
 - cache explicito de identidade do site
 - CTA por produto configuravel no admin
+- busca e filtros nas listagens
+- flags comerciais por produto
+- analytics de conversao
+- dashboard comercial
+- captura alternativa de lead
+- schemas estruturados de SEO
+- migracao de icones para bundle local
 
 Pendente:
-- analytics de conversao
-- eventual migracao de icones para bundle local
+- rotacao da credencial sensivel do Supabase
+- ampliar cobertura de QA visual se o time quiser regressao visual automatizada

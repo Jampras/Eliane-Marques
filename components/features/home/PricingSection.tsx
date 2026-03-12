@@ -2,8 +2,10 @@ import type { CSSProperties } from 'react';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
+import { Badge } from '@/components/ui/Badge';
 import { WhatsAppLink } from '@/components/shared/whatsapp/WhatsAppLink';
 import { buildPricingInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import type { Service } from '@/lib/core/types';
 
 interface PricingSectionProps {
@@ -29,6 +31,8 @@ function extractPrice(price: string) {
 }
 
 export function PricingSection({ services, waConfig }: PricingSectionProps) {
+  const fallbackFeatured = services.findIndex((service) => service.featured || service.bestSeller) === -1 ? 1 : -1;
+
   return (
     <Section
       id="investimentos"
@@ -52,7 +56,8 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service, index) => {
-            const featured = index === 1;
+            const featured =
+              service.bestSeller || service.featured || index === fallbackFeatured;
             const pricing = extractPrice(service.price);
             const waUrl = buildPricingInquiryWhatsAppUrl({
               number: waConfig?.number,
@@ -71,7 +76,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
               >
                 {featured && (
                   <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-[color:var(--mel)] px-[18px] py-[5px] text-[9px] uppercase tracking-[0.18em] text-[color:var(--espresso)]">
-                    ✦ Mais procurado ✦
+                    {'\u2726'} Mais procurado {'\u2726'}
                   </div>
                 )}
 
@@ -98,6 +103,11 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                   {service.desc}
                 </p>
 
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {service.featured && <Badge variant="outline">Destaque</Badge>}
+                  {service.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
+                </div>
+
                 <div className="mt-8">
                   {pricing.prefix && (
                     <p className="mb-2 text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
@@ -115,7 +125,12 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                 </div>
 
                 <div className="mt-8 pt-6">
-                  <WhatsAppLink href={waUrl} className="inline-flex w-full sm:w-auto">
+                  <WhatsAppLink
+                    href={waUrl}
+                    analyticsSource={ANALYTICS_SOURCES.HOME_PRICING}
+                    productTitle={service.title}
+                    className="inline-flex w-full sm:w-auto"
+                  >
                     <span
                       className={`inline-flex w-full justify-center rounded-[1px] border px-5 py-3 text-[9px] uppercase tracking-[0.18em] transition-colors sm:w-auto ${
                         featured

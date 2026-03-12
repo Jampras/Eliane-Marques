@@ -3,6 +3,7 @@ import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading } from '@/components/ui/Typography';
 import { WhatsAppButton } from '@/components/shared/whatsapp/WhatsAppButton';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 interface FinalCtaSectionProps {
   waConfig: { number: string; defaultMessage: string };
@@ -36,6 +37,7 @@ export function FinalCtaSection({ waConfig }: FinalCtaSectionProps) {
               label="Quero garantir minha vaga"
               className="!border-[color:var(--argila)] !bg-[color:var(--argila)] !text-[color:var(--aveia)] hover:!bg-[color:var(--cacau)]"
               size="lg"
+              analyticsSource={ANALYTICS_SOURCES.HOME_PRICING}
             />
           </div>
         </div>

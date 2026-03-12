@@ -1,9 +1,10 @@
 import type { CSSProperties } from 'react';
-import Link from 'next/link';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Heading, Text } from '@/components/ui/Typography';
+import { TrackedLink } from '@/components/analytics/TrackedLink';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import type { Service } from '@/lib/core/types';
 
 interface ServicesSectionProps {
@@ -21,6 +22,8 @@ function inferCategory(title: string) {
 }
 
 export function ServicesSection({ services }: ServicesSectionProps) {
+  const fallbackFeatured = services.findIndex((service) => service.featured) === -1 ? 1 : -1;
+
   return (
     <Section className="bg-[color:var(--aveia)]">
       <Container>
@@ -41,7 +44,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service, index) => {
-            const featured = index === 1;
+            const featured = service.featured || index === fallbackFeatured;
 
             return (
               <article
@@ -62,9 +65,12 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[15px] text-[color:var(--argila)]">
                     {ornaments[index] ?? '\u2726'}
                   </span>
-                  <span className="text-[9px] uppercase tracking-[0.2em] text-[color:var(--taupe)]">
-                    {inferCategory(service.title)}
-                  </span>
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-[color:var(--taupe)]">
+                      {inferCategory(service.title)}
+                    </span>
+                    {service.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
+                  </div>
                 </div>
 
                 <Heading as="h3" className="text-[1.1rem] text-[color:var(--espresso)]">
@@ -76,12 +82,19 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                   <span className="inline-flex rounded-full bg-[color:var(--creme-rosa)] px-4 py-1 text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
                     {inferCategory(service.title)}
                   </span>
-                  <Link
+                  <TrackedLink
                     href="#investimentos"
+                    analytics={{
+                      name: 'cta_click',
+                      source: ANALYTICS_SOURCES.HOME_SERVICES,
+                      destination: '#investimentos',
+                      productSlug: service.slug,
+                      productTitle: service.title,
+                    }}
                     className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[color:var(--argila)] transition-colors hover:text-[color:var(--cacau)]"
                   >
                     Ver valores <span aria-hidden="true">&rarr;</span>
-                  </Link>
+                  </TrackedLink>
                 </div>
               </article>
             );

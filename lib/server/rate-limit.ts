@@ -16,6 +16,10 @@ const redis =
     ? Redis.fromEnv()
     : null;
 
+function isRateLimitBypassedForTests() {
+  return process.env.E2E_DISABLE_RATE_LIMIT === 'true';
+}
+
 function blockKey(key: string) {
   return `${key}:blocked_until`;
 }
@@ -148,6 +152,10 @@ function clearMemoryFailures(key: string) {
 }
 
 export async function getLoginBlockRemainingMs(key: string) {
+  if (isRateLimitBypassedForTests()) {
+    return 0;
+  }
+
   if (!redis) {
     return getMemoryBlockRemainingMs(key);
   }
@@ -161,6 +169,10 @@ export async function getLoginBlockRemainingMs(key: string) {
 }
 
 export async function registerLoginFailure(key: string) {
+  if (isRateLimitBypassedForTests()) {
+    return;
+  }
+
   if (!redis) {
     registerMemoryFailure(key);
     return;
@@ -175,6 +187,10 @@ export async function registerLoginFailure(key: string) {
 }
 
 export async function clearLoginFailures(key: string) {
+  if (isRateLimitBypassedForTests()) {
+    return;
+  }
+
   if (!redis) {
     clearMemoryFailures(key);
     return;

@@ -1,4 +1,5 @@
 import { test, expect } from './fixtures/auth';
+import prisma from '@/lib/core/prisma';
 import { AdminProductsPage } from './pages/AdminProductsPage';
 import { ProductFormPage, type ProductFormData } from './pages/ProductFormPage';
 
@@ -12,6 +13,46 @@ const testProduct: ProductFormData = {
   price: '199.90',
   type: 'CURSO',
   audience: 'AMBOS',
+};
+
+const externalCtaProduct: ProductFormData = {
+  title: `Produto CTA Externo ${timestamp}`,
+  slug: `produto-cta-externo-${timestamp}`,
+  shortDesc: 'Produto com CTA externo para validar checkout em listagem e detalhe.',
+  longDesc: 'Produto de teste com CTA externo configurado no admin.',
+  price: '247.00',
+  type: 'CURSO',
+  audience: 'AMBOS',
+  ctaMode: 'EXTERNAL',
+  ctaUrl: 'https://example.com/checkout-hotmart',
+  ctaLabel: 'Comprar agora',
+  featured: true,
+};
+
+const fallbackCtaProduct: ProductFormData = {
+  title: `Produto CTA Fallback ${timestamp}`,
+  slug: `produto-cta-fallback-${timestamp}`,
+  shortDesc: 'Produto com CTA externo sem URL para validar fallback seguro.',
+  longDesc: 'Produto de teste para fallback seguro.',
+  price: '137.00',
+  type: 'CURSO',
+  audience: 'AMBOS',
+  ctaMode: 'EXTERNAL',
+  ctaUrl: '',
+  ctaLabel: 'Ver detalhes',
+};
+
+const whatsAppCtaProduct: ProductFormData = {
+  title: `Produto CTA WhatsApp ${timestamp}`,
+  slug: `produto-cta-whatsapp-${timestamp}`,
+  shortDesc: 'Produto com CTA via WhatsApp para validar abertura do canal.',
+  longDesc: 'Produto de teste com CTA via WhatsApp.',
+  price: '187.00',
+  type: 'CURSO',
+  audience: 'AMBOS',
+  ctaMode: 'WHATSAPP',
+  whatsappMessageTemplate: 'Ola! Quero detalhes sobre {productTitle}.',
+  ctaLabel: 'Falar com Eliane',
 };
 
 /**
@@ -116,5 +157,104 @@ test.describe('Product CRUD (admin)', () => {
 
     // The product should no longer be in the table
     await expectProductNotInTable(adminPage, testProduct.title);
+  });
+
+  test('external CTA product opens configured checkout link', async ({ adminPage }) => {
+    const productsPage = new AdminProductsPage(adminPage);
+    await productsPage.goto();
+    await productsPage.clickNewProduct();
+    await adminPage.waitForURL('**/admin/produtos/novo');
+
+    const formPage = new ProductFormPage(adminPage);
+    await formPage.fillForm(externalCtaProduct);
+    await formPage.submit();
+    await adminPage.waitForURL('**/admin/produtos', { timeout: 15_000 });
+
+    await adminPage.goto(`/cursos/${externalCtaProduct.slug}`);
+    await adminPage.waitForLoadState('networkidle');
+
+    const externalLink = adminPage.getByRole('link', { name: /comprar agora/i });
+    await expect(externalLink).toBeVisible();
+    await expect(externalLink).toHaveAttribute('href', externalCtaProduct.ctaUrl!);
+  });
+
+  test('whatsapp CTA product opens wa.me on detail page', async ({ adminPage }) => {
+    const productsPage = new AdminProductsPage(adminPage);
+    await productsPage.goto();
+    await productsPage.clickNewProduct();
+    await adminPage.waitForURL('**/admin/produtos/novo');
+
+    const formPage = new ProductFormPage(adminPage);
+    await formPage.fillForm(whatsAppCtaProduct);
+    await formPage.submit();
+    await adminPage.waitForURL('**/admin/produtos', { timeout: 15_000 });
+
+    await adminPage.addInitScript(() => {
+      window.open = (url?: string | URL) => {
+        (window as unknown as Record<string, string>).__capturedPopupUrl =
+          typeof url === 'string' ? url : url?.toString() ?? '';
+        return null;
+      };
+    });
+
+    await adminPage.goto(`/cursos/${whatsAppCtaProduct.slug}`);
+    await adminPage.waitForLoadState('networkidle');
+    await adminPage
+      .locator('section')
+      .first()
+      .getByRole('button', { name: /whatsapp|falar/i })
+      .first()
+      .click();
+
+    const capturedUrl = await adminPage.evaluate(
+      () => (window as unknown as Record<string, string>).__capturedPopupUrl ?? ''
+    );
+
+    expect(capturedUrl).toMatch(/wa\.me/);
+    expect(decodeURIComponent(capturedUrl)).toContain(whatsAppCtaProduct.title);
+  });
+
+  test('external CTA without URL falls back to internal detail route on listing', async ({ adminPage }) => {
+    const productsPage = new AdminProductsPage(adminPage);
+    await productsPage.goto();
+    await productsPage.clickNewProduct();
+    await adminPage.waitForURL('**/admin/produtos/novo');
+
+    const formPage = new ProductFormPage(adminPage);
+    await formPage.fillForm(fallbackCtaProduct);
+    await formPage.submit();
+    await adminPage.waitForURL('**/admin/produtos', { timeout: 15_000 });
+
+    await adminPage.goto('/cursos');
+    await adminPage.waitForLoadState('networkidle');
+
+    const card = adminPage.locator('article').filter({
+      has: adminPage.getByText(fallbackCtaProduct.title),
+    });
+    await expect(card).toBeVisible();
+    await expect(card.getByRole('link', { name: /ver detalhes/i })).toHaveAttribute(
+      'href',
+      `/cursos/${fallbackCtaProduct.slug}`
+    );
+  });
+
+  test('delete CTA configuration products', async ({ adminPage }) => {
+    await prisma.product.deleteMany({
+      where: {
+        slug: {
+          in: [
+            externalCtaProduct.slug,
+            whatsAppCtaProduct.slug,
+            fallbackCtaProduct.slug,
+          ],
+        },
+      },
+    });
+
+    const productsPage = new AdminProductsPage(adminPage);
+    await productsPage.goto();
+    await expect(adminPage.getByText(externalCtaProduct.title)).not.toBeVisible();
+    await expect(adminPage.getByText(whatsAppCtaProduct.title)).not.toBeVisible();
+    await expect(adminPage.getByText(fallbackCtaProduct.title)).not.toBeVisible();
   });
 });

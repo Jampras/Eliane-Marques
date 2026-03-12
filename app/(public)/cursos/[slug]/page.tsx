@@ -3,9 +3,11 @@ export const revalidate = 300;
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProductDetailView } from '@/components/features/products/ProductDetailView';
+import { StructuredDataScript } from '@/components/seo/StructuredDataScript';
 import { getProductDetailPath } from '@/lib/core/product-paths';
 import { getWhatsAppConfig } from '@/lib/data/config';
 import { getProductBySlug } from '@/lib/data/products';
+import { buildProductJsonLd } from '@/lib/seo/schema';
 
 type CoursePageProps = { params: Promise<{ slug: string }> };
 
@@ -39,5 +41,18 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
     notFound();
   }
 
-  return <ProductDetailView product={product} waConfig={waConfig} />;
+  return (
+    <>
+      <StructuredDataScript
+        data={buildProductJsonLd({
+          name: product.title,
+          description: product.shortDesc,
+          path: getProductDetailPath(product.type, product.slug),
+          image: product.coverImage,
+          price: product.price,
+        })}
+      />
+      <ProductDetailView product={product} waConfig={waConfig} />
+    </>
+  );
 }

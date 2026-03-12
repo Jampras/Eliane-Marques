@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { upsertChecklist, deleteChecklist } from '@/lib/actions/admin-crud';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
 import { Heading } from '@/components/ui/Typography';
 import { DeleteConfirmButton } from '@/components/features/admin/DeleteConfirmButton';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
@@ -174,7 +175,7 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
                     disabled={index === 0}
                     className="text-text-secondary hover:text-primary disabled:opacity-20"
                   >
-                    <span className="material-symbols-outlined">expand_less</span>
+                    <Icon name="expand_less" />
                   </button>
                   <button
                     type="button"
@@ -182,7 +183,7 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
                     disabled={index === items.length - 1}
                     className="text-text-secondary hover:text-primary disabled:opacity-20"
                   >
-                    <span className="material-symbols-outlined">expand_more</span>
+                    <Icon name="expand_more" />
                   </button>
                 </div>
                 <div className="grid flex-grow grid-cols-1 gap-4 md:grid-cols-2">
@@ -204,7 +205,7 @@ export default function ChecklistForm({ checklist }: ChecklistFormProps) {
                   onClick={() => removeItem(index)}
                   className="self-end text-red-500 hover:text-red-400 sm:mt-4 sm:self-auto"
                 >
-                  <span className="material-symbols-outlined">delete</span>
+                  <Icon name="delete" />
                 </button>
               </div>
             ))}

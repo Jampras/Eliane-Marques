@@ -2,8 +2,10 @@ import type { CSSProperties } from 'react';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
+import { StructuredDataScript } from '@/components/seo/StructuredDataScript';
+import { buildFaqJsonLd } from '@/lib/seo/schema';
 
-const faqItems = [
+export const faqItems = [
   {
     question: 'Isso serve para quem esta comecando?',
     answer:
@@ -29,6 +31,7 @@ const faqItems = [
 export function FaqSection() {
   return (
     <Section variant="surface" className="border-y border-[color:var(--linho)]/70">
+      <StructuredDataScript data={buildFaqJsonLd(faqItems)} />
       <Container size="md">
         <div className="mx-auto mb-10 max-w-3xl text-center">
           <div className="atelier-overline justify-center">FAQ</div>

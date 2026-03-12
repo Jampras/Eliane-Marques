@@ -7,13 +7,15 @@ import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { PaginationNav } from '@/components/ui/PaginationNav';
-import { LinkButton } from '@/components/ui/LinkButton';
+import { CatalogFilters } from '@/components/features/catalog/CatalogFilters';
+import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
 import { WhatsAppLink } from '@/components/shared/whatsapp/WhatsAppLink';
-import { parsePageParam } from '@/lib/core/pagination';
+import { parsePageParam, parseQueryParam } from '@/lib/core/pagination';
 import { getPaginatedProductsByType } from '@/lib/data/products';
 import { getWhatsAppConfig } from '@/lib/data/config';
 import { shouldOptimizeImage } from '@/lib/core/images';
 import { getProductCta } from '@/lib/core/product-cta';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 export const metadata = {
   title: 'Servicos | Eliane Marques',
@@ -23,16 +25,28 @@ export const metadata = {
 const PAGE_SIZE = 4;
 
 type ServicesPageProps = {
-  searchParams?: Promise<{ page?: string }>;
+  searchParams?: Promise<{ page?: string; q?: string; audience?: string; featured?: string }>;
 };
 
 export default async function ServicesPage({ searchParams }: ServicesPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const currentPage = parsePageParam(resolvedSearchParams.page);
+  const query = parseQueryParam(resolvedSearchParams.q);
+  const audience = parseQueryParam(resolvedSearchParams.audience);
+  const featuredOnly = parseQueryParam(resolvedSearchParams.featured) === '1';
+
   const [servicesPage, wa] = await Promise.all([
-    getPaginatedProductsByType('CONSULTORIA', currentPage, PAGE_SIZE),
+    getPaginatedProductsByType('CONSULTORIA', currentPage, PAGE_SIZE, {
+      q: query,
+      audience:
+        audience === 'PESSOAS' || audience === 'EMPRESAS' || audience === 'AMBOS'
+          ? audience
+          : undefined,
+      featured: featuredOnly,
+    }),
     getWhatsAppConfig(),
   ]);
+
   const services = servicesPage.items;
 
   return (
@@ -48,6 +62,16 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
             narrativa e comportamento ao nivel de valor que ja carregam.
           </Text>
         </div>
+
+        <CatalogFilters
+          clearHref="/servicos"
+          searchPlaceholder="Busque por consultoria, presenca, imagem..."
+          defaultQuery={query}
+          defaultAudience={audience}
+          defaultFeatured={featuredOnly}
+          showAudience
+          showFeatured
+        />
 
         <div className="mt-10 grid grid-cols-1 gap-4 xl:grid-cols-2">
           {services.map((service, index) => {
@@ -73,7 +97,7 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-[2rem] text-[color:var(--argila)]">
-                        ✦
+                        {'\u2726'}
                       </div>
                     )}
                   </div>
@@ -81,7 +105,11 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
                   <div className="px-5 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-9">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <Badge className="mb-5">{service.audience || 'Consultoria privada'}</Badge>
+                        <div className="mb-5 flex flex-wrap items-center gap-3">
+                          <Badge>{service.audience || 'Consultoria privada'}</Badge>
+                          {service.bestSeller && <Badge variant="outline">Mais vendida</Badge>}
+                          {service.featured && <Badge variant="outline">Destaque</Badge>}
+                        </div>
                         <Heading as="h2" className="text-[1.6rem] lg:text-[1.9rem]">
                           {service.title}
                         </Heading>
@@ -90,7 +118,7 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
                         </Text>
                       </div>
                       <span className="hidden h-10 w-10 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[color:var(--argila)] lg:inline-flex">
-                        ✦
+                        {'\u2726'}
                       </span>
                     </div>
 
@@ -110,19 +138,32 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
                         </p>
                       </div>
 
-                      {cta.external ? (
-                        <LinkButton
+                      {cta.kind === 'external' ? (
+                        <TrackedLinkButton
                           href={cta.href}
                           variant="outline"
                           size="sm"
                           className="w-full sm:w-auto"
                           target="_blank"
                           rel="noopener noreferrer"
+                          analytics={{
+                            name: 'cta_click',
+                            source: ANALYTICS_SOURCES.PRODUCT_LIST,
+                            destination: cta.href,
+                            productId: service.id,
+                            productSlug: service.slug,
+                            productTitle: service.title,
+                          }}
                         >
                           {cta.label}
-                        </LinkButton>
+                        </TrackedLinkButton>
                       ) : (
-                        <WhatsAppLink href={cta.href} className="inline-flex w-full sm:w-auto">
+                        <WhatsAppLink
+                          href={cta.href}
+                          className="inline-flex w-full sm:w-auto"
+                          analyticsSource={ANALYTICS_SOURCES.PRODUCT_LIST}
+                          productTitle={service.title}
+                        >
                           <span className="inline-flex w-full justify-center rounded-[1px] border border-[color:var(--linho)] px-5 py-3 text-[9px] uppercase tracking-[0.18em] text-[color:var(--cacau)] transition-colors hover:border-[color:var(--argila)] hover:text-[color:var(--argila)] sm:w-auto">
                             {cta.label}
                           </span>

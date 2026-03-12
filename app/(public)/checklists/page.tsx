@@ -1,14 +1,16 @@
 export const revalidate = 300;
 
 import React from 'react';
-import Link from 'next/link';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { PaginationNav } from '@/components/ui/PaginationNav';
-import { parsePageParam } from '@/lib/core/pagination';
+import { CatalogFilters } from '@/components/features/catalog/CatalogFilters';
+import { TrackedLink } from '@/components/analytics/TrackedLink';
+import { parsePageParam, parseQueryParam } from '@/lib/core/pagination';
 import { getPaginatedChecklists } from '@/lib/data/checklists';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 export const metadata = {
   title: 'Checklists | Eliane Marques',
@@ -18,13 +20,14 @@ export const metadata = {
 const PAGE_SIZE = 6;
 
 type ChecklistsPageProps = {
-  searchParams?: Promise<{ page?: string }>;
+  searchParams?: Promise<{ page?: string; q?: string }>;
 };
 
 export default async function ChecklistsPage({ searchParams }: ChecklistsPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const currentPage = parsePageParam(resolvedSearchParams.page);
-  const checklistsPage = await getPaginatedChecklists(currentPage, PAGE_SIZE);
+  const query = parseQueryParam(resolvedSearchParams.q);
+  const checklistsPage = await getPaginatedChecklists(currentPage, PAGE_SIZE, query);
   const checklists = checklistsPage.items;
 
   return (
@@ -40,11 +43,28 @@ export default async function ChecklistsPage({ searchParams }: ChecklistsPagePro
           </Text>
         </div>
 
+        <CatalogFilters clearHref="/checklists" searchPlaceholder="Busque por checklist, reuniao, etiqueta..." defaultQuery={query} />
+
         <div className="mt-10 grid grid-cols-1 gap-4 xl:grid-cols-2">
           {checklists.map((checklist, index) => (
-            <Link key={checklist.id} href={`/checklists/${checklist.slug}`} className="fade-up block" style={{ '--delay': `${index * 0.08}s` } as React.CSSProperties}>
+            <TrackedLink
+              key={checklist.id}
+              href={`/checklists/${checklist.slug}`}
+              analytics={{
+                name: 'product_click',
+                source: ANALYTICS_SOURCES.PRODUCT_LIST,
+                destination: `/checklists/${checklist.slug}`,
+                productId: checklist.id,
+                productSlug: checklist.slug,
+                productTitle: checklist.title,
+              }}
+              className="fade-up block"
+              style={{ '--delay': `${index * 0.08}s` } as React.CSSProperties}
+            >
               <article className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-5 py-6 sm:px-6 sm:py-7 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-colors hover:border-[color:var(--argila)] lg:px-8 lg:py-9">
-                <Badge variant="outline" className="mb-5">{checklist._count.items} itens</Badge>
+                <Badge variant="outline" className="mb-5">
+                  {checklist._count.items} itens
+                </Badge>
                 <Heading as="h2" className="text-[1.6rem]">
                   {checklist.title}
                 </Heading>
@@ -55,7 +75,7 @@ export default async function ChecklistsPage({ searchParams }: ChecklistsPagePro
                   Abrir checklist
                 </div>
               </article>
-            </Link>
+            </TrackedLink>
           ))}
         </div>
 

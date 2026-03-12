@@ -2,15 +2,24 @@
 
 import React from 'react';
 import { useToast } from '@/components/ui/ToastProvider';
+import { trackAnalyticsEvent } from '@/lib/analytics/client';
 import { openWhatsAppUrl } from './openWhatsApp';
 
 interface WhatsAppLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
+  analyticsSource?: string;
+  productTitle?: string;
 }
 
-export const WhatsAppLink: React.FC<WhatsAppLinkProps> = ({ href, children, className }) => {
+export const WhatsAppLink: React.FC<WhatsAppLinkProps> = ({
+  href,
+  children,
+  className,
+  analyticsSource = 'whatsapp-link',
+  productTitle,
+}) => {
   const { showToast } = useToast();
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -18,6 +27,14 @@ export const WhatsAppLink: React.FC<WhatsAppLinkProps> = ({ href, children, clas
     event.stopPropagation();
 
     const mode = openWhatsAppUrl(href);
+
+    trackAnalyticsEvent({
+      name: 'whatsapp_click',
+      source: analyticsSource,
+      destination: 'whatsapp',
+      productTitle,
+      metadata: { mode },
+    });
 
     showToast({
       variant: 'success',

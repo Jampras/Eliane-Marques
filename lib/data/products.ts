@@ -1,10 +1,43 @@
 import prisma from '../core/prisma';
-import { ProductType } from '../core/types';
+import { Audience, ProductType } from '../core/types';
 import { cache } from 'react';
 import { safeDataQuery } from './safe-query';
 import type { PaginatedResult } from '../core/pagination';
 
-async function paginateProducts(where: { type?: ProductType | { in: ProductType[] }; active: true }, page: number, pageSize: number) {
+interface ProductFilters {
+  q?: string;
+  audience?: Audience;
+  featured?: boolean;
+}
+
+function buildProductWhere(
+  base: { type?: ProductType | { in: ProductType[] }; active: true },
+  filters: ProductFilters
+) {
+  return {
+    ...base,
+    ...(filters.audience ? { audience: { in: [filters.audience, 'AMBOS'] } } : {}),
+    ...(filters.featured ? { featured: true } : {}),
+    ...(filters.q
+      ? {
+          OR: [
+            { title: { contains: filters.q, mode: 'insensitive' as const } },
+            { shortDesc: { contains: filters.q, mode: 'insensitive' as const } },
+            { longDesc: { contains: filters.q, mode: 'insensitive' as const } },
+          ],
+        }
+      : {}),
+  };
+}
+
+async function paginateProducts(
+  baseWhere: { type?: ProductType | { in: ProductType[] }; active: true },
+  page: number,
+  pageSize: number,
+  filters: ProductFilters
+) {
+  const where = buildProductWhere(baseWhere, filters);
+
   return safeDataQuery(
     'paginateProducts',
     async (): Promise<PaginatedResult<Awaited<ReturnType<typeof prisma.product.findMany>>[number]>> => {
@@ -13,7 +46,7 @@ async function paginateProducts(where: { type?: ProductType | { in: ProductType[
       const currentPage = Math.min(Math.max(page, 1), totalPages);
       const items = await prisma.product.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ featured: 'desc' }, { bestSeller: 'desc' }, { createdAt: 'desc' }],
         skip: (currentPage - 1) * pageSize,
         take: pageSize,
       });
@@ -36,13 +69,17 @@ async function paginateProducts(where: { type?: ProductType | { in: ProductType[
   );
 }
 
-export const getPaginatedProductsByType = cache(async (type: ProductType, page: number, pageSize: number) => {
-  return paginateProducts({ type, active: true }, page, pageSize);
-});
+export const getPaginatedProductsByType = cache(
+  async (type: ProductType, page: number, pageSize: number, filters: ProductFilters = {}) => {
+    return paginateProducts({ type, active: true }, page, pageSize, filters);
+  }
+);
 
-export const getPaginatedProductsByTypes = cache(async (types: ProductType[], page: number, pageSize: number) => {
-  return paginateProducts({ type: { in: types }, active: true }, page, pageSize);
-});
+export const getPaginatedProductsByTypes = cache(
+  async (types: ProductType[], page: number, pageSize: number, filters: ProductFilters = {}) => {
+    return paginateProducts({ type: { in: types }, active: true }, page, pageSize, filters);
+  }
+);
 
 export const getProductBySlug = cache(async (slug?: string) => {
   if (!slug) {

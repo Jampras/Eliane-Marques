@@ -7,10 +7,12 @@ import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
+import { StructuredDataScript } from '@/components/seo/StructuredDataScript';
 import { WhatsAppButton } from '@/components/shared/whatsapp/WhatsAppButton';
 import { shouldOptimizeImage } from '@/lib/core/images';
 import { getPostBySlug } from '@/lib/data/posts';
 import { getWhatsAppConfig } from '@/lib/data/config';
+import { buildArticleJsonLd } from '@/lib/seo/schema';
 
 type PostPageProps = { params: Promise<{ slug: string }> };
 
@@ -50,6 +52,15 @@ export default async function PostDetail({ params }: PostPageProps) {
 
   return (
     <article>
+      <StructuredDataScript
+        data={buildArticleJsonLd({
+          title: post.title,
+          description: post.excerpt,
+          path: `/conteudos/${post.slug}`,
+          createdAt: post.createdAt,
+          image: post.coverImage,
+        })}
+      />
       <Section variant="surface">
         <Container size="md">
           <div className="text-center">
@@ -103,6 +114,7 @@ export default async function PostDetail({ params }: PostPageProps) {
                 label="Falar com Eliane"
                 className="mx-auto w-full sm:w-auto"
                 size="lg"
+                analyticsSource="post-detail"
               />
             </div>
           </div>

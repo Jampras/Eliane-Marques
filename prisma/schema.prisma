@@ -22,11 +22,13 @@ model Product {
   ctaMode                 String      @default("WHATSAPP")
   ctaUrl                  String?
   ctaLabel                String?
+  featured                Boolean     @default(false)
+  bestSeller              Boolean     @default(false)
   whatsappMessageTemplate String?
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt
 
-  @@index([type, active, createdAt(sort: Desc)])
+  @@index([type, active, featured, bestSeller, createdAt(sort: Desc)])
 }
 
 model Post {
@@ -71,4 +73,34 @@ model ChecklistItem {
 model SiteConfig {
   key   String @id @unique
   value String
+}
+
+model AnalyticsEvent {
+  id           String   @id @default(cuid())
+  name         String
+  source       String
+  path         String?
+  productId    String?
+  productSlug  String?
+  productTitle String?
+  destination  String?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([name, createdAt(sort: Desc)])
+  @@index([source, createdAt(sort: Desc)])
+  @@index([productSlug, createdAt(sort: Desc)])
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  source    String
+  status    String   @default("NEW")
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([source, createdAt(sort: Desc)])
 }

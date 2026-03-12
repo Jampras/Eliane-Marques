@@ -6,6 +6,7 @@ import { parsePageParam } from '@/lib/core/pagination';
 import { PaginationNav } from '@/components/ui/PaginationNav';
 import { Heading } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui/Icon';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { AdminEmptyState } from '@/components/features/admin/AdminEmptyState';
 import { requireAdmin } from '@/lib/server/admin-auth';
@@ -72,9 +73,7 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
                   {checklist.published ? 'Publicada' : 'Rascunho'}
                 </Badge>
                 <div className="text-text-secondary flex items-center gap-1">
-                  <span aria-hidden="true" className="material-symbols-outlined text-primary text-sm">
-                    checklist
-                  </span>
+                  <Icon name="checklist" className="text-primary text-sm" />
                   <span className="text-sm">{checklist._count.items}</span>
                 </div>
               </div>
@@ -136,7 +135,7 @@ export default async function AdminChecklistsPage({ searchParams }: AdminCheckli
                 </td>
                 <td className="p-6">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary text-sm">checklist</span>
+                    <Icon name="checklist" className="text-primary text-sm" />
                     <span className="text-text-secondary">{checklist._count.items}</span>
                   </div>
                 </td>

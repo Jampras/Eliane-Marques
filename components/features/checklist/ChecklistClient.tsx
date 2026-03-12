@@ -7,6 +7,7 @@ import { ChecklistItem } from './ChecklistItem';
 import { Badge } from '@/components/ui/Badge';
 import { Heading, Text } from '@/components/ui/Typography';
 import { WhatsAppButton } from '@/components/shared/whatsapp/WhatsAppButton';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 interface ChecklistItemData {
   id: string;
@@ -75,6 +76,7 @@ export const ChecklistClient: React.FC<ChecklistClientProps> = ({
               label="Quero ajuda personalizada"
               className="mx-auto w-full sm:w-auto"
               size="lg"
+              analyticsSource={ANALYTICS_SOURCES.PRODUCT_DETAIL}
             />
           </div>
         </div>

@@ -17,6 +17,11 @@ export function parsePageParam(value: string | string[] | undefined) {
   return parsed;
 }
 
+export function parseQueryParam(value: string | string[] | undefined) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw?.trim() || '';
+}
+
 export function getPageWindow(currentPage: number, totalPages: number, radius = 2) {
   const start = Math.max(1, currentPage - radius);
   const end = Math.min(totalPages, currentPage + radius);

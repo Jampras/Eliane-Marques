@@ -7,11 +7,6 @@
 
 ### P0 - Executar primeiro
 
-#### BT-009 - Instrumentar analytics de conversao
-- **Objetivo:** medir clique em CTA, navegacao, WhatsApp e links externos.
-- **Impacto:** alto.
-- **Risco atual:** decisoes de conversao sem telemetria.
-
 #### BT-011 - Rotacionar credencial sensivel do Supabase
 - **Objetivo:** eliminar risco residual operacional associado a chave atual.
 - **Impacto:** alto.
@@ -19,12 +14,8 @@
 
 ### P1 - Executar em seguida
 
-#### BT-012 - Migrar Material Symbols para bundle local
-- **Objetivo:** remover dependencia de CDN para icones.
-- **Impacto:** medio.
-
 #### BT-013 - Revisar featured comercial por configuracao
-- **Objetivo:** tirar destaque fixo por indice em home e pricing.
+- **Objetivo:** decidir regra editorial final para destaque comercial em home e pricing.
 - **Impacto:** medio.
 
 #### BT-014 - Formalizar QA visual automatizado de home e admin
@@ -34,13 +25,13 @@
 ### P2 - Backlog de melhoria
 
 #### BT-015 - Adicionar schema estruturado adicional
-- **Objetivo:** enriquecer SEO com `Article`, `Product` e `FAQPage`.
+- **Objetivo:** expandir o SEO estruturado para outras areas alem de home e detalhe.
 
 #### BT-016 - CRM ou formulario estruturado
-- **Objetivo:** adicionar canal de captura alem de WhatsApp.
+- **Objetivo:** integrar os leads persistidos a um CRM externo ou automacao comercial.
 
 #### BT-017 - Dashboard comercial no admin
-- **Objetivo:** exibir cliques, origem de leads e desempenho de CTA.
+- **Objetivo:** evoluir o dashboard atual com agregacoes, periodos e funil.
 
 ---
 
@@ -59,6 +50,13 @@ Concluidos no codigo:
 - intents de WhatsApp centralizadas
 - cache explicito de `getSiteIdentity()`
 - CTA por produto configuravel
+- analytics de conversao
+- dashboard comercial no admin
+- captura alternativa de lead
+- schemas `Product`, `Article` e `FAQPage`
+- busca e filtros nas listagens publicas
+- flags comerciais por produto
+- icones locais em SVG
 - favicon
 - limpeza visual e padronizacao do admin
 
@@ -67,11 +65,9 @@ Concluidos no codigo:
 ## 3. Ordem Recomendada de Execucao
 
 ### Sprint 1
-- BT-009
 - BT-011
 
 ### Sprint 2
-- BT-012
 - BT-013
 
 ### Sprint 3
@@ -85,8 +81,7 @@ Concluidos no codigo:
 ---
 
 ## 4. Checklist Operacional Atual
-- [ ] configurar analytics de conversao
 - [ ] rotacionar credencial sensivel do Supabase
-- [ ] revisar dependencia externa de icones
-- [ ] decidir featured comercial configuravel
+- [ ] decidir regra editorial definitiva de destaque comercial
 - [ ] ampliar suite de QA/E2E nos fluxos de conversao
+- [ ] avaliar integracao de leads com CRM externo

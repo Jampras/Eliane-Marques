@@ -8,11 +8,21 @@ type ChecklistWithCount = Prisma.ChecklistGetPayload<{
   include: { _count: { select: { items: true } } };
 }>;
 
-export const getPaginatedChecklists = cache(async (page: number, pageSize: number) => {
+export const getPaginatedChecklists = cache(async (page: number, pageSize: number, q = '') => {
   return safeDataQuery(
     'getPaginatedChecklists',
     async (): Promise<PaginatedResult<ChecklistWithCount>> => {
-      const where = { published: true };
+      const where = {
+        published: true,
+        ...(q
+          ? {
+              OR: [
+                { title: { contains: q, mode: 'insensitive' as const } },
+                { description: { contains: q, mode: 'insensitive' as const } },
+              ],
+            }
+          : {}),
+      };
       const totalItems = await prisma.checklist.count({ where });
       const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
       const currentPage = Math.min(Math.max(page, 1), totalPages);

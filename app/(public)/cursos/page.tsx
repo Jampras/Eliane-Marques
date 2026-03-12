@@ -7,12 +7,14 @@ import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
 import { PaginationNav } from '@/components/ui/PaginationNav';
-import { LinkButton } from '@/components/ui/LinkButton';
+import { CatalogFilters } from '@/components/features/catalog/CatalogFilters';
+import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
 import { shouldOptimizeImage } from '@/lib/core/images';
 import { getProductDetailPath } from '@/lib/core/product-paths';
 import { getProductListAction } from '@/lib/core/product-cta';
-import { parsePageParam } from '@/lib/core/pagination';
+import { parsePageParam, parseQueryParam } from '@/lib/core/pagination';
 import { getPaginatedProductsByType } from '@/lib/data/products';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 export const metadata = {
   title: 'Cursos | Eliane Marques',
@@ -22,13 +24,23 @@ export const metadata = {
 const PAGE_SIZE = 6;
 
 type CoursesPageProps = {
-  searchParams?: Promise<{ page?: string }>;
+  searchParams?: Promise<{ page?: string; q?: string; audience?: string; featured?: string }>;
 };
 
 export default async function CoursesPage({ searchParams }: CoursesPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const currentPage = parsePageParam(resolvedSearchParams.page);
-  const coursesPage = await getPaginatedProductsByType('CURSO', currentPage, PAGE_SIZE);
+  const query = parseQueryParam(resolvedSearchParams.q);
+  const audience = parseQueryParam(resolvedSearchParams.audience);
+  const featuredOnly = parseQueryParam(resolvedSearchParams.featured) === '1';
+  const coursesPage = await getPaginatedProductsByType('CURSO', currentPage, PAGE_SIZE, {
+    q: query,
+    audience:
+      audience === 'PESSOAS' || audience === 'EMPRESAS' || audience === 'AMBOS'
+        ? audience
+        : undefined,
+    featured: featuredOnly,
+  });
   const courses = coursesPage.items;
 
   return (
@@ -45,22 +57,33 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
           </Text>
         </div>
 
+        <CatalogFilters
+          clearHref="/cursos"
+          searchPlaceholder="Busque por curso, networking, imagem..."
+          defaultQuery={query}
+          defaultAudience={audience}
+          defaultFeatured={featuredOnly}
+          showAudience
+          showFeatured
+        />
+
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {courses.map((course, index) => {
             const detailHref = getProductDetailPath(course.type, course.slug);
             const action = getProductListAction(course, detailHref, 'Ver detalhes');
+            const highlighted = course.featured || (index === 1 && !courses.some((item) => item.featured));
 
             return (
               <article
                 key={course.id}
-                className={`fade-up relative flex h-full flex-col border border-[color:var(--linho)] px-0 py-0 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] ${
-                  index === 1 ? 'bg-[color:var(--creme-rosa)]' : 'bg-[color:var(--aveia)]'
+                className={`fade-up relative flex h-full flex-col border px-0 py-0 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] ${
+                  highlighted ? 'bg-[color:var(--creme-rosa)]' : 'bg-[color:var(--aveia)]'
                 }`}
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >
                 <span
                   className={`absolute inset-x-0 top-0 h-[3px] ${
-                    index === 1 ? 'bg-[color:var(--argila)]' : 'bg-[color:var(--linho)]'
+                    highlighted ? 'bg-[color:var(--argila)]' : 'bg-[color:var(--linho)]'
                   }`}
                 />
                 <div className="relative aspect-[4/3] border-b border-[color:var(--linho)] bg-[color:var(--manteiga)]">
@@ -74,12 +97,16 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-[2rem] text-[color:var(--argila)]">
-                      ◈
+                      {'\u25c8'}
                     </div>
                   )}
                 </div>
                 <div className="flex flex-1 flex-col px-5 py-6 sm:px-6 sm:py-7 lg:px-7 lg:py-8">
-                  <Badge className="mb-5 w-fit">{course.audience || 'Imersao privada'}</Badge>
+                  <div className="mb-5 flex flex-wrap gap-3">
+                    <Badge className="w-fit">{course.audience || 'Imersao privada'}</Badge>
+                    {course.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
+                    {course.featured && <Badge variant="outline">Destaque</Badge>}
+                  </div>
                   <Heading as="h2" className="text-[1.3rem]">
                     {course.title}
                   </Heading>
@@ -93,15 +120,23 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
                         .format(course.price)
                         .replace('R$', '')}
                     </p>
-                    <LinkButton
+                    <TrackedLinkButton
                       href={action.href}
                       variant="outline"
                       size="sm"
                       target={action.external ? '_blank' : undefined}
                       rel={action.external ? 'noopener noreferrer' : undefined}
+                      analytics={{
+                        name: action.external ? 'cta_click' : 'product_click',
+                        source: ANALYTICS_SOURCES.PRODUCT_LIST,
+                        destination: action.href,
+                        productId: course.id,
+                        productSlug: course.slug,
+                        productTitle: course.title,
+                      }}
                     >
                       {action.label}
-                    </LinkButton>
+                    </TrackedLinkButton>
                   </div>
                 </div>
               </article>

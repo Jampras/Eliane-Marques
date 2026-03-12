@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
+import { Icon, type IconName } from '@/components/ui/Icon';
 import { logoutAction } from '@/lib/actions/admin-auth';
 import { adminMenuItems } from './adminMenuItems';
 
@@ -64,9 +65,7 @@ export const AdminMobileNav: React.FC = () => {
             aria-label="Abrir menu administrativo"
             className="bg-surface hover:text-primary grid h-10 w-10 place-items-center border border-border text-text-1 transition-colors"
           >
-            <span aria-hidden="true" className="material-symbols-outlined">
-              menu
-            </span>
+            <Icon name="menu" />
           </button>
         </div>
       </header>
@@ -115,9 +114,7 @@ export const AdminMobileNav: React.FC = () => {
               aria-label="Fechar menu"
               className="hover:text-primary text-text-muted shrink-0 transition-colors"
             >
-              <span aria-hidden="true" className="material-symbols-outlined text-3xl">
-                close
-              </span>
+              <Icon name="close" className="text-3xl" />
             </button>
           </div>
 
@@ -138,25 +135,22 @@ export const AdminMobileNav: React.FC = () => {
                       : 'text-text-2 hover:bg-primary/5 hover:text-text-1'
                   )}
                 >
-                  <span aria-hidden="true" className="material-symbols-outlined !text-[20px]">
-                    {item.icon}
-                  </span>
+                  <Icon name={item.icon as IconName} className="!text-[20px]" />
                   <span className="truncate">{item.label}</span>
                 </Link>
               );
             })}
           </nav>
 
-          <button
-            type="button"
-            onClick={() => logoutAction()}
-            className="mt-6 flex w-full items-center justify-center gap-3 border border-red-500/15 px-6 py-4 text-[10px] font-bold tracking-[0.2em] text-red-500/80 uppercase transition-all hover:bg-red-500/5 hover:text-red-400"
-          >
-            <span aria-hidden="true" className="material-symbols-outlined !text-[18px]">
-              logout
-            </span>
-            Sair
-          </button>
+          <form action={logoutAction}>
+            <button
+              type="submit"
+              className="mt-6 flex w-full items-center justify-center gap-3 border border-red-500/15 px-6 py-4 text-[10px] font-bold tracking-[0.2em] text-red-500/80 uppercase transition-all hover:bg-red-500/5 hover:text-red-400"
+            >
+              <Icon name="logout" className="!text-[18px]" />
+              Sair
+            </button>
+          </form>
         </aside>
       </div>
     </>

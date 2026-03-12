@@ -33,6 +33,8 @@ export const productSchema = z.object({
   ctaMode: z.enum(['WHATSAPP', 'EXTERNAL']).default('WHATSAPP'),
   ctaUrl: optionalUrlSchema,
   ctaLabel: z.string().trim().max(80).optional(),
+  featured: z.boolean().default(false),
+  bestSeller: z.boolean().default(false),
   whatsappMessageTemplate: z.string().trim().max(300).optional(),
   active: z.boolean().default(true),
 });

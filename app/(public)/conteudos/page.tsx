@@ -2,14 +2,16 @@ export const revalidate = 300;
 
 import type { CSSProperties } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { PaginationNav } from '@/components/ui/PaginationNav';
+import { CatalogFilters } from '@/components/features/catalog/CatalogFilters';
+import { TrackedLink } from '@/components/analytics/TrackedLink';
 import { shouldOptimizeImage } from '@/lib/core/images';
-import { parsePageParam } from '@/lib/core/pagination';
+import { parsePageParam, parseQueryParam } from '@/lib/core/pagination';
 import { getPaginatedPublishedPosts } from '@/lib/data/posts';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 export const metadata = {
   title: 'Blog | Eliane Marques',
@@ -21,13 +23,14 @@ const BLOG_FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80';
 
 type BlogPageProps = {
-  searchParams?: Promise<{ page?: string }>;
+  searchParams?: Promise<{ page?: string; q?: string }>;
 };
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
   const currentPage = parsePageParam(resolvedSearchParams.page);
-  const postsPage = await getPaginatedPublishedPosts(currentPage, PAGE_SIZE);
+  const query = parseQueryParam(resolvedSearchParams.q);
+  const postsPage = await getPaginatedPublishedPosts(currentPage, PAGE_SIZE, query);
   const posts = postsPage.items;
 
   return (
@@ -43,14 +46,24 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </Text>
         </div>
 
+        <CatalogFilters clearHref="/conteudos" searchPlaceholder="Busque por postura, etiqueta, imagem..." defaultQuery={query} />
+
         <div className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-2 xl:gap-8">
           {posts.map((post, index) => {
             const imageSrc = post.coverImage || BLOG_FALLBACK_IMAGE;
 
             return (
-              <Link
+              <TrackedLink
                 key={post.id}
                 href={`/conteudos/${post.slug}`}
+                analytics={{
+                  name: 'product_click',
+                  source: ANALYTICS_SOURCES.PRODUCT_LIST,
+                  destination: `/conteudos/${post.slug}`,
+                  productId: post.id,
+                  productSlug: post.slug,
+                  productTitle: post.title,
+                }}
                 className="fade-up group block"
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >
@@ -81,7 +94,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     </div>
                   </div>
                 </article>
-              </Link>
+              </TrackedLink>
             );
           })}
         </div>

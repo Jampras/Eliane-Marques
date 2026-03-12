@@ -3,11 +3,12 @@ import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
-import { LinkButton } from '@/components/ui/LinkButton';
+import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
 import { WhatsAppButton } from '@/components/shared/whatsapp/WhatsAppButton';
 import { shouldOptimizeImage } from '@/lib/core/images';
 import { getProductSectionLabel } from '@/lib/core/product-paths';
 import { getProductCta } from '@/lib/core/product-cta';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 interface ProductDetailViewProps {
   product: {
@@ -21,13 +22,15 @@ interface ProductDetailViewProps {
     ctaMode: string;
     ctaUrl: string | null;
     ctaLabel: string | null;
+    featured?: boolean;
+    bestSeller?: boolean;
     whatsappMessageTemplate: string | null;
   };
   waConfig: { number: string; defaultMessage: string };
 }
 
 export function ProductDetailView({ product, waConfig }: ProductDetailViewProps) {
-  const fallbackIcon = product.type === 'CHECKLIST' ? '✦' : '◇';
+  const fallbackIcon = product.type === 'CHECKLIST' ? '\u2726' : '\u25c7';
   const cta = getProductCta(product, waConfig);
   const formattedPrice = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -60,7 +63,11 @@ export function ProductDetailView({ product, waConfig }: ProductDetailViewProps)
 
           <div>
             <div className="atelier-overline">{getProductSectionLabel(product.type)}</div>
-            <Badge className="mt-6">{product.type}</Badge>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Badge>{product.type}</Badge>
+              {product.featured && <Badge variant="outline">Destaque</Badge>}
+              {product.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
+            </div>
             <Heading as="h1" className="mt-6 text-[2.2rem] sm:text-[2.6rem] xl:text-[4rem]">
               {product.title}
             </Heading>
@@ -83,16 +90,23 @@ export function ProductDetailView({ product, waConfig }: ProductDetailViewProps)
             </Text>
 
             <div className="mt-10">
-              {cta.external ? (
-                <LinkButton
+              {cta.kind === 'external' ? (
+                <TrackedLinkButton
                   href={cta.href}
                   className="w-full sm:w-auto"
                   size="lg"
                   target="_blank"
                   rel="noopener noreferrer"
+                  analytics={{
+                    name: 'cta_click',
+                    source: ANALYTICS_SOURCES.PRODUCT_DETAIL,
+                    destination: cta.href,
+                    productSlug: product.slug,
+                    productTitle: product.title,
+                  }}
                 >
                   {cta.label}
-                </LinkButton>
+                </TrackedLinkButton>
               ) : (
                 <WhatsAppButton
                   number={waConfig.number}
@@ -104,6 +118,7 @@ export function ProductDetailView({ product, waConfig }: ProductDetailViewProps)
                   label={cta.label}
                   className="w-full sm:w-auto"
                   size="lg"
+                  analyticsSource={ANALYTICS_SOURCES.PRODUCT_DETAIL}
                 />
               )}
             </div>

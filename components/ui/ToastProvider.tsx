@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { Icon, type IconName } from '@/components/ui/Icon';
 
 type ToastVariant = 'success' | 'error' | 'info';
 
@@ -50,7 +51,7 @@ const variantStyles: Record<ToastVariant, string> = {
   info: 'border-[color:var(--linho)] bg-[color:var(--aveia)] text-[color:var(--espresso)]',
 };
 
-const variantIcon: Record<ToastVariant, string> = {
+const variantIcon: Record<ToastVariant, IconName> = {
   success: 'check_circle',
   error: 'error',
   info: 'info',
@@ -131,12 +132,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               className={`pointer-events-auto border px-4 py-4 shadow-[2px_8px_18px_rgba(58,36,24,0.12)] ${variantStyles[toast.variant]}`}
             >
               <div className="flex items-start gap-3">
-                <span
-                  aria-hidden="true"
-                  className="material-symbols-outlined mt-0.5 text-[20px] text-[color:var(--argila)]"
-                >
-                  {variantIcon[toast.variant]}
-                </span>
+                <Icon
+                  name={variantIcon[toast.variant]}
+                  className="mt-0.5 text-[20px] text-[color:var(--argila)]"
+                />
 
                 <div className="min-w-0 flex-1">
                   <p className="text-[13px] font-[500] leading-tight text-[color:var(--espresso)]">
@@ -168,9 +167,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   className="text-[color:var(--taupe)] transition-colors hover:text-[color:var(--espresso)]"
                   aria-label="Fechar notificacao"
                 >
-                  <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
-                    close
-                  </span>
+                  <Icon name="close" className="text-[18px]" />
                 </button>
               </div>
             </div>

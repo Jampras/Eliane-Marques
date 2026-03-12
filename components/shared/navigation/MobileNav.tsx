@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Icon } from '@/components/ui/Icon';
+import { trackAnalyticsEvent } from '@/lib/analytics/client';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -50,9 +53,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           aria-label="Fechar menu"
           className="absolute top-4 right-4 sm:top-5 sm:right-5 inline-flex h-10 w-10 items-center justify-center text-[color:var(--taupe)]"
         >
-          <span aria-hidden="true" className="material-symbols-outlined text-[28px]">
-            close
-          </span>
+          <Icon name="close" className="text-[28px]" />
         </button>
 
         <Link
@@ -68,7 +69,14 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             <Link
               key={link.href}
               href={link.href}
-              onClick={onClose}
+              onClick={() => {
+                trackAnalyticsEvent({
+                  name: 'nav_click',
+                  source: ANALYTICS_SOURCES.MOBILE_NAV,
+                  destination: link.href,
+                });
+                onClose();
+              }}
               className="fade-up font-display text-[1.65rem] sm:text-[1.85rem] text-[color:var(--aveia)]"
               style={{ '--delay': `${index * 0.08}s` } as React.CSSProperties}
             >
@@ -89,6 +97,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           <button
             type="button"
             onClick={() => {
+              trackAnalyticsEvent({
+                name: 'cta_click',
+                source: ANALYTICS_SOURCES.MOBILE_NAV,
+                destination: '/contato',
+              });
               onClose();
               router.push('/contato');
             }}

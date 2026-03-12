@@ -8,7 +8,11 @@ export class MaterialDetailPage {
   constructor(page: Page) {
     this.page = page;
     this.productTitle = page.getByRole('heading', { level: 1 });
-    this.whatsAppButton = page.getByRole('button', { name: /whatsapp|adquirir/i });
+    this.whatsAppButton = page
+      .locator('section')
+      .first()
+      .getByRole('button', { name: /whatsapp|falar|adquirir/i })
+      .first();
   }
 
   async goto(slug: string) {

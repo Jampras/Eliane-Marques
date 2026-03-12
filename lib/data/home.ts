@@ -29,7 +29,7 @@ const getHomeServicesEntries = unstable_cache(
         active: true,
         type: { in: ['CONSULTORIA', 'CURSO', 'EBOOK'] },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ featured: 'desc' }, { bestSeller: 'desc' }, { createdAt: 'desc' }],
       take: 3,
     }),
   ['home-services'],
@@ -50,5 +50,7 @@ export const getHomeServices = cache(async (): Promise<Service[]> => {
     desc: product.shortDesc,
     price: formatter.format(product.price),
     slug: product.slug,
+    featured: product.featured,
+    bestSeller: product.bestSeller,
   }));
 });

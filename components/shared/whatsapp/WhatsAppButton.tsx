@@ -4,6 +4,8 @@ import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { buildProductInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { useToast } from '@/components/ui/ToastProvider';
+import { Icon } from '@/components/ui/Icon';
+import { trackAnalyticsEvent } from '@/lib/analytics/client';
 import { openWhatsAppUrl } from './openWhatsApp';
 
 interface WhatsAppButtonProps {
@@ -15,6 +17,7 @@ interface WhatsAppButtonProps {
   variant?: 'primary' | 'outline';
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  analyticsSource?: string;
 }
 
 export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
@@ -26,6 +29,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   variant = 'primary',
   className = '',
   size = 'md',
+  analyticsSource = 'whatsapp-button',
 }) => {
   const { showToast } = useToast();
 
@@ -44,6 +48,17 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
 
     const mode = openWhatsAppUrl(whatsappUrl);
 
+    trackAnalyticsEvent({
+      name: 'whatsapp_click',
+      source: analyticsSource,
+      destination: 'whatsapp',
+      productTitle,
+      metadata: {
+        audience: audience || null,
+        mode,
+      },
+    });
+
     showToast({
       variant: 'success',
       title: 'Abrindo WhatsApp',
@@ -57,7 +72,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
 
   return (
     <Button variant={variant} size={size} className={`gap-3 ${className}`} onClick={handleClick}>
-      <span className="material-symbols-outlined text-lg">chat</span>
+      <Icon name="chat" className="text-lg" />
       {label}
     </Button>
   );

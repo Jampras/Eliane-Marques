@@ -42,6 +42,8 @@ export default function ProductForm({ product }: ProductFormProps) {
         ...data,
         price: Number(data.price),
         active: data.active === 'on',
+        featured: data.featured === 'on',
+        bestSeller: data.bestSeller === 'on',
       };
     },
     messages: {
@@ -202,6 +204,27 @@ export default function ProductForm({ product }: ProductFormProps) {
             className="cursor-pointer text-sm font-bold tracking-widest uppercase"
           >
             Produto Ativo no Site
+          </label>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="flex items-center gap-3 text-sm font-bold tracking-widest uppercase">
+            <input
+              name="featured"
+              type="checkbox"
+              defaultChecked={product?.featured ?? false}
+              className="accent-primary h-5 w-5"
+            />
+            Destacar nas listagens
+          </label>
+          <label className="flex items-center gap-3 text-sm font-bold tracking-widest uppercase">
+            <input
+              name="bestSeller"
+              type="checkbox"
+              defaultChecked={product?.bestSeller ?? false}
+              className="accent-primary h-5 w-5"
+            />
+            Marcar como mais vendido
           </label>
         </div>
 

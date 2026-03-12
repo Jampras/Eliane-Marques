@@ -2,6 +2,7 @@
 
 import React, { useCallback, useRef, useState } from 'react';
 import Image from 'next/image';
+import { Icon } from '@/components/ui/Icon';
 import { ADMIN_INPUT_CLASS, ADMIN_LABEL_CLASS } from './formStyles';
 
 interface ImageUploadProps {
@@ -49,22 +50,28 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) uploadFile(file);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      uploadFile(file);
+    }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) uploadFile(file);
+    const file = event.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      uploadFile(file);
+    }
   };
 
   const handleRemove = () => {
     setUrl('');
     setError('');
-    if (inputRef.current) inputRef.current.value = '';
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
   };
 
   return (
@@ -93,8 +100,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'
           } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
           onClick={() => inputRef.current?.click()}
-          onDragOver={(e) => {
-            e.preventDefault();
+          onDragOver={(event) => {
+            event.preventDefault();
             setDragOver(true);
           }}
           onDragLeave={() => setDragOver(false)}
@@ -102,16 +109,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         >
           {uploading ? (
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined animate-spin text-primary !text-[20px]">
-                progress_activity
-              </span>
+              <Icon name="progress_activity" className="animate-spin text-primary !text-[20px]" />
               <span className="text-text-muted text-xs">Enviando...</span>
             </div>
           ) : (
             <>
-              <span className="material-symbols-outlined text-text-muted mb-2 !text-[28px]">
-                cloud_upload
-              </span>
+              <Icon name="cloud_upload" className="text-text-muted mb-2 !text-[28px]" />
               <span className="text-text-2 text-xs font-medium">
                 Toque para escolher ou arraste
               </span>
@@ -134,7 +137,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         <input
           type="text"
           value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(event) => setUrl(event.target.value)}
           placeholder="https://..."
           className={`${ADMIN_INPUT_CLASS} p-2 text-xs`}
         />

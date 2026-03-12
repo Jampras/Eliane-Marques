@@ -32,12 +32,18 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 ## Estado tecnico atual
 - home componentizada por secao
 - catalogos paginados
+- catalogos com busca e filtros
 - detalhes de produto com URL por tipo
 - CTA por produto configuravel: WhatsApp ou link externo
+- flags comerciais por produto: `featured` e `bestSeller`
+- analytics de conversao persistidos em `AnalyticsEvent`
+- captura alternativa de lead persistida em `Lead`
+- dashboard comercial no admin
+- SEO estruturado com `FAQPage`, `Article` e `Product`
 - `getSiteIdentity()` com cache explicito
 - intents de WhatsApp centralizadas em `lib/contact/whatsapp-intents.ts`
 - fontes principais via `next/font`
-- `Material Symbols` com preload e injecao client-side
+- icones locais em SVG via `components/ui/Icon.tsx`
 - upload persistente em Supabase obrigatorio em producao
 - rate limit distribuido obrigatorio em producao
 - CSP dinamica com nonce por request
@@ -125,6 +131,12 @@ Importante:
 - em producao serverless, configure `SUPABASE_*`
 - nao dependa de `public/uploads` como persistencia final
 
+## Analytics e leads
+- tracking centralizado em `app/api/track/route.ts`
+- eventos persistidos em `AnalyticsEvent`
+- formulario de contato alternativo persistido em `Lead`
+- dashboard admin mostra metricas comerciais, top produtos e leads recentes
+
 ## Seguranca operacional
 - CSP aplicada via `proxy.ts` com nonce por request
 - `script-src 'unsafe-inline'` removido
@@ -161,6 +173,8 @@ npx playwright install chromium
 ## Documentacao
 - documentacao tecnica principal:
   - `docs/DOCUMENTACAO_TECNICA_ELIANE_MARQUES.md`
+- manual de uso do admin:
+  - `docs/MANUAL_ADMIN_PLATAFORMA.md`
 - backlog operacional:
   - `docs/BACKLOG_TECNICO_OPERACIONAL.md`
 - arquitetura:
@@ -180,4 +194,4 @@ Executado:
 - favicon e limpeza visual final da home
 
 Pendente principal:
-- analytics de conversao
+- rotacao da credencial sensivel do Supabase

@@ -4,6 +4,8 @@ import type { CSSProperties } from 'react';
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { WhatsAppButton } from '@/components/shared/whatsapp/WhatsAppButton';
+import { trackAnalyticsEvent } from '@/lib/analytics/client';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 interface HeroSectionProps {
   waConfig?: { number: string; defaultMessage: string };
@@ -92,17 +94,23 @@ export function HeroSection({ waConfig, headline, subheadline }: HeroSectionProp
             label="Quero meu diagnostico"
             className="w-full sm:w-auto"
             size="lg"
+            analyticsSource="hero-primary"
           />
           <Button
             variant="outline"
             size="lg"
             className="w-full sm:w-auto"
-            onClick={() =>
+            onClick={() => {
+              trackAnalyticsEvent({
+                name: 'cta_click',
+                source: ANALYTICS_SOURCES.HOME_SERVICES,
+                destination: '#investimentos',
+              });
               document.getElementById('investimentos')?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start',
-              })
-            }
+              });
+            }}
           >
             Ver opcoes
           </Button>

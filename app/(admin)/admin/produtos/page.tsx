@@ -7,6 +7,7 @@ import { parsePageParam } from '@/lib/core/pagination';
 import { PaginationNav } from '@/components/ui/PaginationNav';
 import { Heading } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui/Icon';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { AdminEmptyState } from '@/components/features/admin/AdminEmptyState';
 import { requireAdmin } from '@/lib/server/admin-auth';
@@ -35,7 +36,7 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
   const currentPage = Math.min(requestedPage, totalPages);
   const products = await prisma.product.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ featured: 'desc' }, { bestSeller: 'desc' }, { createdAt: 'desc' }],
     skip: (currentPage - 1) * PAGE_SIZE,
     take: PAGE_SIZE,
   });
@@ -71,9 +72,7 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
                 </div>
               ) : (
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-border bg-bg">
-                  <span className="material-symbols-outlined text-text-muted !text-[18px]">
-                    image
-                  </span>
+                  <Icon name="image" className="text-text-muted !text-[18px]" />
                 </div>
               )}
 
@@ -85,6 +84,11 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
               <Badge variant="outline" className="shrink-0 text-[10px]">
                 {product.type}
               </Badge>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {product.featured && <Badge variant="outline">Destaque</Badge>}
+              {product.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
             </div>
 
             <p className="font-display text-primary text-lg">
@@ -145,14 +149,16 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
                       </div>
                     ) : (
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-border-soft bg-bg">
-                        <span className="material-symbols-outlined text-text-muted !text-[18px]">
-                          image
-                        </span>
+                        <Icon name="image" className="text-text-muted !text-[18px]" />
                       </div>
                     )}
                     <div>
                       <p className="font-bold text-text-1">{product.title}</p>
                       <p className="text-text-secondary mt-1 text-[10px]">{product.slug}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {product.featured && <Badge variant="outline">Destaque</Badge>}
+                        {product.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
+                      </div>
                     </div>
                   </div>
                 </td>

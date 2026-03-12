@@ -3,11 +3,22 @@ import { cache } from 'react';
 import { safeDataQuery } from './safe-query';
 import type { PaginatedResult } from '../core/pagination';
 
-export const getPaginatedPublishedPosts = cache(async (page: number, pageSize: number) => {
+export const getPaginatedPublishedPosts = cache(async (page: number, pageSize: number, q = '') => {
   return safeDataQuery(
     'getPaginatedPublishedPosts',
     async (): Promise<PaginatedResult<Awaited<ReturnType<typeof prisma.post.findMany>>[number]>> => {
-      const where = { published: true };
+      const where = {
+        published: true,
+        ...(q
+          ? {
+              OR: [
+                { title: { contains: q, mode: 'insensitive' as const } },
+                { excerpt: { contains: q, mode: 'insensitive' as const } },
+                { content: { contains: q, mode: 'insensitive' as const } },
+              ],
+            }
+          : {}),
+      };
       const totalItems = await prisma.post.count({ where });
       const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
       const currentPage = Math.min(Math.max(page, 1), totalPages);

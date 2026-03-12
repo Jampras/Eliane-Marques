@@ -9,4 +9,6 @@ export interface Service {
   desc: string;
   price: string;
   slug?: string;
+  featured?: boolean;
+  bestSeller?: boolean;
 }
