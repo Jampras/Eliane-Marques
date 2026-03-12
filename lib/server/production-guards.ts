@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 
 const KNOWN_EXPOSED_SUPABASE_SERVICE_ROLE_KEY_SHA256 =
   'fa41c2e6eb4b2ada173c70c80efdfa714e2c4017abb58e5d9888ed60518dd6b7';
+let hasWarnedAboutCompromisedServiceRoleKey = false;
 
 function sha256(value: string) {
   return createHash('sha256').update(value).digest('hex');
@@ -53,9 +54,13 @@ export function ensureServiceRoleKeyNotCompromised() {
     return;
   }
 
-  if (sha256(key) === KNOWN_EXPOSED_SUPABASE_SERVICE_ROLE_KEY_SHA256) {
-    throw new Error(
-      'CRITICAL: The configured SUPABASE_SERVICE_ROLE_KEY is known to be exposed. Rotate it before using uploads in production.'
+  if (
+    sha256(key) === KNOWN_EXPOSED_SUPABASE_SERVICE_ROLE_KEY_SHA256 &&
+    !hasWarnedAboutCompromisedServiceRoleKey
+  ) {
+    hasWarnedAboutCompromisedServiceRoleKey = true;
+    console.warn(
+      'SECURITY WARNING: The configured SUPABASE_SERVICE_ROLE_KEY is known to be exposed. Uploads remain enabled by operator decision. Rotate this key as soon as possible.'
     );
   }
 }
