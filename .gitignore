@@ -34,6 +34,7 @@ dist-ssr
 /test-results/
 /playwright-report/
 /blob-report/
+/.playwright-cli/
 
 # Local build and tooling artifacts
 /output/

@@ -5,7 +5,8 @@ Documento de referencia rapida para o sistema visual atual.
 ## 1. Fonte de verdade
 - tokens visuais: `app/globals.css`
 - mapeamento Tailwind: `tailwind.config.js`
-- fontes: `app/layout.tsx`
+- fontes principais: `app/layout.tsx`
+- icones externos: `components/shared/MaterialSymbolsStylesheet.tsx`
 
 Nao altere cores globais em varios componentes ao mesmo tempo. Ajuste primeiro `globals.css`.
 
@@ -53,7 +54,7 @@ Fontes principais carregadas com `next/font`:
 | Jost | corpo, labels, navegacao e botoes |
 | Cormorant Garamond | ornamentos, subtitulos e precos |
 
-Fonte ainda externa:
+Fonte externa residual:
 
 | Fonte | Uso |
 |---|---|
@@ -87,8 +88,6 @@ Fonte ainda externa:
 - `Typography.tsx`
 - `ToastProvider.tsx`
 
-Se um ajuste visual for global, revise primeiro esses componentes antes de editar paginas especificas.
-
 ## 8. Texturas e efeitos
 - background com grain suave em `body::after`
 - `fade-up` como animacao padrao de entrada
@@ -99,7 +98,7 @@ Se um ajuste visual for global, revise primeiro esses componentes antes de edita
 - nao usar branco puro como fundo base
 - nao criar nova cor sem necessidade real
 - nao quebrar a hierarquia de fontes atual
-- nao reintroduzir estilos antigos de dark mode generico
+- nao reintroduzir dark mode generico
 - validar contraste ao mudar `--taupe`, `--argila` e `--linho`
 
 ## 10. Estado atual
@@ -107,5 +106,6 @@ Se um ajuste visual for global, revise primeiro esses componentes antes de edita
 Atualizado para refletir:
 - contraste revisado
 - fontes via `next/font`
+- `Material Symbols` com preload e injecao client-side
 - loading e toasts alinhados ao sistema visual
 - identidade atual baseada na paleta quente do projeto

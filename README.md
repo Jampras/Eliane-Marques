@@ -2,6 +2,11 @@
 
 Site institucional e comercial da marca Eliane Marques, com foco em consultoria de imagem, etiqueta corporativa, cursos, materiais digitais e checklists.
 
+## Producao
+- URL publica: `https://v03-pink.vercel.app`
+- Hospedagem: Vercel
+- Banco e storage: Supabase / PostgreSQL
+
 ## Stack
 - Next.js 16 App Router
 - React 19
@@ -10,6 +15,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - Prisma + PostgreSQL
 - Zod
 - JWT via `jose`
+- Upstash Redis REST
 - Playwright
 
 ## Arquitetura resumida
@@ -17,19 +23,25 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - backoffice em `app/(admin)/admin`
 - leitura de dados em `lib/data`
 - mutacoes em `lib/actions`
-- auth server-side em `lib/server`
+- infraestrutura server-side em `lib/server`
+- regras de negocio compartilhadas em `lib/core`
+- intents de contato em `lib/contact`
+- utilitarios genericos em `lib/utils`
 - design system em `components/ui`
-- secoes da home em `components/features/home`
 
-## Diferenciais tecnicos atuais
+## Estado tecnico atual
 - home componentizada por secao
 - catalogos paginados
-- detalhes de produto com URLs canonicas por tipo
+- detalhes de produto com URL por tipo
 - CTA por produto configuravel: WhatsApp ou link externo
-- imagens publicas com pipeline de otimizacao condicional
+- `getSiteIdentity()` com cache explicito
+- intents de WhatsApp centralizadas em `lib/contact/whatsapp-intents.ts`
 - fontes principais via `next/font`
-- upload com driver `local` ou `supabase`
-- revalidacao de listagens e paginas de detalhe apos CRUD no admin
+- `Material Symbols` com preload e injecao client-side
+- upload persistente em Supabase obrigatorio em producao
+- rate limit distribuido obrigatorio em producao
+- CSP dinamica com nonce por request
+- fallback de migrations via `scripts/db-deploy.mjs`
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:
@@ -76,7 +88,7 @@ npm run dev
 ```
 
 Observacao:
-- o script `dev` usa `next dev --webpack`
+- `dev` usa `next dev --webpack`
 - isso evita o crash de Turbopack observado no Windows deste projeto
 
 ## Scripts principais
@@ -90,8 +102,15 @@ npx tsc --noEmit
 npm run test:e2e
 npm run db:generate
 npm run db:deploy
+npm run db:deploy:prisma
 npm run db:seed
 ```
+
+## Prisma e migrations
+- `db:deploy` usa `node scripts/db-deploy.mjs`
+- fluxo:
+  1. tenta `prisma migrate deploy`
+  2. se o engine falhar no ambiente local, cai para um runner SQL controlado
 
 ## Upload de imagens
 - rota: `app/api/upload/route.ts`
@@ -99,12 +118,19 @@ npm run db:seed
 - tipos aceitos: JPEG, PNG, WebP, AVIF, GIF
 - tamanho maximo: 5 MB
 - storage:
-  - `supabase` quando `SUPABASE_*` estiver configurado
-  - `local` como fallback em `public/uploads`
+  - producao: Supabase obrigatorio
+  - desenvolvimento: Supabase ou fallback local em `public/uploads`
 
 Importante:
 - em producao serverless, configure `SUPABASE_*`
 - nao dependa de `public/uploads` como persistencia final
+
+## Seguranca operacional
+- CSP aplicada via `proxy.ts` com nonce por request
+- `script-src 'unsafe-inline'` removido
+- login admin exige Upstash configurado em producao
+- upload exige Supabase configurado em producao
+- `SUPABASE_SERVICE_ROLE_KEY` continua sendo credencial sensivel; se for exposta, precisa ser trocada operacionalmente
 
 ## CTA por produto
 - configuracao no admin em `/admin/produtos`
@@ -122,11 +148,6 @@ Comportamento:
 - `servicos`: CTA do card e da pagina de detalhe respeitam o modo configurado
 - `cursos`: card abre link externo quando configurado; caso contrario segue para detalhe
 - `materiais`: card abre link externo quando configurado; caso contrario segue para detalhe
-
-## Build e ambiente
-`npm run build` depende de banco acessivel porque paginas publicas executam queries durante prerender.
-
-Se o banco nao estiver disponivel, o build falha.
 
 ## Testes
 - E2E com Playwright em `tests/e2e`
@@ -148,9 +169,15 @@ npx playwright install chromium
   - `docs/DESIGN_TOKENS.md`
 
 ## Estado atual do backlog
-Ja executado:
-- BT-001 a BT-008
-- BT-010
+Executado:
+- endurecimento de upload, auth, CSP e rate limit
+- pipeline de imagem
+- home componentizada
+- intents de WhatsApp centralizadas
+- cache explicito de identidade do site
+- padronizacao do admin
+- CTA por produto configuravel
+- favicon e limpeza visual final da home
 
-Pendente:
-- BT-009 analytics de conversao
+Pendente principal:
+- analytics de conversao
