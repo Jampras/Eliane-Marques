@@ -40,6 +40,14 @@ export function LeadCaptureForm() {
       }}
     >
       <input type="hidden" name="source" value="contact-form" />
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+        aria-hidden="true"
+      />
       <div className="grid grid-cols-1 gap-3">
         <input
           name="name"

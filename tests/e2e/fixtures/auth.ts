@@ -1,6 +1,5 @@
 import { test as base, type Page } from '@playwright/test';
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? '';
+import { seedAdminSession } from '../helpers/admin-session';
 
 type AuthFixtures = {
   adminPage: Page;
@@ -8,16 +7,12 @@ type AuthFixtures = {
 
 /**
  * Fixture that provides a pre-authenticated admin Page.
- * Logs in via the login form before each test and reuses the session.
+ * Seeds a valid admin_session cookie before each test.
  */
 export const test = base.extend<AuthFixtures>({
   adminPage: async ({ page }, use) => {
-    await page.goto('/admin/login');
-
-    await page.locator('input[name="password"]').fill(ADMIN_PASSWORD);
-    await page.getByRole('button', { name: /entrar/i }).click();
-
-    // Wait for the redirect to the admin dashboard
+    await seedAdminSession(page);
+    await page.goto('/admin');
     await page.waitForURL('**/admin', { timeout: 15_000 });
 
     await use(page);

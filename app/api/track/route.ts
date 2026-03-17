@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { ANALYTICS_EVENT_NAMES, type AnalyticsEventPayload } from '@/lib/analytics/events';
 import { recordAnalyticsEvent } from '@/lib/analytics/server';
+import { getRequestClientKey } from '@/lib/server/request-client';
+import { checkPublicRateLimit } from '@/lib/server/public-rate-limit';
+import { isSameOriginRequest } from '@/lib/server/request-security';
 
 const analyticsSchema = z.object({
   name: z.enum(ANALYTICS_EVENT_NAMES),
@@ -18,6 +21,20 @@ const analyticsSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    if (!isSameOriginRequest(new Headers(request.headers))) {
+      return NextResponse.json({ ok: false }, { status: 403 });
+    }
+
+    const clientKey = await getRequestClientKey();
+    const rateLimit = await checkPublicRateLimit(`analytics:${clientKey}`, {
+      limit: 120,
+      windowMs: 60_000,
+    });
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json({ ok: false }, { status: 429 });
+    }
+
     const input = analyticsSchema.parse(await request.json()) as AnalyticsEventPayload;
     await recordAnalyticsEvent(input);
     return NextResponse.json({ ok: true });

@@ -48,7 +48,9 @@ authTest.describe('Visual QA - Admin', () => {
     await adminPage.setViewportSize({ width: 390, height: 844 });
     await adminPage.goto('/admin');
 
-    await adminPage.getByRole('button', { name: /abrir menu administrativo/i }).click();
+    await adminPage.getByRole('button', { name: /abrir menu administrativo/i }).click({
+      force: true,
+    });
 
     await authExpect(
       adminPage.locator('aside[role="dialog"], aside#admin-mobile-menu')

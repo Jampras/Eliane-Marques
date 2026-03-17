@@ -1,21 +1,19 @@
 import { test, expect } from '@playwright/test';
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? '';
+import { seedAdminSession } from './helpers/admin-session';
 
 async function loginAsAdmin(page: import('@playwright/test').Page) {
-  await page.goto('/admin/login');
-  await page.locator('input[name="password"]').fill(ADMIN_PASSWORD);
-  await page.getByRole('button', { name: /entrar com senha/i }).click();
+  await seedAdminSession(page);
+  await page.goto('/admin');
   await page.waitForURL('**/admin', { timeout: 15_000 });
 }
 
 test.describe('Institutional public routes QA', () => {
-  test('admin login exposes Google and password flows', async ({ page }) => {
+  test('admin login exposes Google flow only', async ({ page }) => {
     await page.goto('/admin/login');
 
     await expect(page.getByRole('button', { name: /entrar com google/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /entrar com senha/i })).toBeVisible();
-    await expect(page.getByLabel(/senha de acesso/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /entrar com senha/i })).toHaveCount(0);
+    await expect(page.getByLabel(/senha de acesso/i)).toHaveCount(0);
   });
 
   test('public sobre page renders institutional sections', async ({ page }) => {

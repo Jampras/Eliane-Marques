@@ -3,13 +3,15 @@ import { type Page, type Locator } from '@playwright/test';
 export class AdminLoginPage {
   readonly page: Page;
   readonly passwordInput: Locator;
-  readonly submitButton: Locator;
+  readonly passwordButton: Locator;
+  readonly googleButton: Locator;
   readonly errorMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.passwordInput = page.locator('input[name="password"]');
-    this.submitButton = page.getByRole('button', { name: /entrar/i });
+    this.passwordButton = page.getByRole('button', { name: /entrar com senha/i });
+    this.googleButton = page.getByRole('button', { name: /entrar com google/i });
     this.errorMessage = page.locator('[class*="red-500"]').filter({ hasText: /.+/ });
   }
 
@@ -19,7 +21,7 @@ export class AdminLoginPage {
 
   async login(password: string) {
     await this.passwordInput.fill(password);
-    await this.submitButton.click();
+    await this.passwordButton.click();
   }
 
   async getError(): Promise<string> {

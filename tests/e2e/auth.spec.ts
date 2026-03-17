@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { AdminLoginPage } from './pages/AdminLoginPage';
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? '';
+import { seedAdminSession } from './helpers/admin-session';
 
 async function postUploadViaBrowser(page: import('@playwright/test').Page) {
   return page.evaluate(async () => {
@@ -24,28 +23,20 @@ async function postUploadViaBrowser(page: import('@playwright/test').Page) {
 }
 
 test.describe('Admin Authentication Flow', () => {
-  test('login with correct password redirects to /admin', async ({ page }) => {
+  test('login page exposes google entry point', async ({ page }) => {
     const loginPage = new AdminLoginPage(page);
     await loginPage.goto();
 
-    await loginPage.login(ADMIN_PASSWORD);
-
-    await expect(page).toHaveURL(/\/admin$/);
-    await expect(
-      page.getByRole('heading', { name: /Dashboard Administrativo/i })
-    ).toBeVisible();
+    await expect(loginPage.googleButton).toBeVisible();
+    await expect(loginPage.googleButton).toBeEnabled();
   });
 
-  test('login with wrong password shows error and stays on login', async ({ page }) => {
+  test('login page no longer exposes password fallback', async ({ page }) => {
     const loginPage = new AdminLoginPage(page);
     await loginPage.goto();
 
-    await loginPage.login('wrong_password_12345');
-
-    const error = await loginPage.getError();
-    expect(error).toContain('Senha incorreta');
-
-    await expect(page).toHaveURL(/\/admin\/login/);
+    await expect(loginPage.passwordInput).toHaveCount(0);
+    await expect(loginPage.passwordButton).toHaveCount(0);
   });
 
   test('direct access to /admin without session redirects to /admin/login', async ({ page }) => {
@@ -85,22 +76,14 @@ test.describe('Admin Authentication Flow', () => {
   });
 
   test('logout destroys session and redirects to login', async ({ page }) => {
-    const loginPage = new AdminLoginPage(page);
-    await loginPage.goto();
-    await loginPage.login(ADMIN_PASSWORD);
+    await seedAdminSession(page);
+    await page.goto('/admin');
     await expect(page).toHaveURL(/\/admin$/);
 
     const logoutButton = page.getByRole('button', { name: /sair|logout/i })
       .or(page.getByRole('link', { name: /sair|logout/i }));
 
-    await logoutButton.evaluate((button) => {
-      const form = (button as HTMLButtonElement).form;
-      if (!form) {
-        throw new Error('Logout form not found');
-      }
-
-      form.requestSubmit();
-    });
+    await logoutButton.click();
 
     await expect(page).toHaveURL(/\/admin\/login/);
 

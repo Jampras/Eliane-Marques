@@ -3,34 +3,17 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { loginAction } from '@/lib/actions/admin-auth';
 import { Button } from '@/components/ui/Button';
 import { isSupabaseOAuthConfigured } from '@/lib/supabase/env';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
-import { ADMIN_INPUT_CLASS, ADMIN_LABEL_CLASS } from '@/components/features/admin/formStyles';
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
-  const [passwordLoading, setPasswordLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const googleConfigured = isSupabaseOAuthConfigured();
   const oauthError = searchParams.get('error');
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setPasswordLoading(true);
-    setError(null);
-
-    const formData = new FormData(e.currentTarget);
-    const result = await loginAction(formData);
-
-    if (result?.error) {
-      setError(result.error);
-      setPasswordLoading(false);
-    }
-  };
 
   const handleGoogleLogin = async () => {
     setError(null);
@@ -85,7 +68,7 @@ export default function LoginPage() {
             <Button
               type="button"
               onClick={handleGoogleLogin}
-              disabled={!googleConfigured || googleLoading || passwordLoading}
+              disabled={!googleConfigured || googleLoading}
               className="mt-5 w-full"
             >
               {googleLoading ? 'Redirecionando...' : 'Entrar com Google'}
@@ -99,36 +82,16 @@ export default function LoginPage() {
 
           <div className="border-t border-[color:var(--linho)] pt-5">
             <p className="text-text-muted text-center text-[10px] tracking-[0.28em] uppercase">
-              Contingencia por senha
+              Acesso administrativo por contas autorizadas
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-5 space-y-6">
-          <div className="space-y-2">
-            <label htmlFor="admin-password" className={ADMIN_LABEL_CLASS}>
-              Senha de Acesso
-            </label>
-            <input
-              id="admin-password"
-              name="password"
-              type="password"
-              required
-              className={`${ADMIN_INPUT_CLASS} bg-[rgba(249,243,237,0.82)] text-text-1 transition-colors`}
-              placeholder="********"
-            />
+        {(oauthError || error) && (
+          <div className="mt-5 border border-red-500/20 bg-red-500/10 p-3 text-center text-[10px] tracking-widest text-red-500 uppercase">
+            {oauthError || error}
           </div>
-
-          {(oauthError || error) && (
-            <div className="border border-red-500/20 bg-red-500/10 p-3 text-center text-[10px] tracking-widest text-red-500 uppercase">
-              {oauthError || error}
-            </div>
-          )}
-
-          <Button type="submit" disabled={passwordLoading || googleLoading} className="w-full">
-            {passwordLoading ? 'Validando...' : 'Entrar com senha'}
-          </Button>
-        </form>
+        )}
 
         <div className="mt-8 text-center">
           <Link

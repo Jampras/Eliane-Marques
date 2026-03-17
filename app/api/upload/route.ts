@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/server/admin-auth';
 import { UnauthorizedError } from '@/lib/server/errors';
+import { isSameOriginRequest } from '@/lib/server/request-security';
 import { uploadImage } from '@/lib/server/upload-storage';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -17,8 +18,7 @@ export async function POST(request: NextRequest) {
   try {
     await requireAdmin();
 
-    const origin = request.headers.get('origin');
-    if (origin && origin !== request.nextUrl.origin) {
+    if (!isSameOriginRequest(request.headers)) {
       return NextResponse.json({ error: 'Origem invalida' }, { status: 403 });
     }
 
