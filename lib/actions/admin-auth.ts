@@ -97,7 +97,7 @@ export async function loginAction(formData: FormData) {
   (await cookies()).set(SESSION_COOKIE_NAME, session, {
     expires,
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'lax',
     secure: isProductionEnv(),
     path: '/',
   });

@@ -36,7 +36,7 @@ export async function issueAdminGoogleSession(input: {
   (await cookies()).set(SESSION_COOKIE_NAME, session, {
     expires,
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'lax',
     secure: isProductionEnv(),
     path: '/',
   });
@@ -47,7 +47,7 @@ export async function clearAdminSession() {
     expires: new Date(0),
     path: '/',
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'lax',
     secure: isProductionEnv(),
   });
 }

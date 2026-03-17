@@ -69,7 +69,7 @@ export async function updateSession(request: NextRequest, requestHeaders?: Heade
     httpOnly: true,
     path: '/',
     expires,
-    sameSite: 'strict',
+    sameSite: 'lax',
     secure: isProductionEnv(),
   });
   return res;
