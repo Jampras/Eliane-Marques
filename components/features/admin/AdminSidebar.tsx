@@ -5,14 +5,20 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
 import { Icon, type IconName } from '@/components/ui/Icon';
-import { logoutAction } from '@/lib/actions/admin-auth';
 import { adminMenuItems } from './adminMenuItems';
 
 interface AdminSidebarProps {
   currentPath?: string;
+  adminIdentity: {
+    name: string;
+    email: string | null;
+  } | null;
 }
 
-export const AdminSidebar: React.FC<AdminSidebarProps> = ({ currentPath: propPath }) => {
+export const AdminSidebar: React.FC<AdminSidebarProps> = ({
+  currentPath: propPath,
+  adminIdentity,
+}) => {
   const pathname = usePathname();
   const currentPath = propPath || pathname;
 
@@ -28,6 +34,28 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ currentPath: propPat
         <p className="text-text-secondary mt-3 text-[9px] tracking-[0.4em] uppercase opacity-50">
           Admin Panel
         </p>
+
+        <div className="mt-8 border border-border-soft bg-bg/70 px-5 py-5 text-left shadow-[2px_3px_12px_rgba(58,36,24,0.04)]">
+          <p className="text-text-secondary text-[9px] tracking-[0.32em] uppercase opacity-70">
+            Sessao ativa
+          </p>
+          <p className="mt-3 text-[12px] font-bold tracking-[0.08em] uppercase text-text-1">
+            {adminIdentity?.name || 'Administrador'}
+          </p>
+          {adminIdentity?.email ? (
+            <p className="text-text-secondary mt-2 break-all text-[10px] leading-5">
+              {adminIdentity.email}
+            </p>
+          ) : null}
+
+          <a
+            href="/auth/admin/logout"
+            className="mt-4 flex min-h-12 w-full items-center justify-center gap-3 border border-red-500/15 px-5 py-3 text-[10px] font-bold tracking-[0.2em] text-red-500/80 uppercase transition-all hover:bg-red-500/5 hover:text-red-500"
+          >
+              <Icon name="logout" className="!text-[18px]" />
+              Sair
+          </a>
+        </div>
       </div>
 
       <nav className="flex-grow space-y-1 py-6">
@@ -55,18 +83,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ currentPath: propPat
           </Link>
         ))}
       </nav>
-
-      <div className="border-t border-border p-6">
-        <form action={logoutAction}>
-          <button
-            type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-sm border border-red-500/10 px-6 py-4 text-[10px] font-bold tracking-[0.2em] text-red-500/70 uppercase transition-all hover:bg-red-500/5 hover:text-red-500"
-          >
-            <Icon name="logout" className="!text-[18px]" />
-            Sair
-          </button>
-        </form>
-      </div>
     </aside>
   );
 };

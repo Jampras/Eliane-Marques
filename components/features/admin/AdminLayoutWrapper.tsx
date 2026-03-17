@@ -5,7 +5,18 @@ import { usePathname } from 'next/navigation';
 import { AdminSidebar } from '@/components/features/admin/AdminSidebar';
 import { AdminMobileNav } from '@/components/features/admin/AdminMobileNav';
 
-export default function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
+type AdminIdentity = {
+  name: string;
+  email: string | null;
+} | null;
+
+export default function AdminLayoutWrapper({
+  children,
+  adminIdentity,
+}: {
+  children: React.ReactNode;
+  adminIdentity: AdminIdentity;
+}) {
   const pathname = usePathname();
   const isLoginPage = pathname === '/admin/login';
 
@@ -13,8 +24,8 @@ export default function AdminLayoutWrapper({ children }: { children: React.React
     <div className="bg-[linear-gradient(180deg,rgba(236,227,217,0.96),rgba(228,216,205,0.96))] selection:bg-primary flex min-h-screen text-text-1 selection:text-white">
       {!isLoginPage && (
         <>
-          <AdminSidebar />
-          <AdminMobileNav />
+          <AdminSidebar adminIdentity={adminIdentity} />
+          <AdminMobileNav adminIdentity={adminIdentity} />
         </>
       )}
       <main className={`w-full flex-grow overflow-y-auto ${!isLoginPage ? 'pt-14 md:pt-16 lg:pt-0' : ''}`}>

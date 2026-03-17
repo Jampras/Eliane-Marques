@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils/cn';
 import { Icon, type IconName } from '@/components/ui/Icon';
-import { logoutAction } from '@/lib/actions/admin-auth';
 import { adminMenuItems } from './adminMenuItems';
 
 const pageTitleByPrefix: Record<string, string> = {
@@ -15,7 +14,12 @@ const pageTitleByPrefix: Record<string, string> = {
   '/admin/config': 'Configuracoes',
 };
 
-export const AdminMobileNav: React.FC = () => {
+export const AdminMobileNav: React.FC<{
+  adminIdentity: {
+    name: string;
+    email: string | null;
+  } | null;
+}> = ({ adminIdentity }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -118,6 +122,27 @@ export const AdminMobileNav: React.FC = () => {
             </button>
           </div>
 
+          <div className="mb-6 border border-border-soft bg-surface px-5 py-5">
+            <p className="text-text-secondary text-[9px] tracking-[0.3em] uppercase opacity-70">
+              Sessao ativa
+            </p>
+            <p className="mt-3 text-[12px] font-bold tracking-[0.08em] uppercase text-text-1">
+              {adminIdentity?.name || 'Administrador'}
+            </p>
+            {adminIdentity?.email ? (
+              <p className="text-text-secondary mt-2 break-all text-[10px] leading-5">
+                {adminIdentity.email}
+              </p>
+            ) : null}
+            <a
+              href="/auth/admin/logout"
+              className="mt-4 flex min-h-12 w-full items-center justify-center gap-3 border border-red-500/15 px-5 py-3 text-[10px] font-bold tracking-[0.2em] text-red-500/80 uppercase transition-all hover:bg-red-500/5 hover:text-red-400"
+            >
+                <Icon name="logout" className="!text-[18px]" />
+                Sair
+            </a>
+          </div>
+
           <nav className="space-y-1 overflow-y-auto pr-1">
             {adminMenuItems.map((item) => {
               const isActive =
@@ -141,16 +166,6 @@ export const AdminMobileNav: React.FC = () => {
               );
             })}
           </nav>
-
-          <form action={logoutAction}>
-            <button
-              type="submit"
-              className="mt-6 flex w-full items-center justify-center gap-3 border border-red-500/15 px-6 py-4 text-[10px] font-bold tracking-[0.2em] text-red-500/80 uppercase transition-all hover:bg-red-500/5 hover:text-red-400"
-            >
-              <Icon name="logout" className="!text-[18px]" />
-              Sair
-            </button>
-          </form>
         </aside>
       </div>
     </>
