@@ -1,6 +1,6 @@
 # Arquitetura do Sistema - Eliane Marques
 
-Documento resumido da arquitetura atual do projeto apos estabilizacao tecnica, ajustes de seguranca e padronizacao de UX.
+Documento resumido da arquitetura atual do projeto apos estabilizacao tecnica, ajustes de seguranca, endurecimento de CSP e agregacao operacional de analytics.
 
 ## 1. Visao Geral
 
@@ -20,13 +20,14 @@ flowchart TD
     PUB --> DATA["lib/data"]
     ADM --> ACT["lib/actions"]
     ACT --> AUTH["JWT + requireAdmin"]
-    AUTH --> OAUTH["Supabase Google OAuth (local validation)"]
+    AUTH --> OAUTH["Supabase Google OAuth + whitelist"]
     ACT --> CACHE["revalidatePath / revalidateTag"]
     DATA --> PRISMA["Prisma"]
     ACT --> PRISMA
     PRISMA --> DB["PostgreSQL / Supabase"]
     PUB --> TRACK["/api/track"]
     TRACK --> PRISMA
+    PRISMA --> AGG["AnalyticsDailyAggregate"]
     PUB --> LEAD["Lead capture form"]
     LEAD --> ACT
     ACT --> UP["/api/upload"]
@@ -52,7 +53,7 @@ flowchart TD
 - `app/(admin)/admin` contem login, dashboard e CRUD
 - protecao de sessao por cookie JWT
 - login exige Upstash configurado em producao
-- fluxo Google OAuth para admin esta implementado localmente e em validacao
+- login admin usa Google OAuth via Supabase com whitelist de emails
 
 ### Dados
 - `lib/data` centraliza queries e cache
@@ -78,8 +79,10 @@ flowchart TD
 ### Analytics e leads
 - eventos de conversao entram por `app/api/track/route.ts`
 - persistencia em `AnalyticsEvent`
+- agregacao diaria historica em `AnalyticsDailyAggregate`
+- manutencao operacional via `scripts/analytics-maintenance.mjs`
 - formulario alternativo de contato persiste em `Lead`
-- dashboard admin consome eventos e leads recentes
+- dashboard admin combina eventos recentes + historico agregado e leads recentes
 
 ### Midia
 - upload autenticado em `app/api/upload/route.ts`
@@ -91,6 +94,7 @@ flowchart TD
 ### Seguranca
 - `proxy.ts` aplica:
   - CSP dinamica com nonce
+  - `style-src` endurecida sem `unsafe-inline` em blocos de estilo
   - `X-Frame-Options`
   - `X-Content-Type-Options`
   - `Referrer-Policy`
@@ -187,16 +191,18 @@ Fluxo:
 ### 4.8 Telemetria comercial
 - tracking client-side centralizado em `lib/analytics/client.ts`
 - ingestao server-side em `lib/analytics/server.ts`
+- agregacao e retencao em `lib/analytics/aggregation.ts`
+- consultas de dashboard em `lib/analytics/reporting.ts`
 - componentes tracked em `components/analytics/*`
 
 ### 4.9 SEO estruturado
 - `lib/seo/schema.ts` centraliza geracao de JSON-LD
 - `components/seo/StructuredDataScript.tsx` injeta scripts com nonce
 
-### 4.10 Auth admin em migracao controlada
-- auth atual em producao: senha unica + `admin_session`
-- auth novo em validacao local: Google OAuth via Supabase + whitelist por `ADMIN_GOOGLE_ALLOWED_EMAILS`
-- decisao tecnica: manter o mesmo cookie `admin_session` como interface interna do painel durante a transicao
+### 4.10 Auth admin
+- auth atual em producao: Google OAuth via Supabase + whitelist por `ADMIN_GOOGLE_ALLOWED_EMAILS`
+- o painel continua usando `admin_session` como cookie interno de sessao administrativa
+- logout invalida a sessao local do painel e a sessao Supabase
 
 ### 4.11 Dominio institucional unificado
 - `lib/institutional/config.ts` e `config-actions.ts` concentram leitura e mutacao de configuracoes singleton
@@ -212,7 +218,7 @@ Fluxo:
 ### Importantes
 - a credencial sensivel do Supabase segue como pendencia operacional se nao for rotacionada
 - build e testes E2E seguem dependentes de banco acessivel e browser instalado
-- auth admin esta em modo dual-stack ate o rollout do Google
+- analytics exige manutencao periodica para manter custo e volume sob controle
 
 ## 6. Regras de Evolucao
 - manter Server Components por padrao
@@ -240,6 +246,7 @@ Resolvido na rodada recente:
 - busca e filtros nas listagens
 - flags comerciais por produto
 - analytics de conversao
+- agregacao diaria e retencao operacional de analytics
 - dashboard comercial
 - captura alternativa de lead
 - schemas estruturados de SEO

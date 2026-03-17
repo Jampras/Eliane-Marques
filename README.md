@@ -41,6 +41,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - analytics de conversao persistidos em `AnalyticsEvent`
 - captura alternativa de lead persistida em `Lead`
 - dashboard comercial no admin
+- dashboard comercial usando eventos recentes + historico agregado diario
 - SEO estruturado com `FAQPage`, `Article` e `Product`
 - `getSiteIdentity()` com cache explicito
 - intents de WhatsApp centralizadas em `lib/contact/whatsapp-intents.ts`
@@ -52,8 +53,9 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - upload persistente em Supabase obrigatorio em producao
 - rate limit distribuido obrigatorio em producao
 - CSP dinamica com nonce por request
+- `style-src` endurecida, sem `unsafe-inline` para blocos `<style>`
 - fallback de migrations via `scripts/db-deploy.mjs`
-- fluxo Google OAuth para admin implementado localmente e em validacao antes de rollout
+- login admin via Google OAuth com whitelist de emails
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:
@@ -63,7 +65,6 @@ Copie `.env.example` para `.env` e preencha:
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `ADMIN_PASSWORD`
 - `ADMIN_SESSION_SECRET`
 - `ADMIN_GOOGLE_ALLOWED_EMAILS`
 - `UPSTASH_REDIS_REST_URL`
@@ -120,6 +121,7 @@ npm run db:generate
 npm run db:deploy
 npm run db:deploy:prisma
 npm run db:seed
+npm run analytics:maintain
 ```
 
 ## Prisma e migrations
@@ -144,6 +146,8 @@ Importante:
 ## Analytics e leads
 - tracking centralizado em `app/api/track/route.ts`
 - eventos persistidos em `AnalyticsEvent`
+- historico agregado em `AnalyticsDailyAggregate`
+- retencao de eventos brutos antigos via `npm run analytics:maintain`
 - formulario de contato alternativo persistido em `Lead`
 - dashboard admin mostra metricas comerciais, top produtos e leads recentes
 
@@ -182,10 +186,9 @@ Comportamento:
 
 ## Auth admin com Google
 Estado atual:
-- implementado localmente
-- sem deploy ate validacao final
 - fluxo principal: Google OAuth via Supabase
-- contingencia mantida: senha unica de admin
+- whitelist por `ADMIN_GOOGLE_ALLOWED_EMAILS`
+- login por senha removido
 
 Variaveis usadas:
 - `NEXT_PUBLIC_SUPABASE_URL`
@@ -235,5 +238,4 @@ Executado:
 Pendente principal:
 - rotacao da credencial sensivel do Supabase
 - integracao dos leads com CRM ou automacao comercial
-- consolidacao do auth admin apos validacao do fluxo Google
-- agregacao/retencao de analytics e CI Linux para migrations
+- CI Linux para migrations

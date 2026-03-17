@@ -28,7 +28,7 @@
 - **Impacto:** medio.
 
 #### BT-018 - Consolidar auth admin apos validacao do Google OAuth
-- **Objetivo:** remover o modo dual-stack de login quando o fluxo Google estiver aprovado.
+- **Objetivo:** concluir endurecimento operacional do fluxo Google ja ativo.
 - **Impacto:** medio.
 
 #### BT-019 - Criar schema unificado de ambiente com fail-fast
@@ -42,14 +42,14 @@
 ### P2 - Backlog de melhoria
 
 #### BT-017 - Dashboard comercial no admin
-- **Objetivo:** evoluir o dashboard atual com agregacoes, periodos e funil.
+- **Objetivo:** evoluir o dashboard atual com agregacoes mais ricas, periodos e funil.
 
 #### BT-021 - Verificacao de migrations em CI Linux
 - **Objetivo:** garantir previsibilidade do schema fora do Windows.
 - **Impacto:** medio.
 
-#### BT-022 - Politica de retencao/agregacao de analytics
-- **Objetivo:** evitar crescimento indefinido da tabela `AnalyticsEvent`.
+#### BT-022 - Operacionalizar manutencao recorrente de analytics
+- **Objetivo:** garantir execucao periodica de `analytics:maintain` em cron/CI.
 - **Impacto:** medio.
 
 ---
@@ -83,6 +83,9 @@ Concluidos no codigo:
 - limpeza visual e padronizacao do admin
 - schema unico de ambiente com fail-fast
 - dominio institucional `Config` + `About` centralizado em `lib/institutional`
+- login admin por Google com whitelist, sem fallback por senha
+- endurecimento de `/api/track` e `lead capture`
+- agregacao/retencao de analytics com `AnalyticsDailyAggregate`
 
 ---
 
@@ -113,7 +116,8 @@ Concluidos no codigo:
 - [ ] integrar leads com CRM ou automacao comercial
 - [ ] decidir regra editorial definitiva de destaque comercial
 - [ ] manter snapshots visuais atualizados quando a UI mudar
-- [ ] evoluir dashboard com filtros temporais mais avancados e agregacao
-- [ ] concluir rollout do Google OAuth no admin e remover stack legada quando aprovado
+- [ ] evoluir dashboard com filtros temporais mais avancados e agregacoes adicionais
+- [ ] revisar o fluxo Google OAuth em producao periodicamente
 - [ ] validar ambiente novo no Vercel e em CI
+- [ ] automatizar `npm run analytics:maintain` em cron/CI
 - [x] consolidar modulos singleton de conteudo institucional

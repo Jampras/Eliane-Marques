@@ -1,8 +1,8 @@
 # Documentacao Tecnica - Eliane Marques Website
-**Versao:** 1.5  
-**Data:** 12/03/2026  
+**Versao:** 1.6  
+**Data:** 17/03/2026  
 **Responsavel pela analise:** Codex AI  
-**Status do projeto:** Producao / manutencao ativa / Google OAuth admin em validacao local
+**Status do projeto:** Producao / manutencao ativa
 
 ## Indice
 - [1. Visao Geral do Projeto](#1-visao-geral-do-projeto)
@@ -40,7 +40,7 @@
 | CSS | Tailwind CSS | 4.1.18 | Tokens em `globals.css` |
 | ORM | Prisma | 5.22.0 | PostgreSQL |
 | Banco | PostgreSQL | n/a | Supabase |
-| Auth admin | `jose` JWT + Supabase Auth Google | 6.1.3 | Producao usa senha unica; branch local adiciona Google OAuth com whitelist |
+| Auth admin | `jose` JWT + Supabase Auth Google | 6.1.3 | Google OAuth com whitelist de emails |
 | Validacao | Zod | 4.3.6 | Admin e formularios |
 | Rate limit | Upstash Redis REST | 1.35.6 | Obrigatorio em producao para login |
 | Testes | Playwright | 1.58.2 | E2E |
@@ -48,7 +48,7 @@
 | Icones | SVG local | n/a | `components/ui/Icon.tsx` |
 | Upload | API Next + Supabase Storage | n/a | Fallback local so fora de producao |
 | CTA por produto | configuracao persistida em banco | n/a | `ctaMode`, `ctaUrl`, `ctaLabel` |
-| Analytics | API route + Prisma | n/a | `AnalyticsEvent` em `/api/track` |
+| Analytics | API route + Prisma | n/a | `AnalyticsEvent` + `AnalyticsDailyAggregate` |
 | Leads | Server Action + Prisma | n/a | `Lead` persistido no contato |
 
 ### 1.3 Diagrama de Arquitetura
@@ -62,7 +62,7 @@ flowchart TD
     FE --> ADM["Rotas admin"]
     ADM --> ACT["Server Actions"]
     ACT --> AUTH["JWT + requireAdmin"]
-    AUTH --> OAUTH["Supabase Google OAuth (local validation)"]
+    AUTH --> OAUTH["Supabase Google OAuth + whitelist"]
     ACT --> CACHE["revalidatePath / revalidateTag"]
     PUB --> DATA["lib/data/*"]
     DATA --> PRISMA["Prisma"]
@@ -246,7 +246,7 @@ docs/
 - **Localizacao no codigo:** `components/analytics/*`, `app/api/track/route.ts`, `lib/analytics/*`
 - **Dados coletados/enviados:** tipo de evento, origem, rota, slug, produto, destino e metadados limitados
 - **Dependencias de configuracao:** banco acessivel e schema atualizado
-- **Risco:** crescimento da tabela `AnalyticsEvent` sem agregacao futura
+- **Risco:** sem execucao periodica da manutencao, eventos brutos voltam a crescer
 
 ### 4.4 Lead capture
 - **Tipo:** formulario / captura de lead
@@ -262,7 +262,7 @@ docs/
 - **Localizacao no codigo:** `app/auth/admin/*`, `lib/server/admin-google.ts`, `lib/supabase/*`
 - **Dados coletados/enviados:** email, nome e metadata basica da conta Google autenticada
 - **Dependencias de configuracao:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ADMIN_GOOGLE_ALLOWED_EMAILS`, provider Google ativo no Supabase
-- **Risco:** fluxo ainda local e em validacao; enquanto coexistir com senha unica, o projeto opera em auth dual-stack
+- **Risco:** qualquer drift em redirect URL, env publica ou provider Google bloqueia o acesso ao painel
 
 ### 4.6 WhatsApp
 - **Tipo:** conversao
@@ -346,20 +346,20 @@ docs/
 
 ### 7.2 Importantes - Resolver em Breve
 
-#### 7.2.1 Dashboard comercial ainda usa agregacao simples
-- **Problema:** metricas comerciais atuais usam agregacao leve em memoria e sem filtro temporal.
-- **Impacto:** limita a leitura de desempenho quando o volume de eventos crescer.
-- **Solucao recomendada:** evoluir para consultas agregadas e filtros por periodo.
+#### 7.2.1 Dashboard comercial ainda pede filtros temporais mais ricos
+- **Problema:** o historico agora esta agregado, mas o dashboard ainda pode evoluir em comparativos e recortes de periodo.
+- **Impacto:** limita analise comercial mais profunda.
+- **Solucao recomendada:** ampliar filtros e comparativos sobre a base agregada.
 
 #### 7.2.2 Leads ainda nao integram com CRM externo
 - **Problema:** os contatos sao persistidos, mas o repasse comercial ainda e manual.
 - **Impacto:** operacao comercial menos eficiente.
 - **Solucao recomendada:** integrar com CRM, webhook ou automacao de email.
 
-#### 7.2.3 Auth admin ainda esta em modo dual-stack
-- **Problema:** o projeto mantem senha unica e Google OAuth local ao mesmo tempo.
-- **Impacto:** aumenta superficie de manutencao, regras de teste e risco de divergencia entre ambiente local e producao.
-- **Solucao recomendada:** validar o fluxo Google, concluir rollout e remover o caminho legado quando aprovado.
+#### 7.2.3 Auth admin depende de operacao OAuth consistente
+- **Problema:** o fluxo administrativo agora depende totalmente de Supabase Auth + Google OAuth + whitelist.
+- **Impacto:** qualquer drift em redirect URL, provider ou env publica bloqueia o acesso ao painel.
+- **Solucao recomendada:** manter checklist operacional de auth e validar apos mudancas de ambiente.
 
 #### 7.2.4 Variaveis criticas ainda pedem rollout completo
 - **Problema:** o schema unico de ambiente ja existe, mas ainda precisa ser combinado com rollout final do auth Google e validacao operacional em todos os ambientes.
@@ -384,15 +384,14 @@ docs/
 | Definir regra editorial final para `featured` e `bestSeller` | Conteudo | Baixo | Medio | Full-stack |
 | Integrar leads com CRM ou automacao | Comercial | Medio | Alto | Full-stack |
 | QA visual automatizado de home/admin | QA | Medio | Medio | Frontend / QA |
-| Consolidar auth admin apos validacao do Google OAuth | Auth | Medio | Alto | Full-stack |
-| Validar o schema de ambiente novo em Vercel e CI | Infra | Medio | Alto | Full-stack |
+| Validar o auth Google e o schema de ambiente em Vercel e CI | Infra/Auth | Medio | Alto | Full-stack |
 
 ### 8.3 Fase 3 - Escala (90-180 dias)
 
 | Tarefa | Area | Esforco | Impacto | Responsavel sugerido |
 |---|---|---|---|---|
 | Evoluir dashboard comercial com recorte temporal | Produto | Medio | Alto | Full-stack |
-| Agregacao e retencao de `AnalyticsEvent` | Dados | Alto | Alto | Backend |
+| Automatizar `analytics:maintain` em cron/CI | Dados | Medio | Alto | Backend |
 | Lighthouse / acessibilidade automatizada | Qualidade | Medio | Medio | QA / Frontend |
 | Formalizar validacao de migrations em CI Linux | Infra | Medio | Alto | Full-stack |
 
@@ -408,7 +407,7 @@ docs/
 - WhatsApp: `lib/contact/whatsapp-intents.ts`
 - CTA de produto: `lib/core/product-cta.ts`
 - conteudo institucional singleton: `lib/institutional/about.ts`, `lib/institutional/about-actions.ts`, `lib/institutional/config.ts`, `lib/institutional/config-actions.ts`
-- auth admin em rollout Google: `app/auth/admin/*`, `lib/server/admin-google.ts`, `lib/actions/admin-auth.ts`
+- auth admin via Google: `app/auth/admin/*`, `lib/server/admin-google.ts`, `lib/actions/admin-auth.ts`
 - manual operacional do painel: `docs/MANUAL_ADMIN_PLATAFORMA.md`
 
 ```bash
@@ -433,6 +432,7 @@ npm.cmd run test:e2e
 - [ ] `SUPABASE_*` configuradas em producao
 - [ ] `UPSTASH_*` configuradas em producao
 - [ ] `NEXT_PUBLIC_SITE_URL` correta
+- [ ] `analytics:maintain` agendado fora do ambiente local
 
 ---
 
@@ -479,6 +479,7 @@ npm.cmd run test:e2e
 | 1.3 | 12/03/2026 | Codex AI | Documento atualizado para refletir seguranca endurecida, fallback de migrations, intent layer de WhatsApp, favicon, cache explicito e estado real de producao |
 | 1.4 | 12/03/2026 | Codex AI | Documento atualizado para refletir analytics, leads, dashboard comercial, filtros, flags e icones locais |
 | 1.5 | 12/03/2026 | Codex AI | Documento atualizado com pagina Sobre, auth admin via Google em validacao local, schema unico de ambiente e centralizacao institucional |
+| 1.6 | 17/03/2026 | Codex AI | Documento atualizado com Google OAuth ativo no admin, CSP de estilo endurecida e agregacao/retencao operacional de analytics |
 
 ---
 
@@ -491,5 +492,5 @@ npm.cmd run test:e2e
 - itens centrais ja resolvidos: CSP, auth, storage em producao, rate limit em producao, pipeline de imagem, componentizacao da home, cache de identidade, intents de contato e padronizacao do admin;
 - os riscos remanescentes estao concentrados em:
   - pendencia operacional de credencial sensivel do Supabase;
-  - dashboard comercial ainda sem agregacao/recorte temporal;
+  - necessidade de automatizar a manutencao de analytics agregados;
   - leads ainda sem integracao com CRM externo.

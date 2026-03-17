@@ -1,7 +1,7 @@
 # Manual do Admin - Plataforma Eliane Marques
 
-**Versao:** 1.0  
-**Data:** 12/03/2026  
+**Versao:** 1.1  
+**Data:** 17/03/2026  
 **Publico:** administradores de conteudo e operacao comercial
 
 ---
@@ -27,15 +27,12 @@ Este documento explica como usar o painel administrativo do site Eliane Marques 
 
 ### Como entrar
 1. Acesse a tela de login.
-2. Enquanto o rollout do Google OAuth nao estiver publicado, use a senha administrativa atual.
-3. Quando o Google OAuth for ativado, clique em `Entrar com Google`.
-4. Use uma conta Google autorizada para administracao.
-5. Em contingencia, o acesso por senha pode continuar disponivel durante a transicao.
+2. Clique em `Entrar com Google`.
+3. Use uma conta Google autorizada para administracao.
 
 ### Observacoes importantes
-- o fluxo principal esta em migracao para Google OAuth com whitelist de emails
-- em producao atual, confirme com o time tecnico se o rollout ja foi ativado antes de orientar o uso por Google
-- a senha unica ainda existe como contingencia operacional
+- o painel usa Google OAuth com whitelist de emails
+- apenas contas explicitamente autorizadas entram no backoffice
 - existe rate limit de seguranca no login
 - se houver muitas tentativas erradas, o sistema bloqueia temporariamente novas tentativas
 
