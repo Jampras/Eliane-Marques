@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
+import { getPublicSiteUrl, getSupabaseStorageEnv, isProductionEnv } from '@/lib/env/server';
 import {
   ensureProductionUploadConfig,
   ensureServiceRoleKeyNotCompromised,
@@ -28,13 +29,11 @@ function buildFilename(extension: string) {
 }
 
 function getBaseSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '') || 'http://localhost:3000';
+  return getPublicSiteUrl().replace(/\/+$/, '');
 }
 
 function getSupabaseConfig() {
-  const url = process.env.SUPABASE_URL?.trim();
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET?.trim() || 'uploads';
+  const { url, serviceRoleKey, bucket } = getSupabaseStorageEnv();
 
   if (!url || !serviceRoleKey) {
     return null;
@@ -103,7 +102,7 @@ async function uploadToSupabase({
 export async function uploadImage(input: UploadImageInput): Promise<UploadImageResult> {
   ensureServiceRoleKeyNotCompromised();
 
-  if (process.env.NODE_ENV === 'production') {
+  if (isProductionEnv()) {
     ensureProductionUploadConfig();
     return uploadToSupabase(input);
   }

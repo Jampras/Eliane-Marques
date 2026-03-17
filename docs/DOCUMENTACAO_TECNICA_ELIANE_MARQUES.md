@@ -1,8 +1,8 @@
 # Documentacao Tecnica - Eliane Marques Website
-**Versao:** 1.3  
+**Versao:** 1.5  
 **Data:** 12/03/2026  
 **Responsavel pela analise:** Codex AI  
-**Status do projeto:** Producao / manutencao ativa
+**Status do projeto:** Producao / manutencao ativa / Google OAuth admin em validacao local
 
 ## Indice
 - [1. Visao Geral do Projeto](#1-visao-geral-do-projeto)
@@ -40,7 +40,7 @@
 | CSS | Tailwind CSS | 4.1.18 | Tokens em `globals.css` |
 | ORM | Prisma | 5.22.0 | PostgreSQL |
 | Banco | PostgreSQL | n/a | Supabase |
-| Auth admin | `jose` JWT | 6.1.3 | Cookie `admin_session` |
+| Auth admin | `jose` JWT + Supabase Auth Google | 6.1.3 | Producao usa senha unica; branch local adiciona Google OAuth com whitelist |
 | Validacao | Zod | 4.3.6 | Admin e formularios |
 | Rate limit | Upstash Redis REST | 1.35.6 | Obrigatorio em producao para login |
 | Testes | Playwright | 1.58.2 | E2E |
@@ -62,6 +62,7 @@ flowchart TD
     FE --> ADM["Rotas admin"]
     ADM --> ACT["Server Actions"]
     ACT --> AUTH["JWT + requireAdmin"]
+    AUTH --> OAUTH["Supabase Google OAuth (local validation)"]
     ACT --> CACHE["revalidatePath / revalidateTag"]
     PUB --> DATA["lib/data/*"]
     DATA --> PRISMA["Prisma"]
@@ -94,6 +95,7 @@ app/
   api/upload/route.ts
   (public)/
   (admin)/admin/
+  auth/admin/
 components/
   ui/
   shared/
@@ -107,6 +109,8 @@ lib/
   contact/
   core/
   data/
+  institutional/
+  supabase/
   server/
   utils/
   validators/
@@ -147,7 +151,7 @@ docs/
 ### 3.1 Navbar / Header
 - **Localizacao:** `components/shared/navigation/Navbar.tsx`, `MobileNav.tsx`
 - **Descricao:** navbar sticky com CTA principal e acesso ao admin.
-- **Problema identificado:** `Material Symbols` ainda depende de recurso externo.
+- **Problema identificado:** nenhum critico estrutural apos migracao dos icones para bundle local.
 - **Sugestao de melhoria:** manter telemetria de navegacao e revisar densidade de links em mobile.
 
 **Acoes para este componente**
@@ -207,6 +211,19 @@ docs/
 - Usar `ctaMode=EXTERNAL` apenas com URL valida preenchida.
 - Centralizar qualquer nova regra comercial em `lib/core/product-cta.ts`.
 
+### 3.8 Pagina Sobre
+- **Localizacao:** `app/(public)/sobre/page.tsx`, `app/(admin)/admin/sobre/*`, `lib/institutional/about.ts`, `lib/institutional/about-actions.ts`
+- **Descricao:** pagina institucional singleton com hero, manifesto, trajetoria, especializacoes e credenciais.
+- **JavaScript associado:** formulario client-side do admin com blocos dinamicos e upload de imagens.
+- **Dependencias:** modelos `AboutPage`, `AboutMilestone`, `AboutSpecialization`, `AboutCredential`.
+- **Estado de responsividade:** pagina publica responsiva e admin com edicao longa suportada por `AdminMobileFormBar`.
+- **Problemas identificados:** por ser singleton novo, ainda depende de validacao editorial real com conteudo final.
+- **Sugestao de melhoria:** se surgirem novas paginas institucionais, consolidar o padrao em um dominio singleton compartilhado.
+
+**Acoes para este componente**
+- Definir padrao editorial de quantidade maxima de marcos e credenciais exibidas.
+- Avaliar modal/detalhe de certificado apenas se isso gerar ganho real de credibilidade.
+
 ---
 
 ## 4. INTEGRACOES EXTERNAS
@@ -239,18 +256,32 @@ docs/
 - **Dependencias de configuracao:** banco acessivel
 - **Risco:** ainda sem integracao automatica com CRM externo
 
-### 4.5 WhatsApp
+### 4.5 Supabase Auth / Google OAuth Admin
+- **Tipo:** autenticacao social administrativa
+- **Implementacao:** Supabase Auth no browser + callback server-side que valida whitelist e emite `admin_session`
+- **Localizacao no codigo:** `app/auth/admin/*`, `lib/server/admin-google.ts`, `lib/supabase/*`
+- **Dados coletados/enviados:** email, nome e metadata basica da conta Google autenticada
+- **Dependencias de configuracao:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ADMIN_GOOGLE_ALLOWED_EMAILS`, provider Google ativo no Supabase
+- **Risco:** fluxo ainda local e em validacao; enquanto coexistir com senha unica, o projeto opera em auth dual-stack
+
+### 4.6 WhatsApp
 - **Tipo:** conversao
 - **Implementacao:** deep link `wa.me` / `api.whatsapp.com`
 
-### 4.6 Links externos por produto
+### 4.7 Links externos por produto
 - **Tipo:** conversao / checkout externo
 - **Implementacao:** configuracao persistida no `Product`
 
-### 4.7 Sistema de icones local
+### 4.8 Sistema de icones local
 - **Tipo:** icones
 - **Implementacao:** SVG inline via `components/ui/Icon.tsx`
-- **Risco:** dependencia residual de CDN
+- **Risco:** baixo; bundle local reduz dependencia de terceiros
+
+### 4.9 Dominio institucional singleton
+- **Tipo:** organizacao interna de conteudo institucional
+- **Implementacao:** `lib/institutional/config.ts`, `lib/institutional/config-actions.ts`, `lib/institutional/about.ts`, `lib/institutional/about-actions.ts`
+- **Dependencias de configuracao:** banco acessivel e tags de revalidacao corretas
+- **Risco:** baixo; principal ganho e previsibilidade de manutencao
 
 ---
 
@@ -258,7 +289,7 @@ docs/
 
 ### 5.1 Analise de Performance
 - fontes principais em `next/font`
-- `Material Symbols` ainda externa, mas sem carregamento bloqueante direto
+- icones agora estao locais em `components/ui/Icon.tsx`
 - imagens publicas usam otimizacao condicional via helper central
 - favicon resolvido em `app/icon.svg`
 - build validado em producao e local
@@ -325,6 +356,16 @@ docs/
 - **Impacto:** operacao comercial menos eficiente.
 - **Solucao recomendada:** integrar com CRM, webhook ou automacao de email.
 
+#### 7.2.3 Auth admin ainda esta em modo dual-stack
+- **Problema:** o projeto mantem senha unica e Google OAuth local ao mesmo tempo.
+- **Impacto:** aumenta superficie de manutencao, regras de teste e risco de divergencia entre ambiente local e producao.
+- **Solucao recomendada:** validar o fluxo Google, concluir rollout e remover o caminho legado quando aprovado.
+
+#### 7.2.4 Variaveis criticas ainda pedem rollout completo
+- **Problema:** o schema unico de ambiente ja existe, mas ainda precisa ser combinado com rollout final do auth Google e validacao operacional em todos os ambientes.
+- **Impacto:** sem validacao completa, ainda pode existir drift entre local e producao.
+- **Solucao recomendada:** concluir rollout do auth e revisar Vercel/CI contra o contrato novo de ambiente.
+
 ---
 
 ## 8. ROADMAP TECNICO RECOMENDADO
@@ -343,6 +384,8 @@ docs/
 | Definir regra editorial final para `featured` e `bestSeller` | Conteudo | Baixo | Medio | Full-stack |
 | Integrar leads com CRM ou automacao | Comercial | Medio | Alto | Full-stack |
 | QA visual automatizado de home/admin | QA | Medio | Medio | Frontend / QA |
+| Consolidar auth admin apos validacao do Google OAuth | Auth | Medio | Alto | Full-stack |
+| Validar o schema de ambiente novo em Vercel e CI | Infra | Medio | Alto | Full-stack |
 
 ### 8.3 Fase 3 - Escala (90-180 dias)
 
@@ -351,6 +394,7 @@ docs/
 | Evoluir dashboard comercial com recorte temporal | Produto | Medio | Alto | Full-stack |
 | Agregacao e retencao de `AnalyticsEvent` | Dados | Alto | Alto | Backend |
 | Lighthouse / acessibilidade automatizada | Qualidade | Medio | Medio | QA / Frontend |
+| Formalizar validacao de migrations em CI Linux | Infra | Medio | Alto | Full-stack |
 
 ---
 
@@ -363,6 +407,8 @@ docs/
 - fontes: `app/layout.tsx` via `next/font`
 - WhatsApp: `lib/contact/whatsapp-intents.ts`
 - CTA de produto: `lib/core/product-cta.ts`
+- conteudo institucional singleton: `lib/institutional/about.ts`, `lib/institutional/about-actions.ts`, `lib/institutional/config.ts`, `lib/institutional/config-actions.ts`
+- auth admin em rollout Google: `app/auth/admin/*`, `lib/server/admin-google.ts`, `lib/actions/admin-auth.ts`
 - manual operacional do painel: `docs/MANUAL_ADMIN_PLATAFORMA.md`
 
 ```bash
@@ -417,6 +463,8 @@ npm.cmd run test:e2e
 - **Funil WhatsApp:** principal fluxo de conversao
 - **CTA externo:** botao de produto apontando para checkout externo
 - **Intent de WhatsApp:** helper central que monta URL contextual
+- **Sobre:** pagina institucional singleton gerida pelo admin em `/admin/sobre`
+- **Admin Google allowlist:** lista de emails autorizados para Google OAuth no painel
 - **Admin:** backoffice protegido em `/admin`
 
 ---
@@ -430,6 +478,7 @@ npm.cmd run test:e2e
 | 1.2 | 11/03/2026 | Codex AI | Documento atualizado com CTA por produto configuravel |
 | 1.3 | 12/03/2026 | Codex AI | Documento atualizado para refletir seguranca endurecida, fallback de migrations, intent layer de WhatsApp, favicon, cache explicito e estado real de producao |
 | 1.4 | 12/03/2026 | Codex AI | Documento atualizado para refletir analytics, leads, dashboard comercial, filtros, flags e icones locais |
+| 1.5 | 12/03/2026 | Codex AI | Documento atualizado com pagina Sobre, auth admin via Google em validacao local, schema unico de ambiente e centralizacao institucional |
 
 ---
 

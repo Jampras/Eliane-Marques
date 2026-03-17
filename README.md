@@ -23,6 +23,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - backoffice em `app/(admin)/admin`
 - leitura de dados em `lib/data`
 - mutacoes em `lib/actions`
+- dominio institucional em `lib/institutional`
 - infraestrutura server-side em `lib/server`
 - regras de negocio compartilhadas em `lib/core`
 - intents de contato em `lib/contact`
@@ -31,6 +32,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 
 ## Estado tecnico atual
 - home componentizada por secao
+- pagina `Sobre` administravel em `/admin/sobre` e publicada em `/sobre`
 - catalogos paginados
 - catalogos com busca e filtros
 - detalhes de produto com URL por tipo
@@ -42,6 +44,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - SEO estruturado com `FAQPage`, `Article` e `Product`
 - `getSiteIdentity()` com cache explicito
 - intents de WhatsApp centralizadas em `lib/contact/whatsapp-intents.ts`
+- `Config` e `About` centralizados em `lib/institutional/*`
 - fontes principais via `next/font`
 - icones locais em SVG via `components/ui/Icon.tsx`
 - politica editorial centralizada para `featured` e `bestSeller`
@@ -50,6 +53,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - rate limit distribuido obrigatorio em producao
 - CSP dinamica com nonce por request
 - fallback de migrations via `scripts/db-deploy.mjs`
+- fluxo Google OAuth para admin implementado localmente e em validacao antes de rollout
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:
@@ -57,8 +61,11 @@ Copie `.env.example` para `.env` e preencha:
 - `DATABASE_URL`
 - `DIRECT_URL`
 - `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `ADMIN_PASSWORD`
 - `ADMIN_SESSION_SECRET`
+- `ADMIN_GOOGLE_ALLOWED_EMAILS`
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`
 - `SUPABASE_URL`
@@ -164,6 +171,31 @@ Comportamento:
 - `cursos`: card abre link externo quando configurado; caso contrario segue para detalhe
 - `materiais`: card abre link externo quando configurado; caso contrario segue para detalhe
 
+## Pagina Sobre
+- rota publica: `/sobre`
+- rota admin: `/admin/sobre`
+- entidades persistidas:
+  - `AboutPage`
+  - `AboutMilestone`
+  - `AboutSpecialization`
+  - `AboutCredential`
+
+## Auth admin com Google
+Estado atual:
+- implementado localmente
+- sem deploy ate validacao final
+- fluxo principal: Google OAuth via Supabase
+- contingencia mantida: senha unica de admin
+
+Variaveis usadas:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `ADMIN_GOOGLE_ALLOWED_EMAILS`
+
+Rotas:
+- `app/auth/admin/callback/route.ts`
+- `app/auth/admin/logout/route.ts`
+
 ## Testes
 - E2E com Playwright em `tests/e2e`
 - o `webServer` usa `next dev --webpack`
@@ -203,3 +235,5 @@ Executado:
 Pendente principal:
 - rotacao da credencial sensivel do Supabase
 - integracao dos leads com CRM ou automacao comercial
+- consolidacao do auth admin apos validacao do fluxo Google
+- agregacao/retencao de analytics e CI Linux para migrations

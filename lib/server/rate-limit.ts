@@ -1,5 +1,6 @@
 import 'server-only';
 import { Redis } from '@upstash/redis';
+import { getUpstashEnv, isProductionEnv, isRateLimitBypassedForTests } from '@/lib/env/server';
 
 interface RateLimitEntry {
   failures: number;
@@ -11,14 +12,9 @@ const MAX_FAILURES = 5;
 const WINDOW_MS = 10 * 60 * 1000;
 const BLOCK_MS = 15 * 60 * 1000;
 
+const upstashEnv = getUpstashEnv();
 const redis =
-  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-    ? Redis.fromEnv()
-    : null;
-
-function isRateLimitBypassedForTests() {
-  return process.env.E2E_DISABLE_RATE_LIMIT === 'true';
-}
+  upstashEnv.isConfigured ? new Redis({ url: upstashEnv.url, token: upstashEnv.token }) : null;
 
 function blockKey(key: string) {
   return `${key}:blocked_until`;
@@ -29,7 +25,7 @@ function failuresKey(key: string) {
 }
 
 function logRateLimitError(context: string, error: unknown) {
-  if (process.env.NODE_ENV === 'production') {
+  if (isProductionEnv()) {
     const safeMessage = error instanceof Error ? error.message : String(error);
     console.error(`[rate-limit:${context}] ${safeMessage}`);
     return;
@@ -98,7 +94,7 @@ const globalForRateLimit = globalThis as unknown as {
 const loginRateLimitStore =
   globalForRateLimit.loginRateLimitStore ?? new Map<string, RateLimitEntry>();
 
-if (process.env.NODE_ENV !== 'production') {
+if (!isProductionEnv()) {
   globalForRateLimit.loginRateLimitStore = loginRateLimitStore;
 }
 

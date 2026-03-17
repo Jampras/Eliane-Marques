@@ -1,5 +1,7 @@
+import { getSupabaseStorageEnv } from '@/lib/env/server';
+
 function getSupabaseHostname() {
-  const supabaseUrl = process.env.SUPABASE_URL?.trim();
+  const supabaseUrl = getSupabaseStorageEnv().url;
 
   if (!supabaseUrl) {
     return null;

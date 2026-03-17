@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import prisma from '@/lib/core/prisma';
+import { getPublicSiteUrl } from '@/lib/env/server';
 import { getProductDetailPath } from '@/lib/core/product-paths';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const BASE_URL = getPublicSiteUrl();
 
 const staticRoutes = [
   '',

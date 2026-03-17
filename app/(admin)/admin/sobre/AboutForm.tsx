@@ -16,7 +16,7 @@ import {
   ADMIN_SELECT_CLASS,
   ADMIN_TEXTAREA_CLASS,
 } from '@/components/features/admin/formStyles';
-import { upsertAboutPage } from '@/lib/actions/about';
+import { upsertInstitutionalAboutPage } from '@/lib/institutional/about-actions';
 
 type CtaMode = 'WHATSAPP' | 'EXTERNAL';
 type CredentialKind = 'CERTIFICATE' | 'SEAL' | 'SPECIALIZATION';
@@ -154,7 +154,7 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
     setFeedback(null);
 
     try {
-      const result = await upsertAboutPage({
+      const result = await upsertInstitutionalAboutPage({
         heroTitle,
         heroSubtitle,
         introTitle,
@@ -284,8 +284,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
 
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="space-y-2 lg:col-span-2">
-              <label className={ADMIN_LABEL_CLASS}>Titulo principal</label>
+              <label htmlFor="about-hero-title" className={ADMIN_LABEL_CLASS}>
+                Titulo principal
+              </label>
               <textarea
+                id="about-hero-title"
                 rows={3}
                 value={heroTitle}
                 onChange={(event) => setHeroTitle(event.target.value)}
@@ -294,8 +297,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
             </div>
 
             <div className="space-y-2 lg:col-span-2">
-              <label className={ADMIN_LABEL_CLASS}>Subtitulo / resumo</label>
+              <label htmlFor="about-hero-subtitle" className={ADMIN_LABEL_CLASS}>
+                Subtitulo / resumo
+              </label>
               <textarea
+                id="about-hero-subtitle"
                 rows={4}
                 value={heroSubtitle}
                 onChange={(event) => setHeroSubtitle(event.target.value)}
@@ -322,9 +328,12 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
           />
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <div className="space-y-2">
-              <label className={ADMIN_LABEL_CLASS}>Titulo da introducao</label>
+              <div className="space-y-2">
+              <label htmlFor="about-intro-title" className={ADMIN_LABEL_CLASS}>
+                Titulo da introducao
+              </label>
               <input
+                id="about-intro-title"
                 value={introTitle}
                 onChange={(event) => setIntroTitle(event.target.value)}
                 className={ADMIN_INPUT_CLASS}
@@ -332,8 +341,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
             </div>
 
             <div className="space-y-2">
-              <label className={ADMIN_LABEL_CLASS}>Titulo do manifesto</label>
+              <label htmlFor="about-manifesto-title" className={ADMIN_LABEL_CLASS}>
+                Titulo do manifesto
+              </label>
               <input
+                id="about-manifesto-title"
                 value={manifestoTitle}
                 onChange={(event) => setManifestoTitle(event.target.value)}
                 className={ADMIN_INPUT_CLASS}
@@ -341,8 +353,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
             </div>
 
             <div className="space-y-2">
-              <label className={ADMIN_LABEL_CLASS}>Texto da introducao</label>
+              <label htmlFor="about-intro-body" className={ADMIN_LABEL_CLASS}>
+                Texto da introducao
+              </label>
               <textarea
+                id="about-intro-body"
                 rows={5}
                 value={introBody}
                 onChange={(event) => setIntroBody(event.target.value)}
@@ -351,8 +366,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
             </div>
 
             <div className="space-y-2">
-              <label className={ADMIN_LABEL_CLASS}>Texto do manifesto</label>
+              <label htmlFor="about-manifesto-body" className={ADMIN_LABEL_CLASS}>
+                Texto do manifesto
+              </label>
               <textarea
+                id="about-manifesto-body"
                 rows={5}
                 value={manifestoBody}
                 onChange={(event) => setManifestoBody(event.target.value)}
@@ -397,27 +415,39 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
                 key={`milestone-${index}`}
                 className="grid gap-4 border border-border-soft bg-bg p-4 lg:grid-cols-[160px_minmax(0,1fr)_auto]"
               >
-                <div className="space-y-2">
-                  <label className={ADMIN_LABEL_CLASS}>Ano</label>
-                  <input
-                    value={item.year}
-                    onChange={(event) => updateMilestone(index, 'year', event.target.value)}
-                    className={ADMIN_INPUT_CLASS}
+                  <div className="space-y-2">
+                    <label htmlFor={`milestone-year-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Ano
+                    </label>
+                    <input
+                      id={`milestone-year-${index}`}
+                      value={item.year}
+                      onChange={(event) => updateMilestone(index, 'year', event.target.value)}
+                      className={ADMIN_INPUT_CLASS}
                     placeholder="2026"
                   />
                 </div>
                 <div className="grid gap-4 lg:grid-cols-2">
                   <div className="space-y-2">
-                    <label className={ADMIN_LABEL_CLASS}>Titulo</label>
+                    <label htmlFor={`milestone-title-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Titulo
+                    </label>
                     <input
+                      id={`milestone-title-${index}`}
                       value={item.title}
                       onChange={(event) => updateMilestone(index, 'title', event.target.value)}
                       className={ADMIN_INPUT_CLASS}
                     />
                   </div>
                   <div className="space-y-2 lg:col-span-2">
-                    <label className={ADMIN_LABEL_CLASS}>Descricao</label>
+                    <label
+                      htmlFor={`milestone-description-${index}`}
+                      className={ADMIN_LABEL_CLASS}
+                    >
+                      Descricao
+                    </label>
                     <textarea
+                      id={`milestone-description-${index}`}
                       rows={3}
                       value={item.description}
                       onChange={(event) =>
@@ -483,8 +513,14 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
               >
                 <div className="grid gap-4 lg:grid-cols-2">
                   <div className="space-y-2">
-                    <label className={ADMIN_LABEL_CLASS}>Titulo</label>
+                    <label
+                      htmlFor={`specialization-title-${index}`}
+                      className={ADMIN_LABEL_CLASS}
+                    >
+                      Titulo
+                    </label>
                     <input
+                      id={`specialization-title-${index}`}
                       value={item.title}
                       onChange={(event) =>
                         updateSpecialization(index, 'title', event.target.value)
@@ -493,8 +529,14 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
                     />
                   </div>
                   <div className="space-y-2 lg:col-span-2">
-                    <label className={ADMIN_LABEL_CLASS}>Descricao</label>
+                    <label
+                      htmlFor={`specialization-description-${index}`}
+                      className={ADMIN_LABEL_CLASS}
+                    >
+                      Descricao
+                    </label>
                     <textarea
+                      id={`specialization-description-${index}`}
                       rows={3}
                       value={item.description}
                       onChange={(event) =>
@@ -567,8 +609,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
               >
                 <div className="grid gap-4 lg:grid-cols-[180px_minmax(0,1fr)_minmax(0,1fr)_120px_auto]">
                   <div className="space-y-2">
-                    <label className={ADMIN_LABEL_CLASS}>Tipo</label>
+                    <label htmlFor={`credential-kind-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Tipo
+                    </label>
                     <select
+                      id={`credential-kind-${index}`}
                       value={item.kind}
                       onChange={(event) =>
                         updateCredential(index, 'kind', event.target.value as CredentialKind)
@@ -581,24 +626,33 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className={ADMIN_LABEL_CLASS}>Titulo</label>
+                    <label htmlFor={`credential-title-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Titulo
+                    </label>
                     <input
+                      id={`credential-title-${index}`}
                       value={item.title}
                       onChange={(event) => updateCredential(index, 'title', event.target.value)}
                       className={ADMIN_INPUT_CLASS}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className={ADMIN_LABEL_CLASS}>Instituicao</label>
+                    <label htmlFor={`credential-issuer-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Instituicao
+                    </label>
                     <input
+                      id={`credential-issuer-${index}`}
                       value={item.issuer}
                       onChange={(event) => updateCredential(index, 'issuer', event.target.value)}
                       className={ADMIN_INPUT_CLASS}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className={ADMIN_LABEL_CLASS}>Ano</label>
+                    <label htmlFor={`credential-year-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Ano
+                    </label>
                     <input
+                      id={`credential-year-${index}`}
                       value={item.year}
                       onChange={(event) => updateCredential(index, 'year', event.target.value)}
                       className={ADMIN_INPUT_CLASS}
@@ -640,8 +694,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
 
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="space-y-2">
-              <label className={ADMIN_LABEL_CLASS}>Destino do CTA</label>
+              <label htmlFor="about-cta-mode" className={ADMIN_LABEL_CLASS}>
+                Destino do CTA
+              </label>
               <select
+                id="about-cta-mode"
                 value={ctaMode}
                 onChange={(event) => setCtaMode(event.target.value as CtaMode)}
                 className={ADMIN_SELECT_CLASS}
@@ -652,8 +709,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
             </div>
 
             <div className="space-y-2">
-              <label className={ADMIN_LABEL_CLASS}>Texto do botao</label>
+              <label htmlFor="about-cta-label" className={ADMIN_LABEL_CLASS}>
+                Texto do botao
+              </label>
               <input
+                id="about-cta-label"
                 value={ctaLabel}
                 onChange={(event) => setCtaLabel(event.target.value)}
                 className={ADMIN_INPUT_CLASS}
@@ -663,8 +723,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
 
             {ctaMode === 'EXTERNAL' ? (
               <div className="space-y-2 lg:col-span-2">
-                <label className={ADMIN_LABEL_CLASS}>URL externa</label>
+                <label htmlFor="about-cta-url" className={ADMIN_LABEL_CLASS}>
+                  URL externa
+                </label>
                 <input
+                  id="about-cta-url"
                   value={ctaUrl}
                   onChange={(event) => setCtaUrl(event.target.value)}
                   className={ADMIN_INPUT_CLASS}
@@ -673,8 +736,11 @@ export default function AboutForm({ initialValue }: { initialValue: AboutFormVal
               </div>
             ) : (
               <div className="space-y-2 lg:col-span-2">
-                <label className={ADMIN_LABEL_CLASS}>Mensagem padrao de WhatsApp</label>
+                <label htmlFor="about-whatsapp-message" className={ADMIN_LABEL_CLASS}>
+                  Mensagem padrao de WhatsApp
+                </label>
                 <textarea
+                  id="about-whatsapp-message"
                   rows={3}
                   value={whatsAppMessageTemplate}
                   onChange={(event) => setWhatsAppMessageTemplate(event.target.value)}

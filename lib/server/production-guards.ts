@@ -1,5 +1,6 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
+import { getSupabaseStorageEnv, getUpstashEnv, isProductionEnv } from '@/lib/env/server';
 
 const KNOWN_EXPOSED_SUPABASE_SERVICE_ROLE_KEY_SHA256 =
   'fa41c2e6eb4b2ada173c70c80efdfa714e2c4017abb58e5d9888ed60518dd6b7';
@@ -14,14 +15,13 @@ function isBlank(value: string | undefined) {
 }
 
 export function ensureDistributedRateLimitConfigured() {
-  if (process.env.NODE_ENV !== 'production') {
+  if (!isProductionEnv()) {
     return;
   }
 
-  if (
-    isBlank(process.env.UPSTASH_REDIS_REST_URL) ||
-    isBlank(process.env.UPSTASH_REDIS_REST_TOKEN)
-  ) {
+  const { url, token } = getUpstashEnv();
+
+  if (isBlank(url) || isBlank(token)) {
     throw new Error(
       'CRITICAL: Upstash Redis is required in production for distributed login rate limiting.'
     );
@@ -29,15 +29,13 @@ export function ensureDistributedRateLimitConfigured() {
 }
 
 export function ensureProductionUploadConfig() {
-  if (process.env.NODE_ENV !== 'production') {
+  if (!isProductionEnv()) {
     return;
   }
 
-  if (
-    isBlank(process.env.SUPABASE_URL) ||
-    isBlank(process.env.SUPABASE_SERVICE_ROLE_KEY) ||
-    isBlank(process.env.SUPABASE_STORAGE_BUCKET)
-  ) {
+  const { url, serviceRoleKey, bucket } = getSupabaseStorageEnv();
+
+  if (isBlank(url) || isBlank(serviceRoleKey) || isBlank(bucket)) {
     throw new Error(
       'CRITICAL: Supabase storage must be configured in production. Local upload fallback is disabled.'
     );
@@ -45,11 +43,11 @@ export function ensureProductionUploadConfig() {
 }
 
 export function ensureServiceRoleKeyNotCompromised() {
-  if (process.env.NODE_ENV !== 'production') {
+  if (!isProductionEnv()) {
     return;
   }
 
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const key = getSupabaseStorageEnv().serviceRoleKey.trim();
   if (!key) {
     return;
   }

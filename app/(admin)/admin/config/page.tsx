@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { getSiteConfigs } from '@/lib/data/config';
+import { getSiteConfigs } from '@/lib/institutional/config';
 import { requireAdmin } from '@/lib/server/admin-auth';
 import ConfigForm from './ConfigForm';
 

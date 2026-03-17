@@ -2,30 +2,14 @@ import 'server-only';
 import { JWTPayload, SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-
-const weakSessionSecrets = new Set([
-  'super-secret-session-key-change-me',
-  'changeme',
-  'change-me',
-  'admin',
-  'defina_um_secret_com_32+_caracteres',
-]);
+import { getAdminSessionSecret, isProductionEnv } from '@/lib/env/server';
 
 let _key: Uint8Array | null = null;
 
 function getKey(): Uint8Array {
   if (_key) return _key;
 
-  const secretKey = process.env.ADMIN_SESSION_SECRET;
-  if (!secretKey) {
-    throw new Error('CRITICAL: ADMIN_SESSION_SECRET is not defined in environment variables.');
-  }
-
-  if (secretKey.length < 32 || weakSessionSecrets.has(secretKey.trim().toLowerCase())) {
-    throw new Error(
-      'CRITICAL: ADMIN_SESSION_SECRET is weak. Use a random secret with at least 32 characters.'
-    );
-  }
+  const secretKey = getAdminSessionSecret();
 
   _key = new TextEncoder().encode(secretKey);
   return _key;
@@ -86,7 +70,7 @@ export async function updateSession(request: NextRequest, requestHeaders?: Heade
     path: '/',
     expires,
     sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProductionEnv(),
   });
   return res;
 }

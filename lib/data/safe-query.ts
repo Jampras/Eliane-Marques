@@ -1,16 +1,4 @@
-function isFailFastEnabled() {
-  const flag = process.env.DATA_QUERY_FAIL_FAST?.trim().toLowerCase();
-
-  if (flag === 'true') {
-    return true;
-  }
-
-  if (flag === 'false') {
-    return false;
-  }
-
-  return process.env.NODE_ENV === 'production';
-}
+import { isFailFastEnabled, isProductionEnv } from '@/lib/env/server';
 
 export async function safeDataQuery<T>(
   context: string,
@@ -22,7 +10,7 @@ export async function safeDataQuery<T>(
   } catch (error) {
     const message = `[${context}] data query failed`;
 
-    if (process.env.NODE_ENV === 'production') {
+    if (isProductionEnv()) {
       console.error(message);
     } else {
       console.error(`[${context}]`, error);

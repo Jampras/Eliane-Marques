@@ -27,10 +27,30 @@
 - **Objetivo:** reduzir regressao visual em pontos de conversao.
 - **Impacto:** medio.
 
+#### BT-018 - Consolidar auth admin apos validacao do Google OAuth
+- **Objetivo:** remover o modo dual-stack de login quando o fluxo Google estiver aprovado.
+- **Impacto:** medio.
+
+#### BT-019 - Criar schema unificado de ambiente com fail-fast
+- **Objetivo:** validar todas as variaveis criticas na inicializacao.
+- **Impacto:** medio.
+
+#### BT-020 - Centralizar singletons institucionais em um dominio dedicado
+- **Objetivo:** agrupar `Config`, `About` e futuros modulos institucionais sob padrao unico.
+- **Impacto:** medio.
+
 ### P2 - Backlog de melhoria
 
 #### BT-017 - Dashboard comercial no admin
 - **Objetivo:** evoluir o dashboard atual com agregacoes, periodos e funil.
+
+#### BT-021 - Verificacao de migrations em CI Linux
+- **Objetivo:** garantir previsibilidade do schema fora do Windows.
+- **Impacto:** medio.
+
+#### BT-022 - Politica de retencao/agregacao de analytics
+- **Objetivo:** evitar crescimento indefinido da tabela `AnalyticsEvent`.
+- **Impacto:** medio.
 
 ---
 
@@ -61,6 +81,8 @@ Concluidos no codigo:
 - auditoria de acessibilidade e performance documentada
 - favicon
 - limpeza visual e padronizacao do admin
+- schema unico de ambiente com fail-fast
+- dominio institucional `Config` + `About` centralizado em `lib/institutional`
 
 ---
 
@@ -72,12 +94,17 @@ Concluidos no codigo:
 
 ### Sprint 2
 - BT-013
+- BT-018
+- BT-019
 
 ### Sprint 3
 - BT-014
+- BT-020
 
 ### Sprint 4
 - BT-017
+- BT-021
+- BT-022
 
 ---
 
@@ -87,3 +114,6 @@ Concluidos no codigo:
 - [ ] decidir regra editorial definitiva de destaque comercial
 - [ ] manter snapshots visuais atualizados quando a UI mudar
 - [ ] evoluir dashboard com filtros temporais mais avancados e agregacao
+- [ ] concluir rollout do Google OAuth no admin e remover stack legada quando aprovado
+- [ ] validar ambiente novo no Vercel e em CI
+- [x] consolidar modulos singleton de conteudo institucional

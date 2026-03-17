@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { encrypt, SESSION_COOKIE_NAME } from '@/lib/core/auth';
 import { getRequestClientKey } from '@/lib/server/admin-auth';
+import { clearAdminSession } from '@/lib/server/admin-google';
 import {
   clearLoginFailures,
   getLoginBlockRemainingMs,
@@ -12,6 +13,7 @@ import {
 } from '@/lib/server/rate-limit';
 import { logServerError } from '@/lib/server/errors';
 import { ensureDistributedRateLimitConfigured } from '@/lib/server/production-guards';
+import { getAdminPassword, isProductionEnv } from '@/lib/env/server';
 
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const LOGIN_DELAY_MS = 350;
@@ -49,7 +51,7 @@ export async function loginAction(formData: FormData) {
     return { error: 'Erro de configuracao do servidor. Contate o suporte.' };
   }
 
-  const expectedPassword = process.env.ADMIN_PASSWORD;
+  const expectedPassword = getAdminPassword();
 
   if (!expectedPassword) {
     logServerError('loginAction', 'ADMIN_PASSWORD is not defined in environment variables.');
@@ -96,7 +98,7 @@ export async function loginAction(formData: FormData) {
     expires,
     httpOnly: true,
     sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProductionEnv(),
     path: '/',
   });
 
@@ -104,13 +106,6 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  (await cookies()).set(SESSION_COOKIE_NAME, '', {
-    expires: new Date(0),
-    path: '/',
-    httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
-  });
-
-  redirect('/admin/login');
+  await clearAdminSession();
+  redirect('/auth/admin/logout');
 }

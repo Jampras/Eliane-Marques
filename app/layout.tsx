@@ -5,8 +5,9 @@ import './globals.css';
 import { ToastProvider } from '@/components/ui/ToastProvider';
 import { BRAND } from '@/lib/core/constants';
 import { getSiteIdentity } from '@/lib/data/site';
+import { getPublicSiteUrl } from '@/lib/env/server';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const SITE_URL = getPublicSiteUrl();
 const DEFAULT_DESCRIPTION =
   'Consultoria de imagem, branding pessoal e etiqueta corporativa para posicionamento de alto valor.';
 

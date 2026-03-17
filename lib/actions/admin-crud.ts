@@ -2,9 +2,10 @@
 
 import prisma from '@/lib/core/prisma';
 import { getProductDetailPath } from '@/lib/core/product-paths';
-import { checklistSchema, configSchema, postSchema, productSchema } from '@/lib/validators/admin';
+import { checklistSchema, postSchema, productSchema } from '@/lib/validators/admin';
 import { runAdminMutation, type ActionResponse } from '@/lib/server/action-runner';
 import { requireAdmin } from '@/lib/server/admin-auth';
+import { updateInstitutionalConfigs } from '@/lib/institutional/config-actions';
 
 function normalizeOptionalText(value: string | undefined) {
   if (value === undefined) {
@@ -299,39 +300,5 @@ export async function deleteChecklist(id: string): Promise<ActionResponse> {
 }
 
 export async function updateConfigs(data: Record<string, string>): Promise<ActionResponse> {
-  return runAdminMutation({
-    context: 'updateConfigs',
-    pathsToRevalidate: [
-      '/',
-      '/contato',
-      '/servicos',
-      '/cursos',
-      '/materiais',
-      '/checklists',
-      '/conteudos',
-    ],
-    tagsToRevalidate: ['site-configs'],
-    mutation: async () => {
-      await requireAdmin();
-      const validated = configSchema.parse(data);
-      const entries = Object.entries(validated).filter(([, value]) => value !== undefined) as Array<
-        [keyof typeof validated, string]
-      >;
-
-      if (entries.length === 0) {
-        return;
-      }
-
-      const updates = entries.map(([key, value]) =>
-        prisma.siteConfig.upsert({
-          where: { key },
-          update: { value },
-          create: { key, value },
-        })
-      );
-
-      await prisma.$transaction(updates);
-      return;
-    },
-  });
+  return updateInstitutionalConfigs(data);
 }

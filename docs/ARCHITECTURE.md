@@ -20,6 +20,7 @@ flowchart TD
     PUB --> DATA["lib/data"]
     ADM --> ACT["lib/actions"]
     ACT --> AUTH["JWT + requireAdmin"]
+    AUTH --> OAUTH["Supabase Google OAuth (local validation)"]
     ACT --> CACHE["revalidatePath / revalidateTag"]
     DATA --> PRISMA["Prisma"]
     ACT --> PRISMA
@@ -34,6 +35,7 @@ flowchart TD
     PUB --> WA["WhatsApp intents"]
     PUB --> EXT["Links externos de conversao"]
     PUB --> SEO["JSON-LD Product / Article / FAQPage"]
+    PUB --> ABOUT["About page content"]
 ```
 
 ## 2. Camadas da Aplicacao
@@ -44,21 +46,27 @@ flowchart TD
 - `components/shared` contem navegacao e componentes de contato
 - `components/features/home` contem as secoes da home
 - `components/analytics` contem wrappers de tracking
+- `app/(public)/sobre` contem a pagina institucional administravel
 
 ### Backoffice
 - `app/(admin)/admin` contem login, dashboard e CRUD
 - protecao de sessao por cookie JWT
 - login exige Upstash configurado em producao
+- fluxo Google OAuth para admin esta implementado localmente e em validacao
 
 ### Dados
 - `lib/data` centraliza queries e cache
+- `lib/institutional` concentra os singletons de conteudo institucional
 - `safeDataQuery` trata falhas com fallback controlado
 - `getSiteConfigs()` usa `unstable_cache`
 - `getSiteIdentity()` usa `cache`
+- `getAboutPage()` centraliza a pagina institucional singleton
 - listagens publicas aceitam filtros por query string
 
 ### Mutacoes
 - `lib/actions/admin-crud.ts` centraliza upsert/delete de produto, post e checklist
+- `lib/institutional/config-actions.ts` centraliza configuracoes singleton
+- `lib/institutional/about-actions.ts` centraliza o singleton da pagina Sobre
 - apos mutacao, listagens e paginas de detalhe sao revalidadas
 - produtos persistem estrategia de conversao:
   - `ctaMode`
@@ -99,6 +107,7 @@ app/
   icon.svg
   (public)/
   (admin)/admin/
+  auth/admin/
   api/upload/
 components/
   ui/
@@ -109,9 +118,12 @@ components/
   features/products/
 lib/
   actions/
+  analytics/
   contact/
   core/
   data/
+  institutional/
+  supabase/
   server/
   utils/
   validators/
@@ -181,6 +193,16 @@ Fluxo:
 - `lib/seo/schema.ts` centraliza geracao de JSON-LD
 - `components/seo/StructuredDataScript.tsx` injeta scripts com nonce
 
+### 4.10 Auth admin em migracao controlada
+- auth atual em producao: senha unica + `admin_session`
+- auth novo em validacao local: Google OAuth via Supabase + whitelist por `ADMIN_GOOGLE_ALLOWED_EMAILS`
+- decisao tecnica: manter o mesmo cookie `admin_session` como interface interna do painel durante a transicao
+
+### 4.11 Dominio institucional unificado
+- `lib/institutional/config.ts` e `config-actions.ts` concentram leitura e mutacao de configuracoes singleton
+- `lib/institutional/about.ts` e `about-actions.ts` concentram leitura e mutacao da pagina Sobre
+- `lib/data/*` e `lib/actions/*` mantem reexports de compatibilidade onde ainda ha dependencias antigas
+
 ## 5. Riscos Arquiteturais Atuais
 
 ### Criticos
@@ -190,6 +212,7 @@ Fluxo:
 ### Importantes
 - a credencial sensivel do Supabase segue como pendencia operacional se nao for rotacionada
 - build e testes E2E seguem dependentes de banco acessivel e browser instalado
+- auth admin esta em modo dual-stack ate o rollout do Google
 
 ## 6. Regras de Evolucao
 - manter Server Components por padrao
@@ -198,6 +221,7 @@ Fluxo:
 - nao espalhar regra de CTA fora de `lib/core/product-cta.ts`
 - nao espalhar montagem de WhatsApp fora de `lib/contact/whatsapp-intents.ts`
 - nao depender de `public/uploads` como storage final em producao
+- concentrar futuros singletons institucionais no mesmo padrao de `lib/institutional/*`
 
 ## 7. Estado Atual
 

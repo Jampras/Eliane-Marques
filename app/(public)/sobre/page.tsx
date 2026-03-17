@@ -7,9 +7,9 @@ import { Heading, Text } from '@/components/ui/Typography';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { Section } from '@/components/ui/Section';
 import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
-import { getAboutPage } from '@/lib/data/about';
+import { getAboutPage } from '@/lib/institutional/about';
+import { getWhatsAppConfig } from '@/lib/institutional/config';
 import { getSiteIdentity } from '@/lib/data/site';
-import { getWhatsAppConfig } from '@/lib/data/config';
 import { buildDirectContactWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 

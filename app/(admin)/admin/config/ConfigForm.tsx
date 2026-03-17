@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { updateConfigs } from '@/lib/actions/admin-crud';
+import { updateInstitutionalConfigs } from '@/lib/institutional/config-actions';
 import { Button } from '@/components/ui/Button';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Badge } from '@/components/ui/Badge';
@@ -33,7 +33,7 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
     const data = Object.fromEntries(formData) as Record<string, string>;
 
     try {
-      const result = await updateConfigs(data);
+      const result = await updateInstitutionalConfigs(data);
 
       if (result.success) {
         showToast({
@@ -108,9 +108,12 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
       <form id={formId} onSubmit={handleSubmit} className={ADMIN_FORM_PANEL_CLASS}>
         {fields.map((field) => (
           <div key={field.key} className="space-y-2">
-            <label className={ADMIN_LABEL_CLASS}>{field.label}</label>
+            <label htmlFor={field.key} className={ADMIN_LABEL_CLASS}>
+              {field.label}
+            </label>
             {field.type === 'textarea' ? (
               <textarea
+                id={field.key}
                 name={field.key}
                 defaultValue={initialConfigs[field.key]}
                 rows={3}
@@ -118,6 +121,7 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
               />
             ) : (
               <input
+                id={field.key}
                 name={field.key}
                 defaultValue={initialConfigs[field.key]}
                 placeholder={'placeholder' in field ? field.placeholder : undefined}

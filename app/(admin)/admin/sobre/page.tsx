@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { requireAdmin } from '@/lib/server/admin-auth';
-import { getAboutPage } from '@/lib/data/about';
+import { getAboutPage } from '@/lib/institutional/about';
 import AboutForm from './AboutForm';
 
 function normalizeCtaMode(value: string): 'WHATSAPP' | 'EXTERNAL' {

@@ -27,11 +27,15 @@ Este documento explica como usar o painel administrativo do site Eliane Marques 
 
 ### Como entrar
 1. Acesse a tela de login.
-2. Digite a senha administrativa.
-3. Clique em `Entrar no painel`.
+2. Enquanto o rollout do Google OAuth nao estiver publicado, use a senha administrativa atual.
+3. Quando o Google OAuth for ativado, clique em `Entrar com Google`.
+4. Use uma conta Google autorizada para administracao.
+5. Em contingencia, o acesso por senha pode continuar disponivel durante a transicao.
 
 ### Observacoes importantes
-- o painel nao possui usuario e senha separados; o acesso atual e feito por senha unica de admin
+- o fluxo principal esta em migracao para Google OAuth com whitelist de emails
+- em producao atual, confirme com o time tecnico se o rollout ja foi ativado antes de orientar o uso por Google
+- a senha unica ainda existe como contingencia operacional
 - existe rate limit de seguranca no login
 - se houver muitas tentativas erradas, o sistema bloqueia temporariamente novas tentativas
 
@@ -45,6 +49,7 @@ As secoes disponiveis hoje sao:
 - `Produtos`
 - `Blog`
 - `Checklists`
+- `Sobre`
 - `Configuracao`
 
 ---
@@ -218,6 +223,9 @@ Cada item pode ter:
 
 A secao `Configuracao` controla informacoes globais do site.
 
+Observacao:
+- `Configuracao` e `Sobre` fazem parte do mesmo dominio institucional no sistema e seguem o mesmo fluxo de publicacao e revalidacao.
+
 ### Campos atuais
 - `WhatsApp (com DDD)`
 - `Mensagem padrao WhatsApp`
@@ -245,6 +253,7 @@ Uploads sao usados hoje em:
 
 - produtos
 - artigos do blog
+- pagina Sobre
 
 ### Como funciona
 1. Clique na area de upload.
@@ -258,6 +267,33 @@ Uploads sao usados hoje em:
 - WebP
 - AVIF
 - GIF
+
+---
+
+## 10. Sobre
+
+A secao `Sobre` controla a pagina institucional publica em `/sobre`.
+
+Observacao:
+- `Sobre` e `Configuracao` compartilham a mesma camada institucional no sistema. Isso reduz divergencia entre dados institucionais da marca e a pagina de apresentacao.
+
+### O que pode ser editado
+- hero principal
+- imagem institucional
+- introducao
+- manifesto
+- marcos de trajetoria
+- especializacoes
+- certificados, selos e credenciais
+- CTA final
+
+### Como usar
+1. Entre em `Sobre`.
+2. Preencha os textos principais.
+3. Envie a imagem principal.
+4. Adicione marcos, especializacoes e credenciais.
+5. Clique em `Publicar pagina Sobre`.
+6. Use o link `Abrir pagina publica` para revisar o resultado.
 
 ### Limite
 - ate 5 MB por arquivo
