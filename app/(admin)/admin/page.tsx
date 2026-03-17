@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Icon, type IconName } from '@/components/ui/Icon';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
+import { getDashboardAnalyticsSummary } from '@/lib/analytics/reporting';
 import { requireAdmin } from '@/lib/server/admin-auth';
 
 const quickActions = [
@@ -108,10 +109,6 @@ export default async function AdminDashboard({ searchParams }: AdminDashboardPro
     : 'all';
 
   const rangeStart = getRangeStart(selectedRange);
-  const analyticsWhere = {
-    ...(rangeStart ? { createdAt: { gte: rangeStart } } : {}),
-    ...(selectedSource !== 'all' ? { source: selectedSource } : {}),
-  };
   const leadsWhere = {
     ...(rangeStart ? { createdAt: { gte: rangeStart } } : {}),
     ...(selectedSource !== 'all' ? { source: selectedSource } : {}),
@@ -125,10 +122,7 @@ export default async function AdminDashboard({ searchParams }: AdminDashboardPro
     totalConfigs,
     totalLeads,
     recentLeads,
-    totalEvents,
-    whatsappClicks,
-    externalCtaClicks,
-    productClickEvents,
+    analyticsSummary,
   ] = await Promise.all([
     prisma.product.count(),
     prisma.product.count({ where: { active: true } }),
@@ -141,48 +135,11 @@ export default async function AdminDashboard({ searchParams }: AdminDashboardPro
       orderBy: { createdAt: 'desc' },
       take: 5,
     }),
-    prisma.analyticsEvent.count({ where: analyticsWhere }),
-    prisma.analyticsEvent.count({
-      where: { ...analyticsWhere, name: 'whatsapp_click' },
-    }),
-    prisma.analyticsEvent.count({
-      where: {
-        ...analyticsWhere,
-        name: 'cta_click',
-        destination: { startsWith: 'http' },
-      },
-    }),
-    prisma.analyticsEvent.findMany({
-      where: {
-        ...analyticsWhere,
-        productSlug: { not: null },
-      },
-      select: {
-        productSlug: true,
-        productTitle: true,
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 500,
+    getDashboardAnalyticsSummary({
+      rangeStart,
+      source: selectedSource !== 'all' ? selectedSource : undefined,
     }),
   ]);
-
-  const topProducts = Array.from(
-    productClickEvents.reduce((acc, event) => {
-      const key = `${event.productSlug ?? ''}::${event.productTitle ?? ''}`;
-      const current = acc.get(key) || {
-        productSlug: event.productSlug,
-        productTitle: event.productTitle,
-        count: 0,
-      };
-
-      current.count += 1;
-      acc.set(key, current);
-      return acc;
-    }, new Map<string, { productSlug: string | null; productTitle: string | null; count: number }>())
-  )
-    .map(([, value]) => value)
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
 
   const metrics = [
     { label: 'Produtos', value: totalProducts, hint: `${activeProducts} ativos` },
@@ -192,9 +149,9 @@ export default async function AdminDashboard({ searchParams }: AdminDashboardPro
   ];
 
   const commercialMetrics = [
-    { label: 'Eventos', value: totalEvents, hint: 'cliques rastreados' },
-    { label: 'WhatsApp', value: whatsappClicks, hint: 'acessos ao canal' },
-    { label: 'CTA externo', value: externalCtaClicks, hint: 'checkout ou link externo' },
+    { label: 'Eventos', value: analyticsSummary.totalEvents, hint: 'cliques rastreados' },
+    { label: 'WhatsApp', value: analyticsSummary.whatsappClicks, hint: 'acessos ao canal' },
+    { label: 'CTA externo', value: analyticsSummary.externalCtaClicks, hint: 'checkout ou link externo' },
     { label: 'Leads', value: totalLeads, hint: 'capturas por email' },
   ];
 
@@ -310,8 +267,8 @@ export default async function AdminDashboard({ searchParams }: AdminDashboardPro
               <div>
                 <Text className="mb-4 text-[10px] tracking-widest uppercase">Produtos mais clicados</Text>
                 <div className="space-y-3">
-                  {topProducts.length > 0 ? (
-                    topProducts.map((item) => (
+                  {analyticsSummary.topProducts.length > 0 ? (
+                    analyticsSummary.topProducts.map((item) => (
                       <div
                         key={`${item.productSlug}-${item.productTitle}`}
                         className="flex items-center justify-between border border-border-soft px-4 py-3"

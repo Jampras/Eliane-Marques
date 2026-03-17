@@ -92,6 +92,24 @@ model AnalyticsEvent {
   @@index([productSlug, createdAt(sort: Desc)])
 }
 
+model AnalyticsDailyAggregate {
+  dayBucket       DateTime
+  name            String
+  source          String
+  pathKey         String   @default("")
+  productSlugKey  String   @default("")
+  productTitleKey String   @default("")
+  destinationKey  String   @default("")
+  count           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@id([dayBucket, name, source, pathKey, productSlugKey, destinationKey])
+  @@index([dayBucket(sort: Desc)])
+  @@index([name, dayBucket(sort: Desc)])
+  @@index([source, dayBucket(sort: Desc)])
+}
+
 model Lead {
   id        String   @id @default(cuid())
   name      String

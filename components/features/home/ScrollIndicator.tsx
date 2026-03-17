@@ -60,22 +60,6 @@ export const ScrollIndicator: React.FC = () => {
         </svg>
       </div>
 
-      <style>{`
-        @keyframes hero-bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(8px); }
-        }
-        @keyframes hero-scroll-dot {
-          0% { transform: translateY(0); opacity: 1; }
-          100% { transform: translateY(10px); opacity: 0; }
-        }
-        .hero-bounce {
-          animation: hero-bounce 1.5s ease-in-out infinite;
-        }
-        .hero-scroll-dot {
-          animation: hero-scroll-dot 1.5s ease-in-out infinite;
-        }
-      `}</style>
     </button>
   );
 };
