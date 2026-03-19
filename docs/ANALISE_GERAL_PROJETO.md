@@ -30,8 +30,9 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 - rate limit publico degrada para memoria local quando Redis falha
 
 ### Frontend publico
-- a home publica ainda esta em iteracao
-- o desktop esta mais consistente do que o mobile
+- a home publica ja esta em producao e agora e administravel via painel
+- o desktop segue mais consistente do que o mobile
+- a secao `Home` do admin ja controla textos, CTA, imagem lateral do hero e imagens por bloco
 
 ### Documentacao
 - a documentacao tende a ficar atras do branch local entre rodadas intensas
@@ -40,8 +41,8 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 
 ### P0
 1. rotacionar a credencial sensivel do Supabase
-2. fechar a direcao final da home e publicar somente apos aprovacao
-3. automatizar `analytics:maintain`
+2. automatizar `analytics:maintain`
+3. continuar refinamento visual da home publicada
 
 ### P1
 1. adicionar testes unitarios para modulos criticos

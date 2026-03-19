@@ -73,7 +73,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
             </Heading>
           </div>
           <Text
-            className="fade-up max-w-none text-[12px] text-[color:var(--taupe)]"
+            className="fade-up max-w-none border-l border-[color:var(--linho)]/80 pl-4 text-[12px] leading-[1.85] text-[color:var(--taupe)] xl:max-w-[240px]"
             style={{ '--delay': '0.1s' } as CSSProperties}
           >
             O formato certo nao e o mais longo. E o que resolve seu momento com mais precisao.

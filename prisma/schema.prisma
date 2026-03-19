@@ -148,6 +148,7 @@ model HomePage {
   id                     String                @id @default(cuid())
   singletonKey           String                @unique @default("main")
   heroEyebrow            String?
+  heroPanelImage         String?
   heroTitle              String
   heroSubtitle           String?
   heroPrimaryCtaLabel    String?
@@ -219,6 +220,7 @@ model HomeAudienceItem {
   title      String
   description String
   icon       String?
+  imageUrl   String?
   sortOrder  Int      @default(0)
   homePage   HomePage @relation(fields: [homePageId], references: [id], onDelete: Cascade)
   homePageId String
@@ -232,6 +234,7 @@ model HomeValueItem {
   title       String
   bullets     Json
   tone        String   @default("NEUTRAL")
+  imageUrl    String?
   sortOrder   Int      @default(0)
   homePage    HomePage @relation(fields: [homePageId], references: [id], onDelete: Cascade)
   homePageId  String
@@ -243,6 +246,7 @@ model HomeMethodStep {
   id          String   @id @default(cuid())
   title       String
   description String
+  imageUrl    String?
   sortOrder   Int      @default(0)
   homePage    HomePage @relation(fields: [homePageId], references: [id], onDelete: Cascade)
   homePageId  String

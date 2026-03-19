@@ -12,6 +12,7 @@ export default async function AdminHomePage() {
     <HomeForm
       initialValue={{
         heroEyebrow: home.heroEyebrow ?? '',
+        heroPanelImage: ('heroPanelImage' in home ? home.heroPanelImage : null) ?? '',
         heroTitle: home.heroTitle,
         heroSubtitle: home.heroSubtitle ?? '',
         heroPrimaryCtaLabel: home.heroPrimaryCtaLabel ?? '',
@@ -36,6 +37,7 @@ export default async function AdminHomePage() {
           title: item.title,
           description: item.description,
           icon: item.icon ?? '',
+          imageUrl: ('imageUrl' in item ? item.imageUrl : null) ?? '',
           sortOrder: item.sortOrder,
         })),
         valueItems: home.valueItems.map((item) => ({
@@ -43,11 +45,13 @@ export default async function AdminHomePage() {
           title: item.title,
           bullets: Array.isArray(item.bullets) ? item.bullets.map(String) : [],
           tone: item.tone === 'POSITIVE' ? 'POSITIVE' : 'NEGATIVE',
+          imageUrl: ('imageUrl' in item ? item.imageUrl : null) ?? '',
           sortOrder: item.sortOrder,
         })),
         methodSteps: home.methodSteps.map((item) => ({
           title: item.title,
           description: item.description,
+          imageUrl: ('imageUrl' in item ? item.imageUrl : null) ?? '',
           sortOrder: item.sortOrder,
         })),
         faqItems: home.faqItems.map((item) => ({

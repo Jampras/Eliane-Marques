@@ -104,6 +104,8 @@ docs/
 ### Home publica
 - `app/(public)/page.tsx` compoe a home por secoes
 - o conteudo institucional da home vem de `lib/institutional/home.ts`
+- o dominio `Home` persiste hero, imagem lateral do hero, audiencia, leitura de valor, metodo, FAQ e CTA final
+- itens de audiencia, leitura de valor e metodo podem carregar imagem propria
 - `Investimentos` e `Formatos` continuam dinamicos a partir de produtos ativos
 
 ### CTA de produto
@@ -133,7 +135,7 @@ docs/
 ### Importantes
 - endpoints publicos degradam para rate limit em memoria se Redis estiver indisponivel
 - nao existe suite de testes unitarios para regras criticas
-- a home publica ainda depende de validacao visual/comercial antes de publicacao
+- a home publica ja esta publicada, mas ainda depende de refinamento visual/comercial continuo
 
 ## 6. Regras de evolucao
 - manter Server Components por padrao

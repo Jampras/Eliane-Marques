@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Card } from '@/components/ui/Card';
@@ -9,18 +10,22 @@ const defaultMethodSteps = [
   {
     title: 'Leitura atual',
     text: 'Mapeamos como imagem, comportamento e comunicacao estao sendo percebidos hoje.',
+    imageUrl: null,
   },
   {
     title: 'Reposicionamento visual',
     text: 'Definimos ajustes de imagem que aumentam coerencia, refinamento e leitura de valor.',
+    imageUrl: null,
   },
   {
     title: 'Refinamento de conduta',
     text: 'Ajustamos postura, etiqueta e comportamento para sustentar a nova presenca em contexto real.',
+    imageUrl: null,
   },
   {
     title: 'Sustentacao da presenca',
     text: 'Transformamos o ajuste em consistencia para que sua imagem pare de depender de esforco extra.',
+    imageUrl: null,
   },
 ];
 
@@ -31,6 +36,7 @@ interface MethodSectionProps {
   steps?: Array<{
     title: string;
     description: string;
+    imageUrl?: string | null;
   }>;
 }
 
@@ -40,6 +46,7 @@ export function MethodSection({ title, subtitle, ctaLabel, steps }: MethodSectio
       ? steps.map((item) => ({
           title: item.title,
           text: item.description,
+          imageUrl: item.imageUrl?.trim() || null,
         }))
       : defaultMethodSteps;
 
@@ -79,6 +86,17 @@ export function MethodSection({ title, subtitle, ctaLabel, steps }: MethodSectio
               key={step.title}
               className="fade-up-card h-full border-[color:var(--linho)] bg-[color:var(--manteiga)] px-5 py-5 sm:px-6 sm:py-6 lg:px-7 lg:py-7"
             >
+              {step.imageUrl ? (
+                <div className="relative mb-5 aspect-[4/3] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)]">
+                  <Image
+                    src={step.imageUrl}
+                    alt={step.title}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+              ) : null}
               <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">0{index + 1}</p>
               <Heading
                 as="h3"

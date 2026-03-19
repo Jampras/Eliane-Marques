@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Card } from '@/components/ui/Card';
@@ -15,20 +16,22 @@ interface IdentitySectionProps {
     title: string;
     bullets: string[];
     tone?: string | null;
+    imageUrl?: string | null;
   }>;
 }
 
 const defaultItems = [
-  {
-    badge: 'Sinais de desalinhamento',
-    title: 'Seu nivel nao fica claro',
+      {
+        badge: 'Sinais de desalinhamento',
+        title: 'Seu nivel nao fica claro',
     bullets: [
       'Voce sente que precisa provar valor em toda reuniao',
       'Preco, fala ou postura geram duvida',
       'Oportunidades travam por percepcao',
-    ],
-    tone: 'NEGATIVE',
-  },
+        ],
+        tone: 'NEGATIVE',
+        imageUrl: null,
+      },
   {
     badge: 'Quando isso se organiza',
     title: 'Sua presenca sustenta seu valor',
@@ -36,9 +39,10 @@ const defaultItems = [
       'Mais consistencia e peso profissional',
       'Mais escuta, respeito e clareza',
       'Mais coerencia entre imagem e posicionamento',
-    ],
-    tone: 'POSITIVE',
-  },
+        ],
+        tone: 'POSITIVE',
+        imageUrl: null,
+      },
 ];
 
 export function IdentitySection({ title, subtitle, ctaLabel, items }: IdentitySectionProps) {
@@ -81,6 +85,17 @@ export function IdentitySection({ title, subtitle, ctaLabel, items }: IdentitySe
                 item.tone === 'POSITIVE' ? 'bg-[color:var(--creme-rosa)]' : 'bg-[color:var(--aveia)]'
               }`}
             >
+              {item.imageUrl ? (
+                <div className="relative mb-5 aspect-[16/9] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)]">
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+              ) : null}
               <Badge className="mb-4">{item.badge?.trim() || `Bloco ${index + 1}`}</Badge>
               <Heading
                 as="h3"

@@ -214,8 +214,8 @@ export function HeroSection({
                         <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
                           Presenca executiva
                         </p>
-                        <p className="mt-3 font-display text-[1.9rem] italic leading-none text-[color:var(--espresso)]">
-                          Eliane Marques
+                        <p className="mt-3 max-w-[12ch] text-[11px] uppercase tracking-[0.16em] text-[color:var(--taupe)]">
+                          Defina uma imagem no painel Home
                         </p>
                       </div>
                     </div>
@@ -411,8 +411,8 @@ export function HeroSection({
                       <p className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
                         Presenca executiva
                       </p>
-                      <p className="mt-4 font-display text-[2.15rem] italic leading-none text-[color:var(--espresso)]">
-                        Eliane Marques
+                      <p className="mt-4 max-w-[14ch] text-[12px] uppercase tracking-[0.16em] text-[color:var(--taupe)]">
+                        Defina uma imagem no painel Home
                       </p>
                     </div>
                   </div>

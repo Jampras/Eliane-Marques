@@ -30,6 +30,7 @@ export const getHomePage = cache(async () => {
     id: 'draft',
     singletonKey: HOME_SINGLETON_KEY,
     heroEyebrow: 'Imagem . Etiqueta . Presenca',
+    heroPanelImage: null,
     heroTitle: 'Sua imagem precisa sustentar o nivel que voce ja entrega.',
     heroSubtitle:
       'Consultoria de imagem, etiqueta e presenca para mulheres que precisam de mais clareza, coerencia e leitura de valor.',
@@ -63,6 +64,7 @@ export const getHomePage = cache(async () => {
         description:
           'Para quem quer liderar com presenca, firmeza e etiqueta em ambientes de alta exigencia.',
         icon: '\u25c7',
+        imageUrl: null,
         sortOrder: 0,
       },
       {
@@ -71,6 +73,7 @@ export const getHomePage = cache(async () => {
         description:
           'Para quem precisa alinhar imagem e comunicacao para cobrar melhor e atrair clientes certos.',
         icon: '\u2726',
+        imageUrl: null,
         sortOrder: 1,
       },
       {
@@ -79,6 +82,7 @@ export const getHomePage = cache(async () => {
         description:
           'Para negocios que desejam padrao de atendimento premium e comportamento coerente com a marca.',
         icon: '\u25c8',
+        imageUrl: null,
         sortOrder: 2,
       },
     ],
@@ -93,6 +97,7 @@ export const getHomePage = cache(async () => {
           'Oportunidades travam por percepcao',
         ],
         tone: 'NEGATIVE',
+        imageUrl: null,
         sortOrder: 0,
       },
       {
@@ -105,6 +110,7 @@ export const getHomePage = cache(async () => {
           'Mais coerencia entre imagem e posicionamento',
         ],
         tone: 'POSITIVE',
+        imageUrl: null,
         sortOrder: 1,
       },
     ],
@@ -114,6 +120,7 @@ export const getHomePage = cache(async () => {
         title: 'Leitura atual',
         description:
           'Mapeamos como imagem, comportamento e comunicacao estao sendo percebidos hoje.',
+        imageUrl: null,
         sortOrder: 0,
       },
       {
@@ -121,6 +128,7 @@ export const getHomePage = cache(async () => {
         title: 'Reposicionamento visual',
         description:
           'Definimos ajustes de imagem que aumentam coerencia, refinamento e leitura de valor.',
+        imageUrl: null,
         sortOrder: 1,
       },
       {
@@ -128,6 +136,7 @@ export const getHomePage = cache(async () => {
         title: 'Refinamento de conduta',
         description:
           'Ajustamos postura, etiqueta e comportamento para sustentar a nova presenca em contexto real.',
+        imageUrl: null,
         sortOrder: 2,
       },
       {
@@ -135,6 +144,7 @@ export const getHomePage = cache(async () => {
         title: 'Sustentacao da presenca',
         description:
           'Transformamos o ajuste em consistencia para que sua imagem pare de depender de esforco extra.',
+        imageUrl: null,
         sortOrder: 3,
       },
     ],

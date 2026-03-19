@@ -22,6 +22,7 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
 
       const baseData = {
         heroEyebrow: normalizeOptionalInstitutionalText(validated.heroEyebrow),
+        heroPanelImage: normalizeOptionalInstitutionalText(validated.heroPanelImage),
         heroTitle: validated.heroTitle,
         heroSubtitle: normalizeOptionalInstitutionalText(validated.heroSubtitle),
         heroPrimaryCtaLabel: normalizeOptionalInstitutionalText(validated.heroPrimaryCtaLabel),
@@ -54,6 +55,7 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
               title: item.title,
               description: item.description,
               icon: normalizeOptionalInstitutionalText(item.icon) ?? null,
+              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
               sortOrder: index,
             })),
           },
@@ -63,6 +65,7 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
               title: item.title,
               bullets: item.bullets,
               tone: item.tone,
+              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
               sortOrder: index,
             })),
           },
@@ -70,6 +73,7 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
             create: validated.methodSteps.map((item, index) => ({
               title: item.title,
               description: item.description,
+              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
               sortOrder: index,
             })),
           },
@@ -89,6 +93,7 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
               title: item.title,
               description: item.description,
               icon: normalizeOptionalInstitutionalText(item.icon) ?? null,
+              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
               sortOrder: index,
             })),
           },
@@ -99,6 +104,7 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
               title: item.title,
               bullets: item.bullets,
               tone: item.tone,
+              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
               sortOrder: index,
             })),
           },
@@ -107,6 +113,7 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
             create: validated.methodSteps.map((item, index) => ({
               title: item.title,
               description: item.description,
+              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
               sortOrder: index,
             })),
           },

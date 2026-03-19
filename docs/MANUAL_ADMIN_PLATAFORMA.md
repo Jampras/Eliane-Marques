@@ -224,6 +224,7 @@ A secao `Home` controla o conteudo institucional da pagina inicial.
 
 ### O que pode ser editado
 - hero principal
+- imagem lateral do hero
 - CTA principal e CTA secundario
 - linha de confianca do hero
 - cards da secao `Para quem e`
@@ -231,6 +232,12 @@ A secao `Home` controla o conteudo institucional da pagina inicial.
 - etapas da secao `Metodo`
 - perguntas frequentes
 - CTA final da home
+
+### Imagens disponiveis na Home
+- imagem lateral do hero
+- imagem por card em `Para quem e`
+- imagem por item em `Leitura de valor`
+- imagem por etapa em `Metodo`
 
 ### O que nao e editado aqui
 - layout visual
@@ -248,8 +255,9 @@ Esses elementos continuam controlados pelo codigo para manter consistencia visua
 5. Revise a pagina inicial publica.
 
 ### Observacao importante
-- a imagem principal do hero da home continua vindo da pagina `Sobre`
-- para trocar essa imagem, atualize primeiro `Sobre`
+- a imagem grande institucional continua podendo ser usada em `Sobre`
+- a imagem lateral do hero da home agora e propria da secao `Home`
+- se ela nao for definida, o site mostra uma mensagem orientando configurar no painel
 
 ---
 
@@ -288,6 +296,7 @@ Uploads sao usados hoje em:
 - produtos
 - artigos do blog
 - pagina Sobre
+- pagina Home
 
 ### Como funciona
 1. Clique na area de upload.
@@ -439,7 +448,7 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 1. Editar a secao `Home`
 2. Salvar
 3. Revisar `/`
-4. Se precisar trocar a imagem do hero, editar `Sobre`
+4. Se precisar trocar a imagem lateral do hero ou imagens dos cards, fazer isso na propria secao `Home`
 
 ### Artigo novo
 1. Criar artigo

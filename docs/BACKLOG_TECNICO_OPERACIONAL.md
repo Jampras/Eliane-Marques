@@ -11,10 +11,6 @@
 - **Objetivo:** eliminar o principal risco operacional remanescente.
 - **Impacto:** alto.
 
-#### BT-023 - Validar e publicar a nova rodada da home
-- **Objetivo:** fechar a avaliacao local da home antes de qualquer push/deploy.
-- **Impacto:** alto.
-
 #### BT-022 - Operacionalizar `analytics:maintain`
 - **Objetivo:** garantir retencao/agregacao recorrente sem depender de execucao manual.
 - **Impacto:** alto.
@@ -43,6 +39,10 @@
 - **Objetivo:** decidir regra editorial final para destaque comercial em home e pricing.
 - **Impacto:** medio.
 
+#### BT-026 - Refinar visual e usabilidade da home publicada
+- **Objetivo:** continuar ajustes de composicao, legibilidade e mobile sem reabrir a base estrutural.
+- **Impacto:** medio.
+
 #### BT-017 - Evoluir dashboard comercial
 - **Objetivo:** ampliar filtros temporais, comparativos e funil.
 - **Impacto:** medio.
@@ -60,14 +60,15 @@
 - lead capture com honeypot, same-origin e rate limit
 - dashboard comercial inicial
 - home componentizada
+- home publicada com conteudo administravel em `/admin/home`
 
 ## 3. Checklist atual
 
 - [ ] rotacionar credencial sensivel do Supabase
-- [ ] validar e aprovar a nova home antes de publicar
 - [ ] automatizar `npm run analytics:maintain`
 - [ ] integrar leads com CRM ou automacao comercial
 - [ ] validar migrations em CI Linux
 - [ ] decidir estrategia do fallback de rate limit publico
 - [ ] adicionar testes unitarios para modulos criticos
 - [ ] evoluir dashboard com filtros temporais mais avancados
+- [ ] refinar visual e usabilidade da home publicada

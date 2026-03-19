@@ -34,7 +34,8 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 
 ## Estado tecnico atual
 - home componentizada por secao
-- home administravel em `/admin/home` para hero, audiencia, leitura de valor, metodo, FAQ e CTA final
+- home administravel em `/admin/home` para hero, imagem lateral do hero, audiencia, leitura de valor, metodo, FAQ e CTA final
+- cards de `Para quem e`, `Leitura de valor` e `Metodo` aceitam imagem por item no painel
 - pagina `Sobre` administravel em `/admin/sobre` e publicada em `/sobre`
 - catalogos com busca, filtros e detalhe por tipo
 - CTA por produto configuravel: WhatsApp ou link externo
@@ -124,7 +125,7 @@ npm run analytics:maintain
 - analytics e lead capture usam rate limit publico; sem Redis disponivel, o fallback atual e memoria local
 
 ## Pontos fracos atuais
-- a home publica ainda esta em iteracao, principalmente no mobile
+- a home publica foi publicada, mas ainda depende de refinamento visual continuo, principalmente no mobile
 - nao ha suite de testes unitarios para helpers criticos
 - o build agora tenta seguir mesmo sem banco acessivel para queries publicas protegidas por fallback
 - build continua dependente de banco acessivel e pode sofrer lock do Prisma no Windows
@@ -146,7 +147,7 @@ Pendente principal:
 - integracao dos leads com CRM ou automacao comercial
 - CI Linux para migrations
 - agendamento recorrente de `npm run analytics:maintain`
-- fechamento e publicacao da nova rodada visual da home
+- refinamento visual recorrente da home publicada
 
 ## Documentacao
 - documentacao tecnica principal:

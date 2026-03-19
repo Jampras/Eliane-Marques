@@ -37,10 +37,11 @@ Documento de referencia rapida para o sistema visual atual.
 - priorizar composicao continua em vez de excesso de caixas
 - manter a home mobile coerente com o desktop
 - a home mobile atual favorece grids/cards estaveis em vez de dock fixo e carrossel persistente
+- textos auxiliares pequenos em colunas laterais devem usar algum detalhe de apoio discreto, como linha vertical ou divisor curto
 
 ## 5. Estado atual
 
 - identidade atual baseada na paleta quente do projeto
 - icones locais em SVG
 - tipografia carregada via `next/font`
-- direcao da home mais homogenea entre desktop e mobile, ainda em refinamento local
+- direcao da home mais homogenea entre desktop e mobile, com refinamento continuo em producao

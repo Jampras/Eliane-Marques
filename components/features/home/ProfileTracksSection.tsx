@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Card } from '@/components/ui/Card';
@@ -8,16 +9,19 @@ const defaultProfileTracks = [
     title: 'Executivas em ascensao',
     desc: 'Para quem quer liderar com presenca, firmeza e etiqueta em ambientes de alta exigencia.',
     icon: '\u25c7',
+    imageUrl: null,
   },
   {
     title: 'Empreendedoras e marcas pessoais',
     desc: 'Para quem precisa alinhar imagem e comunicacao para cobrar melhor e atrair clientes certos.',
     icon: '\u2726',
+    imageUrl: null,
   },
   {
     title: 'Empresas e equipes',
     desc: 'Para negocios que desejam padrao de atendimento premium e comportamento coerente com a marca.',
     icon: '\u25c8',
+    imageUrl: null,
   },
 ];
 
@@ -28,6 +32,7 @@ interface ProfileTracksSectionProps {
     title: string;
     description: string;
     icon?: string | null;
+    imageUrl?: string | null;
   }>;
 }
 
@@ -42,6 +47,7 @@ export function ProfileTracksSection({
           title: item.title,
           desc: item.description,
           icon: item.icon?.trim() || defaultProfileTracks[index]?.icon || '\u2726',
+          imageUrl: item.imageUrl?.trim() || null,
         }))
       : defaultProfileTracks;
 
@@ -67,6 +73,17 @@ export function ProfileTracksSection({
                 index === 1 ? 'bg-[color:var(--creme-rosa)]' : 'bg-[color:var(--aveia)]'
               }`}
             >
+              {track.imageUrl ? (
+                <div className="relative mb-4 aspect-[4/3] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)]">
+                  <Image
+                    src={track.imageUrl}
+                    alt={track.title}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+              ) : null}
               <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[15px] text-[color:var(--argila)]">
                 {track.icon}
               </div>

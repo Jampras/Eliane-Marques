@@ -47,6 +47,7 @@ const homeAudienceItemSchema = z.object({
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().min(1).max(320),
   icon: z.string().trim().max(12).optional(),
+  imageUrl: optionalUrlSchema,
   sortOrder: z.number().default(0),
 });
 
@@ -55,12 +56,14 @@ const homeValueItemSchema = z.object({
   title: z.string().trim().min(1).max(120),
   bullets: z.array(z.string().trim().min(1).max(180)).min(2).max(4),
   tone: z.enum(['NEGATIVE', 'POSITIVE']).default('NEGATIVE'),
+  imageUrl: optionalUrlSchema,
   sortOrder: z.number().default(0),
 });
 
 const homeMethodStepSchema = z.object({
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().min(1).max(320),
+  imageUrl: optionalUrlSchema,
   sortOrder: z.number().default(0),
 });
 
@@ -157,6 +160,7 @@ export const aboutPageSchema = z.object({
 
 export const homePageSchema = z.object({
   heroEyebrow: z.string().trim().max(80).optional(),
+  heroPanelImage: optionalUrlSchema,
   heroTitle: z.string().trim().min(3).max(220),
   heroSubtitle: z.string().trim().max(320).optional(),
   heroPrimaryCtaLabel: z.string().trim().max(80).optional(),

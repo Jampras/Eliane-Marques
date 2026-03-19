@@ -22,7 +22,7 @@ O projeto esta em estado operacional bom, mas ainda sem automacao formal de aces
 - textos secundarios pequenos exigem revisao recorrente de contraste
 - build continua dependente de banco acessivel
 - no Windows, `prisma generate` ainda pode sofrer lock do engine durante dev/build
-- a home publica ainda esta em refinamento visual
+- a home publica esta publicada, mas ainda passa por refinamento visual
 
 ## 4. Pendencias relevantes
 
@@ -44,4 +44,4 @@ Os riscos reais remanescentes hoje sao operacionais, nao de performance bruta:
 - credencial sensivel
 - manutencao de analytics
 - ausencia de testes unitarios
-- refinamento final da home antes de publicacao
+- refinamento continuo da home publicada

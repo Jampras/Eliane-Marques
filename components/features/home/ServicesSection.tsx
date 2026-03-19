@@ -66,7 +66,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
             </Heading>
           </div>
           <Text
-            className="fade-up max-w-none text-[12px] text-[color:var(--taupe)] xl:max-w-[220px]"
+            className="fade-up max-w-none border-l border-[color:var(--linho)]/80 pl-4 text-[12px] leading-[1.85] text-[color:var(--taupe)] xl:max-w-[240px]"
             style={{ '--delay': '0.1s' } as CSSProperties}
           >
             Cada formato responde a um nivel diferente de necessidade.

@@ -11,8 +11,8 @@ import { FaqSection } from '@/components/features/home/FaqSection';
 import { FinalCtaSection } from '@/components/features/home/FinalCtaSection';
 import { getHomeServices } from '@/lib/data/home';
 import { getSiteConfigs, getWhatsAppConfig } from '@/lib/data/config';
-import { getAboutPage } from '@/lib/institutional/about';
 import { getHomePage } from '@/lib/institutional/home';
+import { getAboutPage } from '@/lib/institutional/about';
 
 export default async function LandingPage() {
   const [services, wa, configs, about, home] = await Promise.all([
@@ -33,7 +33,7 @@ export default async function LandingPage() {
         primaryCtaLabel={home.heroPrimaryCtaLabel ?? undefined}
         secondaryCtaLabel={home.heroSecondaryCtaLabel ?? undefined}
         trustText={home.heroTrustText ?? undefined}
-        heroImage={about.heroImage}
+        heroImage={(('heroPanelImage' in home ? home.heroPanelImage : null) ?? undefined)}
         authoritySummary={{
           specializationCount: about.specializations.length,
           credentialCount: about.credentials.length,
@@ -47,6 +47,7 @@ export default async function LandingPage() {
           title: item.title,
           description: item.description,
           icon: item.icon,
+          imageUrl: 'imageUrl' in item ? item.imageUrl : null,
         }))}
       />
       <IdentitySection
@@ -58,6 +59,7 @@ export default async function LandingPage() {
           title: item.title,
           bullets: Array.isArray(item.bullets) ? item.bullets.map(String) : [],
           tone: item.tone,
+          imageUrl: 'imageUrl' in item ? item.imageUrl : null,
         }))}
       />
       <MethodSection
@@ -67,6 +69,7 @@ export default async function LandingPage() {
         steps={home.methodSteps.map((item) => ({
           title: item.title,
           description: item.description,
+          imageUrl: 'imageUrl' in item ? item.imageUrl : null,
         }))}
       />
       <AuthoritySection

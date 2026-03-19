@@ -2,7 +2,7 @@
 
 **Versao:** 1.8  
 **Data:** 19/03/2026  
-**Status:** producao com manutencao ativa e branch local em revisao visual da home
+**Status:** producao com manutencao ativa e home institucional publicada com edicao via admin
 
 ## 1. Visao geral
 
@@ -70,7 +70,9 @@ docs/
   - `ServicesSection`
   - `FaqSection`
 - `FinalCtaSection`
-- o desktop esta mais estavel do que o mobile no branch atual
+- o conteudo institucional da home vem de `lib/institutional/home.ts`
+- `/admin/home` controla hero, imagem lateral do hero, audiencia, leitura de valor, metodo, FAQ e CTA final
+- cards de audiencia, leitura de valor e metodo aceitam imagem por item
 
 ### Admin
 - painel em `app/(admin)/admin`
@@ -114,14 +116,14 @@ docs/
 - o build ainda depende de um Prisma Client gerado, mas as queries publicas com fallback nao bloqueiam mais a compilacao sem banco
 - no Windows, `prisma generate` ainda pode travar o engine DLL
 - nao ha testes unitarios para regras criticas
-- a home publica ainda esta em iteracao, principalmente no mobile
+- a home publica foi publicada, mas ainda recebe refinamento visual continuo, principalmente no mobile
 
 ## 7. Recomendacoes priorizadas
 
 ### Imediato
 1. rotacionar a credencial sensivel do Supabase
-2. fechar a direcao final da home antes de publicar
-3. automatizar `analytics:maintain`
+2. automatizar `analytics:maintain`
+3. continuar refinamento visual da home ja publicada
 
 ### Em seguida
 1. adicionar testes unitarios para modulos criticos

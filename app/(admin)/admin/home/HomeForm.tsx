@@ -7,6 +7,7 @@ import { Heading, Text } from '@/components/ui/Typography';
 import { useToast } from '@/components/ui/ToastProvider';
 import { AdminInlineNotice } from '@/components/features/admin/AdminInlineNotice';
 import { AdminMobileFormBar } from '@/components/features/admin/AdminMobileFormBar';
+import { ImageUpload } from '@/components/features/admin/ImageUpload';
 import {
   ADMIN_FORM_PANEL_CLASS,
   ADMIN_INPUT_CLASS,
@@ -22,6 +23,7 @@ interface HomeAudienceItemInput {
   title: string;
   description: string;
   icon: string;
+  imageUrl: string;
   sortOrder: number;
 }
 
@@ -30,12 +32,14 @@ interface HomeValueItemInput {
   title: string;
   bullets: string[];
   tone: ValueTone;
+  imageUrl: string;
   sortOrder: number;
 }
 
 interface HomeMethodStepInput {
   title: string;
   description: string;
+  imageUrl: string;
   sortOrder: number;
 }
 
@@ -47,6 +51,7 @@ interface HomeFaqItemInput {
 
 interface HomeFormValue {
   heroEyebrow: string;
+  heroPanelImage: string;
   heroTitle: string;
   heroSubtitle: string;
   heroPrimaryCtaLabel: string;
@@ -118,6 +123,7 @@ function normalizeAudienceItems(items: HomeAudienceItemInput[]) {
     title: item.title.trim(),
     description: item.description.trim(),
     icon: item.icon.trim() || undefined,
+    imageUrl: item.imageUrl.trim() || undefined,
     sortOrder: index,
   }));
 }
@@ -128,6 +134,7 @@ function normalizeValueItems(items: HomeValueItemInput[]) {
     title: item.title.trim(),
     bullets: item.bullets.map((bullet) => bullet.trim()).filter(Boolean),
     tone: item.tone,
+    imageUrl: item.imageUrl.trim() || undefined,
     sortOrder: index,
   }));
 }
@@ -136,6 +143,7 @@ function normalizeMethodSteps(items: HomeMethodStepInput[]) {
   return items.map((item, index) => ({
     title: item.title.trim(),
     description: item.description.trim(),
+    imageUrl: item.imageUrl.trim() || undefined,
     sortOrder: index,
   }));
 }
@@ -158,6 +166,7 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
     description: string;
   } | null>(null);
   const [heroEyebrow, setHeroEyebrow] = useState(initialValue.heroEyebrow);
+  const [heroPanelImage, setHeroPanelImage] = useState(initialValue.heroPanelImage);
   const [heroTitle, setHeroTitle] = useState(initialValue.heroTitle);
   const [heroSubtitle, setHeroSubtitle] = useState(initialValue.heroSubtitle);
   const [heroPrimaryCtaLabel, setHeroPrimaryCtaLabel] = useState(initialValue.heroPrimaryCtaLabel);
@@ -202,6 +211,7 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
     try {
       const result = await upsertInstitutionalHomePage({
         heroEyebrow,
+        heroPanelImage,
         heroTitle,
         heroSubtitle,
         heroPrimaryCtaLabel,
@@ -327,6 +337,14 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
                 className={ADMIN_INPUT_CLASS}
               />
             </div>
+            <div className="lg:col-span-2">
+              <ImageUpload
+                name="home-hero-panel-image"
+                label="Imagem do card lateral do hero"
+                defaultValue={heroPanelImage}
+                onValueChange={setHeroPanelImage}
+              />
+            </div>
             <div className="space-y-2 lg:col-span-2">
               <label htmlFor="home-hero-title" className={ADMIN_LABEL_CLASS}>
                 Titulo principal
@@ -377,6 +395,114 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
         </section>
 
         <section className="space-y-6 border-t border-border-soft pt-8">
+          <SectionHeader
+            badge="Comparativo"
+            title="Leitura de valor"
+            description="Controle os dois cards comparativos e o CTA da secao."
+            count="2 card(s) fixos"
+          />
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="space-y-2">
+              <label htmlFor="home-value-title" className={ADMIN_LABEL_CLASS}>
+                Titulo da secao
+              </label>
+              <input
+                id="home-value-title"
+                value={valueTitle}
+                onChange={(event) => setValueTitle(event.target.value)}
+                className={ADMIN_INPUT_CLASS}
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="home-value-subtitle" className={ADMIN_LABEL_CLASS}>
+                Subtitulo
+              </label>
+              <input
+                id="home-value-subtitle"
+                value={valueSubtitle}
+                onChange={(event) => setValueSubtitle(event.target.value)}
+                className={ADMIN_INPUT_CLASS}
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="home-value-cta" className={ADMIN_LABEL_CLASS}>
+                CTA da secao
+              </label>
+              <input
+                id="home-value-cta"
+                value={valueCtaLabel}
+                onChange={(event) => setValueCtaLabel(event.target.value)}
+                className={ADMIN_INPUT_CLASS}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {valueItems.map((item, index) => (
+              <div key={`value-${index}`} className="space-y-4 border border-border-soft bg-bg p-4">
+                <div className="grid gap-4 lg:grid-cols-[160px_minmax(0,1fr)]">
+                  <div className="space-y-2">
+                    <label htmlFor={`value-tone-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Tom
+                    </label>
+                    <select
+                      id={`value-tone-${index}`}
+                      value={item.tone}
+                      onChange={(event) => updateValue(index, 'tone', event.target.value as ValueTone)}
+                      className={ADMIN_SELECT_CLASS}
+                    >
+                      <option value="NEGATIVE">Desalinhamento</option>
+                      <option value="POSITIVE">Alinhamento</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor={`value-badge-${index}`} className={ADMIN_LABEL_CLASS}>
+                      Badge
+                    </label>
+                    <input
+                      id={`value-badge-${index}`}
+                      value={item.badge}
+                      onChange={(event) => updateValue(index, 'badge', event.target.value)}
+                      className={ADMIN_INPUT_CLASS}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor={`value-title-${index}`} className={ADMIN_LABEL_CLASS}>
+                    Titulo
+                  </label>
+                  <input
+                    id={`value-title-${index}`}
+                    value={item.title}
+                    onChange={(event) => updateValue(index, 'title', event.target.value)}
+                    className={ADMIN_INPUT_CLASS}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor={`value-bullets-${index}`} className={ADMIN_LABEL_CLASS}>
+                    Bullets
+                  </label>
+                  <textarea
+                    id={`value-bullets-${index}`}
+                    rows={5}
+                    value={bulletsToText(item.bullets)}
+                    onChange={(event) => updateValue(index, 'bullets', textToBullets(event.target.value))}
+                    className={ADMIN_TEXTAREA_CLASS}
+                  />
+                </div>
+                <ImageUpload
+                  name={`home-value-image-${index}`}
+                  label="Imagem do card"
+                  defaultValue={item.imageUrl}
+                  onValueChange={(value) => updateValue(index, 'imageUrl', value)}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-6 border-t border-border-soft pt-8">
           <div className="flex items-center justify-between gap-4">
             <SectionHeader
               badge="Audiencia"
@@ -391,7 +517,13 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
               onClick={() =>
                 setAudienceItems((current) => [
                   ...current,
-                  { title: '', description: '', icon: '\u2726', sortOrder: current.length },
+                  {
+                    title: '',
+                    description: '',
+                    icon: '\u2726',
+                    imageUrl: '',
+                    sortOrder: current.length,
+                  },
                 ])
               }
             >
@@ -466,6 +598,12 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
                       className={ADMIN_TEXTAREA_CLASS}
                     />
                   </div>
+                  <ImageUpload
+                    name={`home-audience-image-${index}`}
+                    label="Imagem do card"
+                    defaultValue={item.imageUrl}
+                    onValueChange={(value) => updateAudience(index, 'imageUrl', value)}
+                  />
                 </div>
                 <div className="flex items-start justify-end">
                   <Button
@@ -499,7 +637,7 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
               onClick={() =>
                 setMethodSteps((current) => [
                   ...current,
-                  { title: '', description: '', sortOrder: current.length },
+                  { title: '', description: '', imageUrl: '', sortOrder: current.length },
                 ])
               }
             >
@@ -573,6 +711,12 @@ export default function HomeForm({ initialValue }: { initialValue: HomeFormValue
                       className={ADMIN_TEXTAREA_CLASS}
                     />
                   </div>
+                  <ImageUpload
+                    name={`home-step-image-${index}`}
+                    label="Imagem da etapa"
+                    defaultValue={item.imageUrl}
+                    onValueChange={(value) => updateStep(index, 'imageUrl', value)}
+                  />
                 </div>
                 <div className="flex items-start justify-end">
                   <Button
