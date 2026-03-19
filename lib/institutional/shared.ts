@@ -11,7 +11,9 @@ export const INSTITUTIONAL_REVALIDATE_PATHS = [
 
 export const SITE_CONFIGS_TAG = 'site-configs';
 export const ABOUT_PAGE_TAG = 'about-page';
+export const HOME_PAGE_TAG = 'home-page';
 export const ABOUT_SINGLETON_KEY = 'main';
+export const HOME_SINGLETON_KEY = 'main';
 
 export function normalizeOptionalInstitutionalText(value: string | undefined) {
   if (value === undefined) {

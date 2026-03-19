@@ -12,21 +12,27 @@ import { FinalCtaSection } from '@/components/features/home/FinalCtaSection';
 import { getHomeServices } from '@/lib/data/home';
 import { getSiteConfigs, getWhatsAppConfig } from '@/lib/data/config';
 import { getAboutPage } from '@/lib/institutional/about';
+import { getHomePage } from '@/lib/institutional/home';
 
 export default async function LandingPage() {
-  const [services, wa, configs, about] = await Promise.all([
+  const [services, wa, configs, about, home] = await Promise.all([
     getHomeServices(),
     getWhatsAppConfig(),
     getSiteConfigs(),
     getAboutPage(),
+    getHomePage(),
   ]);
 
   return (
     <div>
       <HeroSection
         waConfig={wa}
-        headline={configs.heroHeadline}
-        subheadline={configs.heroSubheadline}
+        eyebrow={home.heroEyebrow ?? undefined}
+        headline={home.heroTitle || configs.heroHeadline}
+        subheadline={home.heroSubtitle || configs.heroSubheadline}
+        primaryCtaLabel={home.heroPrimaryCtaLabel ?? undefined}
+        secondaryCtaLabel={home.heroSecondaryCtaLabel ?? undefined}
+        trustText={home.heroTrustText ?? undefined}
         heroImage={about.heroImage}
         authoritySummary={{
           specializationCount: about.specializations.length,
@@ -34,9 +40,35 @@ export default async function LandingPage() {
           milestoneCount: about.milestones.length,
         }}
       />
-      <ProfileTracksSection />
-      <IdentitySection />
-      <MethodSection />
+      <ProfileTracksSection
+        title={home.audienceTitle}
+        subtitle={home.audienceSubtitle}
+        items={home.audienceItems.map((item) => ({
+          title: item.title,
+          description: item.description,
+          icon: item.icon,
+        }))}
+      />
+      <IdentitySection
+        title={home.valueTitle}
+        subtitle={home.valueSubtitle}
+        ctaLabel={home.valueCtaLabel}
+        items={home.valueItems.map((item) => ({
+          badge: item.badge,
+          title: item.title,
+          bullets: Array.isArray(item.bullets) ? item.bullets.map(String) : [],
+          tone: item.tone,
+        }))}
+      />
+      <MethodSection
+        title={home.methodTitle}
+        subtitle={home.methodSubtitle}
+        ctaLabel={home.methodCtaLabel}
+        steps={home.methodSteps.map((item) => ({
+          title: item.title,
+          description: item.description,
+        }))}
+      />
       <AuthoritySection
         specializationCount={about.specializations.length}
         credentialCount={about.credentials.length}
@@ -49,8 +81,22 @@ export default async function LandingPage() {
       />
       <PricingSection services={services} waConfig={wa} />
       <ServicesSection services={services} />
-      <FaqSection />
-      <FinalCtaSection waConfig={wa} />
+      <FaqSection
+        title={home.faqTitle}
+        subtitle={home.faqSubtitle}
+        items={home.faqItems.map((item) => ({
+          question: item.question,
+          answer: item.answer,
+        }))}
+      />
+      <FinalCtaSection
+        waConfig={wa}
+        title={home.finalCtaTitle}
+        subtitle={home.finalCtaSubtitle}
+        scarcityText={home.finalCtaScarcityText}
+        ctaLabel={home.finalCtaLabel}
+        whatsappMessage={home.finalWhatsappMessage}
+      />
     </div>
   );
 }

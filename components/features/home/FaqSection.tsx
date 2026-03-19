@@ -7,7 +7,7 @@ import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import { HomeFaqAccordion } from './HomeFaqAccordion';
 
-export const faqItems = [
+export const defaultFaqItems = [
   {
     question: 'Isso serve para quem esta comecando?',
     answer:
@@ -30,7 +30,18 @@ export const faqItems = [
   },
 ];
 
-export function FaqSection() {
+interface FaqSectionProps {
+  title?: string | null;
+  subtitle?: string | null;
+  items?: Array<{
+    question: string;
+    answer: string;
+  }>;
+}
+
+export function FaqSection({ title, subtitle, items }: FaqSectionProps) {
+  const faqItems = items && items.length > 0 ? items : defaultFaqItems;
+
   return (
     <Section id="faq" variant="surface">
       <StructuredDataScript data={buildFaqJsonLd(faqItems)} />
@@ -38,10 +49,11 @@ export function FaqSection() {
         <div className="mx-auto mb-10 max-w-3xl text-center">
           <div className="atelier-overline justify-center">FAQ</div>
           <Heading className="mt-4 text-[2.2rem] lg:text-[3rem]">
-            Duvidas mais comuns
+            {title?.trim() || 'Duvidas mais comuns'}
           </Heading>
           <Text className="mx-auto mt-5 max-w-[620px] text-[14px] text-[color:var(--taupe)]">
-            Se ainda houver duvida, abra a conversa e receba a recomendacao mais adequada.
+            {subtitle?.trim() ||
+              'Se ainda houver duvida, abra a conversa e receba a recomendacao mais adequada.'}
           </Text>
         </div>
 

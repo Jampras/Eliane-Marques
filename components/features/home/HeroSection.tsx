@@ -10,8 +10,12 @@ import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 interface HeroSectionProps {
   waConfig?: { number: string; defaultMessage: string };
+  eyebrow?: string;
   headline?: string;
   subheadline?: string;
+  primaryCtaLabel?: string;
+  secondaryCtaLabel?: string;
+  trustText?: string;
   heroImage?: string | null;
   authoritySummary?: {
     specializationCount: number;
@@ -27,6 +31,10 @@ const DEFAULT_HEADLINE =
   'Sua imagem precisa sustentar o nivel que voce ja entrega.';
 const DEFAULT_SUBHEADLINE =
   'Consultoria de imagem, etiqueta e presenca para mulheres que precisam de mais clareza, coerencia e leitura de valor.';
+const DEFAULT_EYEBROW = 'Imagem . etiqueta . presenca';
+const DEFAULT_PRIMARY_CTA = 'Quero meu diagnostico estrategico';
+const DEFAULT_SECONDARY_CTA = 'Ver formatos de atendimento';
+const DEFAULT_TRUST_TEXT = 'Sem compromisso. Resposta inicial em ate 24h uteis.';
 
 const baseMetrics = [
   { value: '150+', label: 'atendimentos' },
@@ -133,8 +141,12 @@ function AnimatedMetric({ value }: { value: string }) {
 
 export function HeroSection({
   waConfig,
+  eyebrow,
   headline,
   subheadline,
+  primaryCtaLabel,
+  secondaryCtaLabel,
+  trustText,
   heroImage,
   authoritySummary,
 }: HeroSectionProps) {
@@ -150,6 +162,10 @@ export function HeroSection({
         authoritySummary && authoritySummary.credentialCount > 0 ? 'credenciais' : 'eixos tecnicos',
     },
   ];
+  const resolvedEyebrow = eyebrow?.trim() || DEFAULT_EYEBROW;
+  const resolvedPrimaryCtaLabel = primaryCtaLabel?.trim() || DEFAULT_PRIMARY_CTA;
+  const resolvedSecondaryCtaLabel = secondaryCtaLabel?.trim() || DEFAULT_SECONDARY_CTA;
+  const resolvedTrustText = trustText?.trim() || DEFAULT_TRUST_TEXT;
 
   return (
     <section
@@ -170,7 +186,7 @@ export function HeroSection({
               <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--linho)] bg-[rgba(255,255,255,0.34)] px-3 py-2 text-center sm:gap-3 sm:px-4">
                 <span className="h-[6px] w-[6px] rounded-full bg-[color:var(--argila)]" />
                 <span className="text-[8px] uppercase tracking-[0.16em] text-[color:var(--taupe)] sm:text-[9px] sm:tracking-[0.18em]">
-                  Imagem . etiqueta . presenca
+                  {resolvedEyebrow}
                 </span>
               </div>
 
@@ -238,7 +254,7 @@ export function HeroSection({
               <WhatsAppButton
                 number={waConfig?.number || ''}
                 template="Ola Eliane! Quero entender qual formato faz mais sentido para alinhar minha imagem, minha presenca e a forma como meu valor esta sendo percebido."
-                label="Quero meu diagnostico estrategico"
+                label={resolvedPrimaryCtaLabel}
                 className="w-full sm:w-auto"
                 size="lg"
                 analyticsSource={ANALYTICS_SOURCES.HOME_HERO}
@@ -259,7 +275,7 @@ export function HeroSection({
                   });
                 }}
               >
-                Ver formatos de atendimento
+                {resolvedSecondaryCtaLabel}
               </Button>
             </div>
 
@@ -267,7 +283,7 @@ export function HeroSection({
               className="fade-up mt-3 max-w-[42ch] text-[9px] uppercase tracking-[0.12em] text-[color:var(--taupe)] sm:text-[10px] sm:tracking-[0.14em] lg:max-w-[520px]"
               style={{ '--delay': '0.45s' } as CSSProperties}
             >
-              Sem compromisso. Resposta inicial em ate 24h uteis.
+              {resolvedTrustText}
             </p>
 
             <div
@@ -296,7 +312,7 @@ export function HeroSection({
               <div className="inline-flex items-center gap-3 rounded-full border border-[color:var(--linho)] bg-[rgba(255,255,255,0.34)] px-4 py-2 text-center">
                 <span className="h-[6px] w-[6px] rounded-full bg-[color:var(--argila)]" />
                 <span className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
-                  Imagem . etiqueta . presenca
+                  {resolvedEyebrow}
                 </span>
               </div>
             </div>
@@ -325,7 +341,7 @@ export function HeroSection({
               <WhatsAppButton
                 number={waConfig?.number || ''}
                 template="Ola Eliane! Quero entender qual formato faz mais sentido para alinhar minha imagem, minha presenca e a forma como meu valor esta sendo percebido."
-                label="Quero meu diagnostico estrategico"
+                label={resolvedPrimaryCtaLabel}
                 className="w-full sm:w-auto"
                 size="lg"
                 analyticsSource={ANALYTICS_SOURCES.HOME_HERO}
@@ -346,7 +362,7 @@ export function HeroSection({
                   });
                 }}
               >
-                Ver formatos de atendimento
+                {resolvedSecondaryCtaLabel}
               </Button>
             </div>
 
@@ -354,7 +370,7 @@ export function HeroSection({
               className="fade-up mt-3 max-w-[520px] text-[10px] uppercase tracking-[0.14em] text-[color:var(--taupe)]"
               style={{ '--delay': '0.45s' } as CSSProperties}
             >
-              Sem compromisso. Resposta inicial em ate 24h uteis.
+              {resolvedTrustText}
             </p>
 
             <div

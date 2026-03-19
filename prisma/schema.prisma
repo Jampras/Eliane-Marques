@@ -144,6 +144,38 @@ model AboutPage {
   updatedAt               DateTime              @updatedAt
 }
 
+model HomePage {
+  id                     String                @id @default(cuid())
+  singletonKey           String                @unique @default("main")
+  heroEyebrow            String?
+  heroTitle              String
+  heroSubtitle           String?
+  heroPrimaryCtaLabel    String?
+  heroSecondaryCtaLabel  String?
+  heroTrustText          String?
+  audienceTitle          String?
+  audienceSubtitle       String?
+  valueTitle             String?
+  valueSubtitle          String?
+  valueCtaLabel          String?
+  methodTitle            String?
+  methodSubtitle         String?
+  methodCtaLabel         String?
+  faqTitle               String?
+  faqSubtitle            String?
+  finalCtaTitle          String?
+  finalCtaSubtitle       String?
+  finalCtaScarcityText   String?
+  finalCtaLabel          String?
+  finalWhatsappMessage   String?
+  audienceItems          HomeAudienceItem[]
+  valueItems             HomeValueItem[]
+  methodSteps            HomeMethodStep[]
+  faqItems               HomeFaqItem[]
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+}
+
 model AboutMilestone {
   id          String    @id @default(cuid())
   title       String
@@ -180,4 +212,51 @@ model AboutCredential {
 
   @@index([aboutPageId, sortOrder])
   @@index([kind, sortOrder])
+}
+
+model HomeAudienceItem {
+  id         String   @id @default(cuid())
+  title      String
+  description String
+  icon       String?
+  sortOrder  Int      @default(0)
+  homePage   HomePage @relation(fields: [homePageId], references: [id], onDelete: Cascade)
+  homePageId String
+
+  @@index([homePageId, sortOrder])
+}
+
+model HomeValueItem {
+  id          String   @id @default(cuid())
+  badge       String?
+  title       String
+  bullets     Json
+  tone        String   @default("NEUTRAL")
+  sortOrder   Int      @default(0)
+  homePage    HomePage @relation(fields: [homePageId], references: [id], onDelete: Cascade)
+  homePageId  String
+
+  @@index([homePageId, sortOrder])
+}
+
+model HomeMethodStep {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  sortOrder   Int      @default(0)
+  homePage    HomePage @relation(fields: [homePageId], references: [id], onDelete: Cascade)
+  homePageId  String
+
+  @@index([homePageId, sortOrder])
+}
+
+model HomeFaqItem {
+  id         String   @id @default(cuid())
+  question   String
+  answer     String
+  sortOrder  Int      @default(0)
+  homePage   HomePage @relation(fields: [homePageId], references: [id], onDelete: Cascade)
+  homePageId String
+
+  @@index([homePageId, sortOrder])
 }

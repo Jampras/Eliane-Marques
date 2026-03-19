@@ -7,9 +7,21 @@ import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
 interface FinalCtaSectionProps {
   waConfig: { number: string; defaultMessage: string };
+  title?: string | null;
+  subtitle?: string | null;
+  scarcityText?: string | null;
+  ctaLabel?: string | null;
+  whatsappMessage?: string | null;
 }
 
-export function FinalCtaSection({ waConfig }: FinalCtaSectionProps) {
+export function FinalCtaSection({
+  waConfig,
+  title,
+  subtitle,
+  scarcityText,
+  ctaLabel,
+  whatsappMessage,
+}: FinalCtaSectionProps) {
   return (
     <Section id="cta-final" variant="black" className="relative">
       <Container className="text-center">
@@ -21,25 +33,29 @@ export function FinalCtaSection({ waConfig }: FinalCtaSectionProps) {
             className="fade-up mt-7 mx-auto max-w-[13ch] text-[2rem] !text-[color:var(--aveia)] lg:text-[2.7rem]"
             style={{ '--delay': '0.1s' } as CSSProperties}
           >
-            Se sua imagem ainda nao sustenta seu valor, este e o momento de corrigir isso.
+            {title?.trim() ||
+              'Se sua imagem ainda nao sustenta seu valor, este e o momento de corrigir isso.'}
           </Heading>
           <p
             className="fade-up mx-auto mt-4 max-w-[34ch] text-[13px] leading-[1.8] text-white/68"
             style={{ '--delay': '0.16s' } as CSSProperties}
           >
-            Uma conversa curta ja define o formato mais adequado para seu momento.
+            {subtitle?.trim() || 'Uma conversa curta ja define o formato mais adequado para seu momento.'}
           </p>
           <p
             className="fade-up mt-4 font-ornament text-[1rem] italic text-[color:var(--taupe)]"
             style={{ '--delay': '0.2s' } as CSSProperties}
           >
-            Poucos acompanhamentos por ciclo.
+            {scarcityText?.trim() || 'Poucos acompanhamentos por ciclo.'}
           </p>
           <div className="fade-up mt-8" style={{ '--delay': '0.3s' } as CSSProperties}>
             <WhatsAppButton
               number={waConfig.number}
-              template="Ola Eliane! Quero entender o formato mais adequado para alinhar minha imagem, minha presenca e a forma como meu valor esta sendo percebido."
-              label="Quero conversar sobre meu caso"
+              template={
+                whatsappMessage?.trim() ||
+                'Ola Eliane! Quero entender o formato mais adequado para alinhar minha imagem, minha presenca e a forma como meu valor esta sendo percebido.'
+              }
+              label={ctaLabel?.trim() || 'Quero conversar sobre meu caso'}
               className="!border-[color:var(--argila)] !bg-[color:var(--argila)] !text-[color:var(--aveia)] hover:!bg-[color:var(--cacau)]"
               size="lg"
               analyticsSource={ANALYTICS_SOURCES.HOME_PRICING}

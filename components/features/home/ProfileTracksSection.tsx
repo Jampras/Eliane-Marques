@@ -3,7 +3,7 @@ import { Container } from '@/components/ui/Container';
 import { Card } from '@/components/ui/Card';
 import { Heading, Text } from '@/components/ui/Typography';
 
-const profileTracks = [
+const defaultProfileTracks = [
   {
     title: 'Executivas em ascensao',
     desc: 'Para quem quer liderar com presenca, firmeza e etiqueta em ambientes de alta exigencia.',
@@ -21,17 +21,41 @@ const profileTracks = [
   },
 ];
 
-export function ProfileTracksSection() {
+interface ProfileTracksSectionProps {
+  title?: string | null;
+  subtitle?: string | null;
+  items?: Array<{
+    title: string;
+    description: string;
+    icon?: string | null;
+  }>;
+}
+
+export function ProfileTracksSection({
+  title,
+  subtitle,
+  items,
+}: ProfileTracksSectionProps) {
+  const profileTracks =
+    items && items.length > 0
+      ? items.map((item, index) => ({
+          title: item.title,
+          desc: item.description,
+          icon: item.icon?.trim() || defaultProfileTracks[index]?.icon || '\u2726',
+        }))
+      : defaultProfileTracks;
+
   return (
     <Section id="perfis">
       <Container>
         <div className="mx-auto mb-8 max-w-2xl text-center lg:mb-10">
           <div className="atelier-overline justify-center">Para quem e</div>
           <Heading className="mt-4 text-[2rem] lg:text-[2.7rem]">
-            Quem mais se beneficia desse trabalho
+            {title?.trim() || 'Quem mais se beneficia desse trabalho'}
           </Heading>
           <Text className="mx-auto mt-4 max-w-[560px] text-[14px] text-[color:var(--taupe)]">
-            A orientacao foi pensada para momentos em que presenca, leitura de valor e comportamento fazem diferenca.
+            {subtitle?.trim() ||
+              'A orientacao foi pensada para momentos em que presenca, leitura de valor e comportamento fazem diferenca.'}
           </Text>
         </div>
 

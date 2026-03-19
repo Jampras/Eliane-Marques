@@ -34,6 +34,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 
 ## Estado tecnico atual
 - home componentizada por secao
+- home administravel em `/admin/home` para hero, audiencia, leitura de valor, metodo, FAQ e CTA final
 - pagina `Sobre` administravel em `/admin/sobre` e publicada em `/sobre`
 - catalogos com busca, filtros e detalhe por tipo
 - CTA por produto configuravel: WhatsApp ou link externo
@@ -46,8 +47,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - upload persistente em Supabase obrigatorio em producao
 - CSP dinamica com nonce por request
 - fallback resiliente de migrations via `scripts/db-deploy.mjs`
-- home do branch atual em revisao visual/comercial
-- desktop da home mais estavel do que o mobile no branch local
+- home publica ligada ao dominio institucional com conteudo administravel no backoffice
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:

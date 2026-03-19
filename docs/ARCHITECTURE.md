@@ -40,7 +40,7 @@ flowchart TD
 
 ### Dados
 - `lib/data` centraliza queries e cache
-- `lib/institutional` centraliza `Config` e `About`
+- `lib/institutional` centraliza `Config`, `About` e `Home`
 - `lib/env` centraliza o contrato de ambiente
 
 ### Mutacoes
@@ -103,7 +103,8 @@ docs/
 
 ### Home publica
 - `app/(public)/page.tsx` compoe a home por secoes
-- o desktop esta mais estavel do que o mobile no branch atual
+- o conteudo institucional da home vem de `lib/institutional/home.ts`
+- `Investimentos` e `Formatos` continuam dinamicos a partir de produtos ativos
 
 ### CTA de produto
 - regra central em `lib/core/product-cta.ts`
@@ -141,3 +142,4 @@ docs/
 - nao espalhar links de WhatsApp fora de `lib/contact/whatsapp-intents.ts`
 - nao depender de `public/uploads` como storage final em producao
 - concentrar futuros singletons institucionais em `lib/institutional/*`
+- manter a home CMS-driven apenas para conteudo; layout e comportamento visual continuam no codigo

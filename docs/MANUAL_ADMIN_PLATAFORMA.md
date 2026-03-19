@@ -44,6 +44,7 @@ Este documento explica como usar o painel administrativo do site Eliane Marques 
 As secoes disponiveis hoje sao:
 
 - `Dashboard`
+- `Home`
 - `Produtos`
 - `Blog`
 - `Checklists`
@@ -217,7 +218,42 @@ Cada item pode ter:
 
 ---
 
-## 8. Configuracao
+## 8. Home
+
+A secao `Home` controla o conteudo institucional da pagina inicial.
+
+### O que pode ser editado
+- hero principal
+- CTA principal e CTA secundario
+- linha de confianca do hero
+- cards da secao `Para quem e`
+- comparativo da secao `Leitura de valor`
+- etapas da secao `Metodo`
+- perguntas frequentes
+- CTA final da home
+
+### O que nao e editado aqui
+- layout visual
+- animacoes
+- cards de `Investimentos`
+- cards de `Formatos`
+
+Esses elementos continuam controlados pelo codigo para manter consistencia visual.
+
+### Como usar
+1. Entre em `Home`.
+2. Ajuste os textos das secoes.
+3. Atualize os cards e etapas, se necessario.
+4. Salve.
+5. Revise a pagina inicial publica.
+
+### Observacao importante
+- a imagem principal do hero da home continua vindo da pagina `Sobre`
+- para trocar essa imagem, atualize primeiro `Sobre`
+
+---
+
+## 9. Configuracao
 
 A secao `Configuracao` controla informacoes globais do site.
 
@@ -245,7 +281,7 @@ Observacao:
 
 ---
 
-## 9. Upload de imagens
+## 10. Upload de imagens
 
 Uploads sao usados hoje em:
 
@@ -268,7 +304,7 @@ Uploads sao usados hoje em:
 
 ---
 
-## 10. Sobre
+## 11. Sobre
 
 A secao `Sobre` controla a pagina institucional publica em `/sobre`.
 
@@ -304,7 +340,7 @@ Verifique:
 
 ---
 
-## 10. Busca e filtros no site
+## 12. Busca e filtros no site
 
 O painel admin nao possui hoje filtros complexos de operacao interna, mas o site publico ja permite filtros e busca em listagens.
 
@@ -314,7 +350,7 @@ Isso significa que:
 
 ---
 
-## 11. Captura de leads
+## 13. Captura de leads
 
 O site possui um formulario alternativo de contato alem do WhatsApp.
 
@@ -333,7 +369,7 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 
 ---
 
-## 12. Boas praticas de uso
+## 14. Boas praticas de uso
 
 ### Ao cadastrar produtos
 - use titulos objetivos
@@ -350,9 +386,15 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 - altere com cuidado o WhatsApp e links sociais
 - revise textos da home para evitar quebrar layout
 
+### Ao editar a home
+- prefira frases curtas e claras
+- mantenha o hero objetivo
+- use bullets curtos no comparativo
+- revise se o CTA final continua coerente com a oferta
+
 ---
 
-## 13. Erros comuns e como resolver
+## 15. Erros comuns e como resolver
 
 ### Nao consigo entrar no painel
 - confirme se esta usando uma conta Google autorizada
@@ -382,7 +424,7 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 
 ---
 
-## 14. Fluxo recomendado de publicacao
+## 16. Fluxo recomendado de publicacao
 
 ### Produto novo
 1. Criar produto
@@ -392,6 +434,12 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 5. Marcar como ativo
 6. Salvar
 7. Testar no site publico
+
+### Ajuste da home
+1. Editar a secao `Home`
+2. Salvar
+3. Revisar `/`
+4. Se precisar trocar a imagem do hero, editar `Sobre`
 
 ### Artigo novo
 1. Criar artigo
@@ -412,7 +460,7 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 
 ---
 
-## 15. Limites atuais do painel
+## 17. Limites atuais do painel
 
 Hoje o painel:
 - nao gerencia permissoes por usuario via interface
@@ -421,7 +469,7 @@ Hoje o painel:
 
 ---
 
-## 16. Suporte tecnico
+## 18. Suporte tecnico
 
 Se algo nao funcionar como esperado, o ideal e repassar ao time tecnico:
 

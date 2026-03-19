@@ -5,7 +5,7 @@ import { Heading, Text } from '@/components/ui/Typography';
 import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 
-const methodSteps = [
+const defaultMethodSteps = [
   {
     title: 'Leitura atual',
     text: 'Mapeamos como imagem, comportamento e comunicacao estao sendo percebidos hoje.',
@@ -24,17 +24,36 @@ const methodSteps = [
   },
 ];
 
-export function MethodSection() {
+interface MethodSectionProps {
+  title?: string | null;
+  subtitle?: string | null;
+  ctaLabel?: string | null;
+  steps?: Array<{
+    title: string;
+    description: string;
+  }>;
+}
+
+export function MethodSection({ title, subtitle, ctaLabel, steps }: MethodSectionProps) {
+  const methodSteps =
+    steps && steps.length > 0
+      ? steps.map((item) => ({
+          title: item.title,
+          text: item.description,
+        }))
+      : defaultMethodSteps;
+
   return (
     <Section id="metodo" variant="surface">
       <Container>
         <div className="mx-auto mb-8 max-w-2xl text-center lg:mb-10">
           <div className="atelier-overline justify-center">Como funciona</div>
           <Heading className="mt-4 text-[2rem] lg:text-[2.7rem]">
-            Quatro etapas claras
+            {title?.trim() || 'Quatro etapas claras'}
           </Heading>
           <Text className="mx-auto mt-4 max-w-[560px] text-[14px] text-[color:var(--taupe)]">
-            O foco nao e mudar quem voce e. E alinhar leitura, imagem e comportamento.
+            {subtitle?.trim() ||
+              'O foco nao e mudar quem voce e. E alinhar leitura, imagem e comportamento.'}
           </Text>
           <div className="mt-7 flex justify-center">
             <TrackedLinkButton
@@ -49,7 +68,7 @@ export function MethodSection() {
               size="lg"
               className="border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] shadow-[0_8px_18px_rgba(58,36,24,0.08)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)]"
             >
-              Ver formatos que aplicam esse metodo
+              {ctaLabel?.trim() || 'Ver formatos que aplicam esse metodo'}
             </TrackedLinkButton>
           </div>
         </div>

@@ -1,5 +1,6 @@
 export const adminMenuItems = [
   { label: 'Dashboard', icon: 'dashboard', href: '/admin' },
+  { label: 'Home', icon: 'home', href: '/admin/home' },
   { label: 'Produtos', icon: 'shopping_bag', href: '/admin/produtos' },
   { label: 'Blog', icon: 'article', href: '/admin/conteudos' },
   { label: 'Checklists', icon: 'checklist', href: '/admin/checklists' },
