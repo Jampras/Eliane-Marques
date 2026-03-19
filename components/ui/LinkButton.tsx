@@ -19,9 +19,9 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
 }) => {
   const variants = {
     primary:
-      'border border-[color:var(--cacau)] bg-[color:var(--cacau)] text-[color:var(--aveia)] hover:bg-[color:var(--espresso)]',
+      'border border-[color:var(--cacau)] bg-[color:var(--cacau)] text-[color:var(--aveia)] shadow-[0_8px_18px_rgba(122,78,56,0.14)] hover:border-[color:var(--espresso)] hover:bg-[color:var(--espresso)] hover:shadow-[0_12px_24px_rgba(58,36,24,0.2)]',
     outline:
-      'border border-[color:var(--linho)] bg-transparent text-text-2 hover:border-[color:var(--argila)] hover:text-[color:var(--argila)]',
+      'border border-[color:var(--argila)]/55 bg-[color:var(--manteiga)]/72 text-[color:var(--cacau)] shadow-[0_4px_12px_rgba(58,36,24,0.05)] hover:border-[color:var(--argila)] hover:bg-[color:var(--creme-rosa)] hover:text-[color:var(--espresso)]',
     ghost: 'border border-transparent text-text-2 hover:text-[color:var(--espresso)]',
   };
 
@@ -35,7 +35,7 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
     <Link
       href={href}
       className={cn(
-        'inline-flex items-center justify-center rounded-[1px] font-[400] uppercase tracking-[0.18em] transition-all duration-300',
+        'inline-flex touch-manipulation items-center justify-center rounded-[1px] font-[500] uppercase tracking-[0.18em] transition-all duration-300 active:scale-[0.985]',
         variants[variant],
         sizes[size],
         className

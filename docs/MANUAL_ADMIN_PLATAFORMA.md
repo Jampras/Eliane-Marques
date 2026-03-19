@@ -1,7 +1,7 @@
 # Manual do Admin - Plataforma Eliane Marques
 
-**Versao:** 1.1  
-**Data:** 17/03/2026  
+**Versao:** 1.2  
+**Data:** 19/03/2026  
 **Publico:** administradores de conteudo e operacao comercial
 
 ---
@@ -24,6 +24,7 @@ Este documento explica como usar o painel administrativo do site Eliane Marques 
 
 ### URL
 - producao: `https://v03-pink.vercel.app/admin/login`
+- acesso recomendado: abrir diretamente `/admin/login`
 
 ### Como entrar
 1. Acesse a tela de login.
@@ -34,7 +35,7 @@ Este documento explica como usar o painel administrativo do site Eliane Marques 
 - o painel usa Google OAuth com whitelist de emails
 - apenas contas explicitamente autorizadas entram no backoffice
 - existe rate limit de seguranca no login
-- se houver muitas tentativas erradas, o sistema bloqueia temporariamente novas tentativas
+- se houver muitas tentativas seguidas, o sistema bloqueia temporariamente novas tentativas
 
 ---
 
@@ -323,9 +324,8 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 ### O que e salvo
 - nome
 - email
-- telefone opcional
-- interesse
 - mensagem
+- origem do formulario
 
 ### Observacao
 - neste momento, o lead fica salvo no banco
@@ -355,7 +355,7 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 ## 13. Erros comuns e como resolver
 
 ### Nao consigo entrar no painel
-- confirme se a senha esta correta
+- confirme se esta usando uma conta Google autorizada
 - evite muitas tentativas seguidas
 - tente novamente apos alguns minutos se houver bloqueio
 
@@ -415,9 +415,8 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 ## 15. Limites atuais do painel
 
 Hoje o painel:
-- nao troca a senha de admin por interface
+- nao gerencia permissoes por usuario via interface
 - nao envia leads automaticamente para CRM
-- nao possui permissao por usuario
 - nao possui historico/versionamento de conteudo
 
 ---

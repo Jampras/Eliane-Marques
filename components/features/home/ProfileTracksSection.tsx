@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Card } from '@/components/ui/Card';
@@ -24,34 +23,35 @@ const profileTracks = [
 
 export function ProfileTracksSection() {
   return (
-    <Section>
+    <Section id="perfis">
       <Container>
-        <div className="mx-auto mb-10 max-w-3xl text-center lg:mb-12">
-          <div className="atelier-overline justify-center">Perfis atendidos</div>
-          <Heading className="mt-4 text-[2.2rem] lg:text-[3rem]">
-            Escolha o caminho que combina com seu momento
+        <div className="mx-auto mb-8 max-w-2xl text-center lg:mb-10">
+          <div className="atelier-overline justify-center">Para quem e</div>
+          <Heading className="mt-4 text-[2rem] lg:text-[2.7rem]">
+            Quem mais se beneficia desse trabalho
           </Heading>
-          <Text className="mx-auto mt-5 max-w-[620px] text-[14px] text-[color:var(--taupe)]">
-            Voce recebe orientacao personalizada para seu contexto, sem receita generica.
+          <Text className="mx-auto mt-4 max-w-[560px] text-[14px] text-[color:var(--taupe)]">
+            A orientacao foi pensada para momentos em que presenca, leitura de valor e comportamento fazem diferenca.
           </Text>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
           {profileTracks.map((track, index) => (
             <Card
               key={track.title}
-              className={`fade-up border-[color:var(--linho)] px-6 py-7 lg:px-8 lg:py-9 ${
+              className={`fade-up-card h-full border-[color:var(--linho)] px-5 py-5 lg:px-7 lg:py-7 ${
                 index === 1 ? 'bg-[color:var(--creme-rosa)]' : 'bg-[color:var(--aveia)]'
               }`}
-              style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
             >
-              <div className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[15px] text-[color:var(--argila)]">
+              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[15px] text-[color:var(--argila)]">
                 {track.icon}
               </div>
-              <Heading as="h3" className="text-[1.3rem]">
+              <Heading as="h3" className="max-w-[14ch] text-[1.2rem] leading-[1.12] [text-wrap:balance] sm:text-[1.3rem]">
                 {track.title}
               </Heading>
-              <Text className="mt-4 text-[12px] text-[color:var(--taupe)]">{track.desc}</Text>
+              <Text className="mt-3 max-w-[26ch] text-[12px] leading-[1.72] text-[color:var(--taupe)]">
+                {track.desc}
+              </Text>
             </Card>
           ))}
         </div>

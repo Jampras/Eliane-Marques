@@ -1,123 +1,73 @@
 # Backlog Tecnico Operacional - Eliane Marques Website
-**Data:** 12/03/2026
-**Origem:** estado atual do codigo em producao
-**Arquivo base:** `docs/DOCUMENTACAO_TECNICA_ELIANE_MARQUES.md`
 
-## 1. Backlog Tecnico por Prioridade
+**Data:** 19/03/2026  
+**Origem:** estado atual do codigo no repositorio
 
-### P0 - Executar primeiro
+## 1. Prioridade
+
+### P0
 
 #### BT-011 - Rotacionar credencial sensivel do Supabase
-- **Objetivo:** eliminar risco residual operacional associado a chave atual.
+- **Objetivo:** eliminar o principal risco operacional remanescente.
 - **Impacto:** alto.
-- **Risco atual:** credencial sensivel ja exposta anteriormente fora do repositorio.
+
+#### BT-023 - Validar e publicar a nova rodada da home
+- **Objetivo:** fechar a avaliacao local da home antes de qualquer push/deploy.
+- **Impacto:** alto.
+
+#### BT-022 - Operacionalizar `analytics:maintain`
+- **Objetivo:** garantir retencao/agregacao recorrente sem depender de execucao manual.
+- **Impacto:** alto.
+
+### P1
 
 #### BT-016 - Integrar leads com CRM ou automacao comercial
 - **Objetivo:** tirar o processo comercial do modo manual.
 - **Impacto:** alto.
-- **Risco atual:** leads capturados exigem operacao manual no painel.
 
-### P1 - Executar em seguida
+#### BT-021 - Validar migrations em CI Linux
+- **Objetivo:** garantir previsibilidade do schema fora do Windows.
+- **Impacto:** medio.
+
+#### BT-024 - Definir estrategia de fallback do rate limit publico
+- **Objetivo:** decidir se analytics e lead capture podem continuar degradando para memoria local quando Redis falhar.
+- **Impacto:** medio.
+
+#### BT-025 - Adicionar testes unitarios para modulos criticos
+- **Objetivo:** cobrir `lib/env`, `lib/core/product-cta`, analytics e seguranca de requests.
+- **Impacto:** medio.
+
+### P2
 
 #### BT-013 - Revisar featured comercial por configuracao
 - **Objetivo:** decidir regra editorial final para destaque comercial em home e pricing.
 - **Impacto:** medio.
 
-#### BT-014 - Formalizar QA visual automatizado de home e admin
-- **Objetivo:** reduzir regressao visual em pontos de conversao.
+#### BT-017 - Evoluir dashboard comercial
+- **Objetivo:** ampliar filtros temporais, comparativos e funil.
 - **Impacto:** medio.
 
-#### BT-018 - Consolidar auth admin apos validacao do Google OAuth
-- **Objetivo:** concluir endurecimento operacional do fluxo Google ja ativo.
-- **Impacto:** medio.
+## 2. Itens ja executados
 
-#### BT-019 - Criar schema unificado de ambiente com fail-fast
-- **Objetivo:** validar todas as variaveis criticas na inicializacao.
-- **Impacto:** medio.
-
-#### BT-020 - Centralizar singletons institucionais em um dominio dedicado
-- **Objetivo:** agrupar `Config`, `About` e futuros modulos institucionais sob padrao unico.
-- **Impacto:** medio.
-
-### P2 - Backlog de melhoria
-
-#### BT-017 - Dashboard comercial no admin
-- **Objetivo:** evoluir o dashboard atual com agregacoes mais ricas, periodos e funil.
-
-#### BT-021 - Verificacao de migrations em CI Linux
-- **Objetivo:** garantir previsibilidade do schema fora do Windows.
-- **Impacto:** medio.
-
-#### BT-022 - Operacionalizar manutencao recorrente de analytics
-- **Objetivo:** garantir execucao periodica de `analytics:maintain` em cron/CI.
-- **Impacto:** medio.
-
----
-
-## 2. Itens Ja Executados
-
-Concluidos no codigo:
 - upload autenticado endurecido
 - storage persistente em producao
-- revalidacao de detalhes apos mutacao
-- pipeline de imagem
-- fontes principais via `next/font`
-- fallback resiliente de migrations
 - CSP com nonce por request
-- obrigatoriedade de Upstash em producao para login
-- home componentizada
-- intents de WhatsApp centralizadas
-- cache explicito de `getSiteIdentity()`
+- auth admin Google-only
+- schema unico de ambiente
+- dominio institucional `Config` + `About`
 - CTA por produto configuravel
-- analytics de conversao
-- dashboard comercial no admin
-- captura alternativa de lead
-- schemas `Product`, `Article` e `FAQPage`
-- busca e filtros nas listagens publicas
-- flags comerciais por produto
-- icones locais em SVG
-- politica editorial documentada para `featured` e `bestSeller`
-- QA visual automatizado com snapshots Playwright
-- auditoria de acessibilidade e performance documentada
-- favicon
-- limpeza visual e padronizacao do admin
-- schema unico de ambiente com fail-fast
-- dominio institucional `Config` + `About` centralizado em `lib/institutional`
-- login admin por Google com whitelist, sem fallback por senha
-- endurecimento de `/api/track` e `lead capture`
-- agregacao/retencao de analytics com `AnalyticsDailyAggregate`
+- analytics com agregado diario
+- lead capture com honeypot, same-origin e rate limit
+- dashboard comercial inicial
+- home componentizada
 
----
+## 3. Checklist atual
 
-## 3. Ordem Recomendada de Execucao
-
-### Sprint 1
-- BT-011
-- BT-016
-
-### Sprint 2
-- BT-013
-- BT-018
-- BT-019
-
-### Sprint 3
-- BT-014
-- BT-020
-
-### Sprint 4
-- BT-017
-- BT-021
-- BT-022
-
----
-
-## 4. Checklist Operacional Atual
 - [ ] rotacionar credencial sensivel do Supabase
+- [ ] validar e aprovar a nova home antes de publicar
+- [ ] automatizar `npm run analytics:maintain`
 - [ ] integrar leads com CRM ou automacao comercial
-- [ ] decidir regra editorial definitiva de destaque comercial
-- [ ] manter snapshots visuais atualizados quando a UI mudar
-- [ ] evoluir dashboard com filtros temporais mais avancados e agregacoes adicionais
-- [ ] revisar o fluxo Google OAuth em producao periodicamente
-- [ ] validar ambiente novo no Vercel e em CI
-- [ ] automatizar `npm run analytics:maintain` em cron/CI
-- [x] consolidar modulos singleton de conteudo institucional
+- [ ] validar migrations em CI Linux
+- [ ] decidir estrategia do fallback de rate limit publico
+- [ ] adicionar testes unitarios para modulos criticos
+- [ ] evoluir dashboard com filtros temporais mais avancados

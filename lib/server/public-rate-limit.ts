@@ -28,6 +28,10 @@ const globalForPublicRateLimit = globalThis as unknown as {
 const publicRateLimitStore = globalForPublicRateLimit.publicRateLimitStore ?? new Map();
 globalForPublicRateLimit.publicRateLimitStore = publicRateLimitStore;
 
+function buildPublicRateLimitKey(key: string) {
+  return `public-rate-limit:${key}`;
+}
+
 function getMemoryWindow(key: string) {
   const current = publicRateLimitStore.get(key);
   if (!current) {
@@ -76,14 +80,19 @@ async function checkRedisPublicRateLimit(
   key: string,
   options: PublicRateLimitOptions
 ): Promise<PublicRateLimitResult> {
-  const count = await redis!.incr(key);
+  const scopedKey = buildPublicRateLimitKey(key);
+  const count = await redis!.incr(scopedKey);
 
   if (count === 1) {
-    await redis!.expire(key, Math.ceil(options.windowMs / 1000));
+    await redis!.expire(scopedKey, Math.ceil(options.windowMs / 1000));
   }
 
   if (count > options.limit) {
-    return { allowed: false, retryAfterMs: options.windowMs };
+    const ttlSeconds = await redis!.ttl(scopedKey);
+    return {
+      allowed: false,
+      retryAfterMs: ttlSeconds > 0 ? ttlSeconds * 1000 : options.windowMs,
+    };
   }
 
   return { allowed: true, retryAfterMs: 0 };

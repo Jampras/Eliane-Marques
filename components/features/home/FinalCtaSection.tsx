@@ -11,30 +11,35 @@ interface FinalCtaSectionProps {
 
 export function FinalCtaSection({ waConfig }: FinalCtaSectionProps) {
   return (
-    <Section variant="black" className="relative">
+    <Section id="cta-final" variant="black" className="relative">
       <Container className="text-center">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-3xl border border-white/8 bg-[rgba(247,240,230,0.03)] px-6 py-10 shadow-[0_16px_42px_rgba(0,0,0,0.12)] sm:px-8 sm:py-12">
           <div className="fade-up inline-flex" style={{ '--delay': '0s' } as CSSProperties}>
             <div className="h-px w-full bg-[linear-gradient(to_right,transparent,rgba(200,146,58,1),transparent)]" />
           </div>
           <Heading
-            className="fade-up mt-8 text-[2.4rem] text-[color:var(--aveia)] lg:text-[3rem]"
+            className="fade-up mt-7 mx-auto max-w-[13ch] text-[2rem] !text-[color:var(--aveia)] lg:text-[2.7rem]"
             style={{ '--delay': '0.1s' } as CSSProperties}
           >
-            Se sua imagem ainda nao representa seu nivel, este e o momento de{' '}
-            <span className="italic text-[color:var(--mel)]">ajustar</span>.
+            Se sua imagem ainda nao sustenta seu valor, este e o momento de corrigir isso.
           </Heading>
           <p
-            className="fade-up mt-5 font-ornament text-[1.05rem] italic text-[color:var(--taupe)]"
+            className="fade-up mx-auto mt-4 max-w-[34ch] text-[13px] leading-[1.8] text-white/68"
+            style={{ '--delay': '0.16s' } as CSSProperties}
+          >
+            Uma conversa curta ja define o formato mais adequado para seu momento.
+          </p>
+          <p
+            className="fade-up mt-4 font-ornament text-[1rem] italic text-[color:var(--taupe)]"
             style={{ '--delay': '0.2s' } as CSSProperties}
           >
-            Atendo poucas pessoas por ciclo para manter acompanhamento de alta qualidade.
+            Poucos acompanhamentos por ciclo.
           </p>
           <div className="fade-up mt-8" style={{ '--delay': '0.3s' } as CSSProperties}>
             <WhatsAppButton
               number={waConfig.number}
-              template="Ola Eliane! Quero garantir uma vaga neste ciclo e entender o melhor formato para mim."
-              label="Quero garantir minha vaga"
+              template="Ola Eliane! Quero entender o formato mais adequado para alinhar minha imagem, minha presenca e a forma como meu valor esta sendo percebido."
+              label="Quero conversar sobre meu caso"
               className="!border-[color:var(--argila)] !bg-[color:var(--argila)] !text-[color:var(--aveia)] hover:!bg-[color:var(--cacau)]"
               size="lg"
               analyticsSource={ANALYTICS_SOURCES.HOME_PRICING}

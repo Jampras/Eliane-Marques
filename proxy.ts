@@ -1,17 +1,19 @@
 import crypto from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { decrypt, SESSION_COOKIE_NAME, updateSession } from '@/lib/core/auth';
+import { getSupabaseStorageEnv, isProductionEnv } from '@/lib/env/server';
 
 function getSupabaseHost() {
   try {
-    return process.env.SUPABASE_URL ? new URL(process.env.SUPABASE_URL).hostname : null;
+    const { url } = getSupabaseStorageEnv();
+    return url ? new URL(url).hostname : null;
   } catch {
     return null;
   }
 }
 
 function buildContentSecurityPolicy(nonce: string) {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = isProductionEnv();
   const supabaseHost = getSupabaseHost();
   const imageSrcHosts = ["'self'", 'data:', 'blob:', 'https://images.unsplash.com'];
 
@@ -55,7 +57,7 @@ function applySecurityHeaders(
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
   response.headers.set('Cross-Origin-Resource-Policy', 'same-site');
 
-  if (process.env.NODE_ENV === 'production') {
+  if (isProductionEnv()) {
     response.headers.set(
       'Strict-Transport-Security',
       'max-age=31536000; includeSubDomains; preload'

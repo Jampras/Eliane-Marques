@@ -1,4 +1,4 @@
-import { isFailFastEnabled, isProductionEnv } from '@/lib/env/server';
+import { isBuildPhase, isFailFastEnabled, isProductionEnv } from '@/lib/env/server';
 
 export async function safeDataQuery<T>(
   context: string,
@@ -10,7 +10,9 @@ export async function safeDataQuery<T>(
   } catch (error) {
     const message = `[${context}] data query failed`;
 
-    if (isProductionEnv()) {
+    if (isBuildPhase()) {
+      console.warn(message);
+    } else if (isProductionEnv()) {
       console.error(message);
     } else {
       console.error(`[${context}]`, error);

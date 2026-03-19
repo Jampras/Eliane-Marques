@@ -26,7 +26,7 @@ export const Section: React.FC<SectionProps> = ({
   return (
     <section
       id={id}
-      className={`py-12 sm:py-14 md:py-16 lg:py-20 xl:py-24 ${bgColors[variant]} ${borderClasses} ${className}`}
+      className={`py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20 ${bgColors[variant]} ${borderClasses} ${className}`}
     >
       {children}
     </section>

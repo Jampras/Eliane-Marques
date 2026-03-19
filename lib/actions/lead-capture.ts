@@ -43,7 +43,7 @@ export async function createLead(data: unknown): Promise<LeadActionResponse> {
     await prisma.lead.create({
       data: {
         name: input.name,
-        email: input.email,
+        email: input.email.toLowerCase(),
         message: input.message,
         source: input.source,
       },

@@ -2,6 +2,8 @@ import React from 'react';
 import AdminLayoutWrapper from '@/components/features/admin/AdminLayoutWrapper';
 import { getSession } from '@/lib/core/auth';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
   const adminIdentity =

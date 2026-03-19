@@ -7,27 +7,54 @@ import { WhatsAppLink } from '@/components/shared/whatsapp/WhatsAppLink';
 import { buildPricingInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import type { Service } from '@/lib/core/types';
-import { isPricingFeatured } from '@/lib/core/editorial-highlights';
+import {
+  extractServicePrice,
+  inferServiceLabel,
+  parseServicePriceValue,
+} from '@/lib/core/home-offers';
+import { getPricingFeaturedIndex, isPricingFeatured } from '@/lib/core/editorial-highlights';
 
 interface PricingSectionProps {
   services: Service[];
   waConfig?: { number: string; defaultMessage: string };
 }
 
-function inferLabel(title: string) {
-  const lower = title.toLowerCase();
-  if (lower.includes('consultoria')) return 'Consultoria privada';
-  if (lower.includes('curso')) return 'Experiencia formativa';
-  if (lower.includes('ebook')) return 'Material autoral';
-  return 'Atelier signature';
-}
+function inferPricingRole(services: Service[], service: Service, index: number) {
+  const featuredIndex = getPricingFeaturedIndex(services);
+  const pricedServices = services
+    .map((item, itemIndex) => ({
+      index: itemIndex,
+      price: parseServicePriceValue(item.price),
+    }))
+    .filter((item): item is { index: number; price: number } => item.price !== null)
+    .sort((a, b) => a.price - b.price);
+  const lowestIndex = pricedServices[0]?.index;
+  const highestIndex = pricedServices[pricedServices.length - 1]?.index;
 
-function extractPrice(price: string) {
-  const clean = price.replace('A partir de ', '').trim();
-  const match = clean.match(/^R\$\s*(.+)$/);
+  if (index === featuredIndex) {
+    return {
+      label: 'Melhor ponto de decisao',
+      note: 'Indicado para quem quer orientacao com mais impacto no curto prazo.',
+    };
+  }
+
+  if (index === lowestIndex) {
+    return {
+      label: 'Porta de entrada',
+      note: 'Opcao para iniciar o ajuste com menor investimento e boa objetividade.',
+    };
+  }
+
+  if (index === highestIndex) {
+    return {
+      label: 'Maior personalizacao',
+      note: 'Para quem precisa de proximidade maior e refinamento mais individualizado.',
+    };
+  }
+
   return {
-    prefix: price.startsWith('A partir de') ? 'A partir de' : null,
-    value: match ? match[1] : clean,
+    label: 'Ajuste prioritario',
+    note: 'Para quem quer um reposicionamento mais direto sem ir para o formato mais extenso.',
   };
 }
 
@@ -41,22 +68,34 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
         <div className="mb-8 grid gap-4 md:mb-10 xl:grid-cols-[minmax(0,1fr)_260px] xl:items-end">
           <div className="fade-up" style={{ '--delay': '0s' } as CSSProperties}>
             <div className="atelier-overline">Investimentos</div>
-            <Heading className="mt-4 text-[2.4rem] lg:text-[2.9rem]">
-              Solucoes desenhadas para sofisticacao, confianca e presenca
+            <Heading className="mt-4 max-w-[13ch] text-[2rem] lg:text-[2.7rem]">
+              Escolha o nivel de profundidade que voce precisa agora
             </Heading>
           </div>
           <Text
-            className="fade-up text-[12px] text-[color:var(--taupe)]"
+            className="fade-up max-w-none text-[12px] text-[color:var(--taupe)]"
             style={{ '--delay': '0.1s' } as CSSProperties}
           >
-            Escolha o formato mais aderente ao seu momento. Cada proposta preserva o mesmo cuidado de atelier.
+            O formato certo nao e o mais longo. E o que resolve seu momento com mais precisao.
           </Text>
+          <div
+            className="fade-up border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] px-5 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)]"
+            style={{ '--delay': '0.14s' } as CSSProperties}
+          >
+            <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
+              Agenda limitada
+            </p>
+            <p className="mt-3 text-[12px] leading-[1.8] text-[color:var(--taupe)]">
+              Atendimentos individuais nao ficam abertos o tempo todo.
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service, index) => {
             const featured = isPricingFeatured(services, index);
-            const pricing = extractPrice(service.price);
+            const role = inferPricingRole(services, service, index);
+            const pricing = extractServicePrice(service.price);
             const waUrl = buildPricingInquiryWhatsAppUrl({
               number: waConfig?.number,
               productTitle: service.title,
@@ -65,7 +104,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
             return (
               <article
                 key={service.slug ?? service.title}
-                className={`fade-up relative flex h-full flex-col border px-6 py-7 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-transform duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
+                className={`fade-up-card relative flex h-full flex-col border px-6 py-7 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-transform duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
                   featured
                     ? 'border-[rgba(221,208,188,0.18)] bg-[color:var(--espresso)] text-[color:var(--aveia)] xl:mt-2 xl:-translate-y-1'
                     : 'border-[color:var(--linho)] bg-[color:var(--manteiga)] lg:hover:-translate-y-1'
@@ -73,8 +112,8 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >
                 {featured && (
-                  <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-[color:var(--mel)] px-[18px] py-[5px] text-[9px] uppercase tracking-[0.18em] text-[color:var(--espresso)]">
-                    {'\u2726'} Mais procurado {'\u2726'}
+                  <div className="mb-4 inline-flex self-start bg-[color:var(--mel)] px-[18px] py-[5px] text-[9px] uppercase tracking-[0.18em] text-[color:var(--espresso)] md:absolute md:left-1/2 md:top-0 md:mb-0 md:-translate-x-1/2 md:-translate-y-1/2">
+                    {'\u2726'} Formato recomendado {'\u2726'}
                   </div>
                 )}
 
@@ -85,21 +124,35 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                       : 'border-[color:var(--linho)] text-[color:var(--taupe)]'
                   }`}
                 >
-                  {inferLabel(service.title)}
+                  {inferServiceLabel(service)}
                 </div>
 
                 <Heading
                   as="h3"
-                  className={`mt-6 text-[1.4rem] ${
+                  className={`mt-6 max-w-[15ch] text-[1.3rem] leading-[1.08] [text-wrap:balance] ${
                     featured ? 'text-[color:var(--aveia)]' : 'text-[color:var(--espresso)]'
                   }`}
                 >
                   {service.title}
                 </Heading>
 
-                <p className="mt-2 font-ornament text-[11px] italic text-[color:var(--taupe)]">
-                  {service.desc}
+                <p
+                  className={`mt-3 text-[10px] uppercase tracking-[0.16em] ${
+                    featured ? 'text-[color:var(--mel)]' : 'text-[color:var(--argila)]'
+                  }`}
+                >
+                  {role.label}
                 </p>
+                <p className="mt-3 font-ornament text-[11px] italic text-[color:var(--taupe)]">
+                  {role.note}
+                </p>
+                <Text
+                  className={`mt-4 max-w-[28ch] text-[12px] ${
+                    featured ? 'text-white/72' : 'text-[color:var(--taupe)]'
+                  }`}
+                >
+                  {service.desc}
+                </Text>
 
                 <div className="mt-3 flex flex-wrap gap-2">
                   {service.featured && <Badge variant="outline">Destaque</Badge>}
@@ -122,7 +175,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6">
+                <div className="mt-8 border-t border-[color:var(--linho)]/50 pt-6">
                   <WhatsAppLink
                     href={waUrl}
                     analyticsSource={ANALYTICS_SOURCES.HOME_PRICING}
@@ -132,11 +185,11 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                     <span
                       className={`inline-flex w-full justify-center rounded-[1px] border px-5 py-3 text-[9px] uppercase tracking-[0.18em] transition-colors sm:w-auto ${
                         featured
-                          ? 'border-[color:var(--mel)] text-[color:var(--mel)] hover:bg-[rgba(200,146,58,0.08)]'
-                          : 'border-[color:var(--linho)] text-[color:var(--cacau)] hover:border-[color:var(--argila)] hover:text-[color:var(--argila)]'
+                          ? 'border-[color:var(--mel)] bg-[rgba(200,146,58,0.08)] text-[color:var(--mel)] hover:bg-[rgba(200,146,58,0.14)]'
+                          : 'border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)]'
                       }`}
                     >
-                      Agendar agora
+                      Falar sobre este formato
                     </span>
                   </WhatsAppLink>
                 </div>

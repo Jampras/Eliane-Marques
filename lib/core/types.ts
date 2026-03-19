@@ -11,4 +11,5 @@ export interface Service {
   slug?: string;
   featured?: boolean;
   bestSeller?: boolean;
+  type?: ProductType;
 }

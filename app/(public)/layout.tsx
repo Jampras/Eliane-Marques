@@ -2,12 +2,18 @@ import React from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/shared/navigation/Navbar';
 import { FloatingWhatsAppButton } from '@/components/shared/whatsapp/FloatingWhatsAppButton';
+import { Icon } from '@/components/ui/Icon';
+import { buildDirectContactWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { CONTACT } from '@/lib/core/constants';
 import { getWhatsAppConfig } from '@/lib/data/config';
 import { getSiteIdentity } from '@/lib/data/site';
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const [site, waConfig] = await Promise.all([getSiteIdentity(), getWhatsAppConfig()]);
+  const whatsappUrl = buildDirectContactWhatsAppUrl({
+    number: waConfig.number || CONTACT.defaultPhone,
+    message: waConfig.defaultMessage || CONTACT.defaultMessage,
+  });
 
   return (
     <div className="bg-bg text-text-primary selection:bg-primary flex min-h-screen flex-col font-sans antialiased selection:text-white">
@@ -54,15 +60,37 @@ export default async function PublicLayout({ children }: { children: React.React
               <h5 className="mb-4 text-[10px] uppercase tracking-[0.18em] text-[color:var(--aveia)]">
                 Contato
               </h5>
-              <p className="mb-3 text-[11px] font-[300] uppercase tracking-[0.16em]">{site.contactEmail}</p>
-              <a
-                href={site.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[11px] font-[300] uppercase tracking-[0.16em] transition-colors hover:text-[color:var(--aveia)]"
-              >
-                Instagram oficial
-              </a>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="WhatsApp"
+                  className="inline-flex h-11 w-11 items-center justify-center border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.02)] text-[color:var(--aveia)] transition-all hover:border-[color:var(--mel)] hover:text-[color:var(--mel)]"
+                >
+                  <Icon name="chat" className="text-[18px]" />
+                </a>
+                <a
+                  href={site.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram oficial"
+                  className="inline-flex h-11 w-11 items-center justify-center border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.02)] text-[color:var(--aveia)] transition-all hover:border-[color:var(--mel)] hover:text-[color:var(--mel)]"
+                >
+                  <Icon name="alternate_email" className="text-[18px]" />
+                </a>
+                <a
+                  href={`mailto:${site.contactEmail}`}
+                  aria-label="Enviar email"
+                  className="inline-flex h-11 w-11 items-center justify-center border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.02)] text-[color:var(--aveia)] transition-all hover:border-[color:var(--mel)] hover:text-[color:var(--mel)]"
+                >
+                  <Icon name="mail" className="text-[18px]" />
+                </a>
+              </div>
+              <p className="mt-4 max-w-[240px] text-[11px] font-[300] leading-[1.8] text-[color:var(--taupe)]">
+                Prefira WhatsApp ou Instagram para a primeira conversa. O email continua disponivel,
+                mas deixa de ser o ponto principal da pagina.
+              </p>
             </div>
           </div>
 

@@ -6,9 +6,7 @@ Documento de referencia rapida para o sistema visual atual.
 - tokens visuais: `app/globals.css`
 - mapeamento Tailwind: `tailwind.config.js`
 - fontes principais: `app/layout.tsx`
-- icones externos: `components/shared/MaterialSymbolsStylesheet.tsx`
-
-Nao altere cores globais em varios componentes ao mesmo tempo. Ajuste primeiro `globals.css`.
+- icones locais: `components/ui/Icon.tsx`
 
 ## 2. Paleta atual
 
@@ -25,28 +23,7 @@ Nao altere cores globais em varios componentes ao mesmo tempo. Ajuste primeiro `
 | `--espresso` | `#3A2418` | texto principal e fundos escuros |
 | `--sage` | `#A8B89A` | equilibrio frio e estado positivo |
 
-## 3. Tokens semanticos
-
-```css
---color-bg: var(--aveia);
---color-surface: var(--manteiga);
---color-primary: var(--cacau);
---color-primary-hover: var(--espresso);
---color-primary-light: var(--sage);
---color-accent: var(--creme-rosa);
---color-accent-soft: var(--manteiga);
---color-accent-warm: var(--argila);
---color-gold: var(--mel);
---color-text-1: var(--espresso);
---color-text-2: var(--taupe);
---color-text-muted: var(--taupe);
---color-border: var(--linho);
---color-border-soft: rgba(196, 176, 154, 0.32);
-```
-
-## 4. Fontes
-
-Fontes principais carregadas com `next/font`:
+## 3. Fontes
 
 | Fonte | Uso |
 |---|---|
@@ -54,58 +31,16 @@ Fontes principais carregadas com `next/font`:
 | Jost | corpo, labels, navegacao e botoes |
 | Cormorant Garamond | ornamentos, subtitulos e precos |
 
-Fonte externa residual:
+## 4. Regras visuais
+- evitar branco puro como fundo base
+- manter contraste sob controle em `--taupe`, `--argila` e `--linho`
+- priorizar composicao continua em vez de excesso de caixas
+- manter a home mobile coerente com o desktop
+- a home mobile atual favorece grids/cards estaveis em vez de dock fixo e carrossel persistente
 
-| Fonte | Uso |
-|---|---|
-| Material Symbols Outlined | icones de interface |
+## 5. Estado atual
 
-## 5. Classes Tailwind principais
-
-| Token | Classe util |
-|---|---|
-| `--color-bg` | `bg-bg` |
-| `--color-surface` | `bg-surface` |
-| `--color-primary` | `bg-primary`, `text-primary`, `border-primary` |
-| `--color-text-1` | `text-text-1`, `text-text-primary` |
-| `--color-text-2` | `text-text-2`, `text-text-secondary` |
-| `--color-text-muted` | `text-text-muted` |
-| `--color-border` | `border-border` |
-| `--color-border-soft` | `border-border-soft` |
-
-## 6. Tipografia e escala
-- labels pequenas: evitar abaixo de `9px`
-- corpo padrao: `12px` a `15px`
-- titulos: Playfair Display com `line-height` curto
-- uppercase: `letter-spacing` alto, normalmente entre `0.16em` e `0.22em`
-
-## 7. Componentes-base
-- `Button.tsx`
-- `Badge.tsx`
-- `Card.tsx`
-- `Container.tsx`
-- `Section.tsx`
-- `Typography.tsx`
-- `ToastProvider.tsx`
-
-## 8. Texturas e efeitos
-- background com grain suave em `body::after`
-- `fade-up` como animacao padrao de entrada
-- `nav-underline` para links da navbar
-- sombras suaves, sem glassmorphism
-
-## 9. Regras de manutencao
-- nao usar branco puro como fundo base
-- nao criar nova cor sem necessidade real
-- nao quebrar a hierarquia de fontes atual
-- nao reintroduzir dark mode generico
-- validar contraste ao mudar `--taupe`, `--argila` e `--linho`
-
-## 10. Estado atual
-
-Atualizado para refletir:
-- contraste revisado
-- fontes via `next/font`
-- `Material Symbols` com preload e injecao client-side
-- loading e toasts alinhados ao sistema visual
 - identidade atual baseada na paleta quente do projeto
+- icones locais em SVG
+- tipografia carregada via `next/font`
+- direcao da home mais homogenea entre desktop e mobile, ainda em refinamento local

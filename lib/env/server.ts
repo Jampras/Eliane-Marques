@@ -30,13 +30,10 @@ const optionalUrl = z.preprocess((value) => {
 
 const runtimeSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  NEXT_PHASE: optionalTrimmedString,
   NEXT_PUBLIC_SITE_URL: optionalUrl,
   DATA_QUERY_FAIL_FAST: z.enum(['true', 'false']).optional(),
   E2E_DISABLE_RATE_LIMIT: z.enum(['true', 'false']).optional(),
-});
-
-const adminPasswordSchema = z.object({
-  ADMIN_PASSWORD: z.string().min(6),
 });
 
 const adminSessionSchema = z.object({
@@ -67,7 +64,6 @@ const adminGoogleSchema = z.object({
 });
 
 const runtime = runtimeSchema.parse(process.env);
-const adminPasswordEnv = adminPasswordSchema.safeParse(process.env);
 const adminSessionEnv = adminSessionSchema.safeParse(process.env);
 const upstashEnv = upstashSchema.parse(process.env);
 const supabaseStorageEnv = supabaseStorageSchema.parse(process.env);
@@ -80,6 +76,10 @@ export function getNodeEnv() {
 
 export function isProductionEnv() {
   return getNodeEnv() === 'production';
+}
+
+export function isBuildPhase() {
+  return runtime.NEXT_PHASE === 'phase-production-build';
 }
 
 export function getPublicSiteUrl() {
@@ -95,15 +95,15 @@ export function isFailFastEnabled() {
     return false;
   }
 
+  if (isBuildPhase()) {
+    return false;
+  }
+
   return isProductionEnv();
 }
 
 export function isRateLimitBypassedForTests() {
   return runtime.E2E_DISABLE_RATE_LIMIT === 'true';
-}
-
-export function getAdminPassword() {
-  return adminPasswordEnv.success ? adminPasswordEnv.data.ADMIN_PASSWORD : '';
 }
 
 export function getAdminSessionSecret() {

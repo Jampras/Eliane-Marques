@@ -38,12 +38,14 @@ Casos de uso:
   1. primeiro item com `featured`
   2. se nao houver, primeiro item com `bestSeller`
   3. se nao houver nenhum, card central
+- no mobile, essa secao permanece em pilha vertical para favorecer leitura e comparacao
 
 ### Home - Secao de pricing
 - prioridade do card principal:
   1. primeiro item com `bestSeller`
   2. se nao houver, primeiro item com `featured`
   3. se nao houver nenhum, card central
+- no mobile, essa secao permanece em pilha vertical para favorecer comparacao de investimento
 
 ### Listagens publicas
 - `featured` e `bestSeller` aparecem como badges

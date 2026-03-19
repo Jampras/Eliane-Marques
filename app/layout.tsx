@@ -84,6 +84,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="pt-BR">
       <head>
         <script
+          suppressHydrationWarning
           nonce={nonce}
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationJsonLd) }}

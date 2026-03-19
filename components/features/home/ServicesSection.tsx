@@ -6,7 +6,8 @@ import { Heading, Text } from '@/components/ui/Typography';
 import { TrackedLink } from '@/components/analytics/TrackedLink';
 import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
 import type { Service } from '@/lib/core/types';
-import { isServicesFeatured } from '@/lib/core/editorial-highlights';
+import { inferServiceCategory, parseServicePriceValue } from '@/lib/core/home-offers';
+import { getServicesFeaturedIndex, isServicesFeatured } from '@/lib/core/editorial-highlights';
 
 interface ServicesSectionProps {
   services: Service[];
@@ -14,41 +15,73 @@ interface ServicesSectionProps {
 
 const ornaments = ['\u2726', '\u25c8', '\u25c7'];
 
-function inferCategory(title: string) {
-  const lower = title.toLowerCase();
-  if (lower.includes('consultoria')) return 'Consultoria';
-  if (lower.includes('curso')) return 'Curso';
-  if (lower.includes('ebook')) return 'Ebook';
-  return 'Atelier';
+function inferOfferRole(services: Service[], service: Service, index: number) {
+  const featuredIndex = getServicesFeaturedIndex(services);
+  const pricedServices = services
+    .map((item, itemIndex) => ({
+      index: itemIndex,
+      price: parseServicePriceValue(item.price),
+    }))
+    .filter((item): item is { index: number; price: number } => item.price !== null)
+    .sort((a, b) => a.price - b.price);
+  const lowestIndex = pricedServices[0]?.index;
+  const highestIndex = pricedServices[pricedServices.length - 1]?.index;
+
+  if (index === featuredIndex) {
+    return {
+      label: 'Escolha principal',
+      description: 'Melhor equilibrio entre impacto imediato e profundidade de acompanhamento.',
+    };
+  }
+
+  if (index === lowestIndex) {
+    return {
+      label: 'Entrada estrategica',
+      description: 'Passo inicial para corrigir percepcao com menor complexidade de agenda.',
+    };
+  }
+
+  if (index === highestIndex) {
+    return {
+      label: 'Acompanhamento premium',
+      description: 'Para quem precisa de proximidade, refinamento e alta personalizacao.',
+    };
+  }
+
+  return {
+    label: 'Ajuste prioritario',
+    description: 'Para quem ja reconhece o ponto de ajuste e quer acelerar a mudanca.',
+  };
 }
 
 export function ServicesSection({ services }: ServicesSectionProps) {
   return (
-    <Section className="bg-[color:var(--aveia)]">
+    <Section id="formatos" className="bg-[color:var(--aveia)]">
       <Container>
         <div className="mb-8 grid gap-4 md:mb-10 lg:mb-12 xl:grid-cols-[minmax(0,1fr)_220px] xl:items-end">
           <div className="fade-up" style={{ '--delay': '0s' } as CSSProperties}>
-            <Badge className="mb-4">Servicos</Badge>
-            <Heading className="max-w-[720px] text-[2.4rem] lg:text-[3rem]">
-              Solucoes desenhadas para sofisticacao, confianca e presenca
+            <Badge className="mb-4">Formatos</Badge>
+            <Heading className="max-w-[16ch] text-[2rem] lg:text-[2.7rem]">
+              Escolha o formato mais adequado para seu momento
             </Heading>
           </div>
           <Text
             className="fade-up max-w-none text-[12px] text-[color:var(--taupe)] xl:max-w-[220px]"
             style={{ '--delay': '0.1s' } as CSSProperties}
           >
-            Cada formato responde a um momento da sua jornada, com o mesmo nivel de cuidado e assinatura.
+            Cada formato responde a um nivel diferente de necessidade.
           </Text>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service, index) => {
             const featured = isServicesFeatured(services, index);
+            const role = inferOfferRole(services, service, index);
 
             return (
               <article
                 key={service.slug ?? service.title}
-                className={`fade-up relative border border-[color:var(--linho)] px-5 py-6 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-all duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
+                className={`fade-up-card relative border border-[color:var(--linho)] px-5 py-6 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-all duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
                   featured
                     ? 'bg-[color:var(--creme-rosa)]'
                     : 'bg-[color:var(--aveia)] lg:hover:shadow-[2px_8px_18px_rgba(58,36,24,0.08)] xl:hover:-translate-y-[5px] xl:hover:rotate-[-0.3deg]'
@@ -65,21 +98,29 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                     {ornaments[index] ?? '\u2726'}
                   </span>
                   <div className="flex flex-wrap items-center justify-end gap-2">
+                    <span className="rounded-full border border-[color:var(--linho)] px-3 py-1 text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
+                      {role.label}
+                    </span>
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[color:var(--taupe)]">
-                      {inferCategory(service.title)}
+                      {inferServiceCategory(service)}
                     </span>
                     {service.bestSeller && <Badge variant="outline">Mais vendido</Badge>}
                   </div>
                 </div>
 
-                <Heading as="h3" className="text-[1.1rem] text-[color:var(--espresso)]">
+                <Heading as="h3" className="max-w-[16ch] text-[1.15rem] leading-[1.14] [text-wrap:balance] text-[color:var(--espresso)]">
                   {service.title}
                 </Heading>
-                <Text className="mt-4 text-[12px] text-[color:var(--taupe)]">{service.desc}</Text>
+                <p className="mt-3 max-w-[26ch] text-[10px] uppercase tracking-[0.16em] text-[color:var(--argila)]">
+                  {role.description}
+                </p>
+                <Text className="mt-4 max-w-[28ch] text-[12px] leading-[1.75] text-[color:var(--taupe)]">
+                  {service.desc}
+                </Text>
 
                 <div className="mt-7 flex flex-col gap-4 border-t border-[color:var(--linho)] pt-5 sm:flex-row sm:items-center sm:justify-between">
                   <span className="inline-flex rounded-full bg-[color:var(--creme-rosa)] px-4 py-1 text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
-                    {inferCategory(service.title)}
+                    {inferServiceCategory(service)}
                   </span>
                   <TrackedLink
                     href="#investimentos"
@@ -90,9 +131,9 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                       productSlug: service.slug,
                       productTitle: service.title,
                     }}
-                    className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[color:var(--argila)] transition-colors hover:text-[color:var(--cacau)]"
+                    className="inline-flex items-center gap-2 rounded-[1px] border border-[color:var(--argila)] bg-[color:var(--creme-rosa)] px-4 py-3 text-[10px] uppercase tracking-[0.18em] text-[color:var(--espresso)] transition-all hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)]"
                   >
-                    Ver valores <span aria-hidden="true">&rarr;</span>
+                    Comparar investimento <span aria-hidden="true">&rarr;</span>
                   </TrackedLink>
                 </div>
               </article>

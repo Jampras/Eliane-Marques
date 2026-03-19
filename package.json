@@ -8,9 +8,9 @@
     },
     "scripts": {
         "dev": "next dev --webpack",
-        "build": "prisma generate && next build",
+        "build": "node scripts/build.mjs",
         "start": "next start",
-        "db:generate": "prisma generate",
+        "db:generate": "node scripts/build.mjs --generate-only",
         "db:migrate": "prisma migrate dev",
         "db:deploy": "node scripts/db-deploy.mjs",
         "db:deploy:prisma": "prisma migrate deploy",

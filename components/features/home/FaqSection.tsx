@@ -1,9 +1,11 @@
-import type { CSSProperties } from 'react';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { StructuredDataScript } from '@/components/seo/StructuredDataScript';
 import { buildFaqJsonLd } from '@/lib/seo/schema';
+import { TrackedLinkButton } from '@/components/analytics/TrackedLinkButton';
+import { ANALYTICS_SOURCES } from '@/lib/analytics/events';
+import { HomeFaqAccordion } from './HomeFaqAccordion';
 
 export const faqItems = [
   {
@@ -30,33 +32,34 @@ export const faqItems = [
 
 export function FaqSection() {
   return (
-    <Section variant="surface" className="border-y border-[color:var(--linho)]/70">
+    <Section id="faq" variant="surface">
       <StructuredDataScript data={buildFaqJsonLd(faqItems)} />
       <Container size="md">
         <div className="mx-auto mb-10 max-w-3xl text-center">
           <div className="atelier-overline justify-center">FAQ</div>
           <Heading className="mt-4 text-[2.2rem] lg:text-[3rem]">
-            Duvidas que costumam travar a decisao
+            Duvidas mais comuns
           </Heading>
           <Text className="mx-auto mt-5 max-w-[620px] text-[14px] text-[color:var(--taupe)]">
-            Se algo ainda estiver em aberto, eu te ajudo a clarear no WhatsApp.
+            Se ainda houver duvida, abra a conversa e receba a recomendacao mais adequada.
           </Text>
         </div>
 
-        <div className="space-y-3 sm:space-y-4">
-          {faqItems.map((item, index) => (
-            <details
-              key={item.question}
-              className="fade-up border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 sm:px-5 sm:py-5 lg:px-6"
-              style={{ '--delay': `${index * 0.06}s` } as CSSProperties}
-            >
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-[11px] font-[400] uppercase tracking-[0.12em] text-[color:var(--espresso)] sm:text-[13px]">
-                <span>{item.question}</span>
-                <span className="text-[color:var(--argila)]">+</span>
-              </summary>
-              <p className="mt-4 text-[12px] font-[300] leading-[1.85] text-[color:var(--taupe)]">{item.answer}</p>
-            </details>
-          ))}
+        <HomeFaqAccordion items={faqItems} />
+
+        <div className="mt-8 flex justify-center">
+          <TrackedLinkButton
+            href="#cta-final"
+            analytics={{
+              name: 'cta_click',
+              source: ANALYTICS_SOURCES.HOME_FAQ,
+              destination: '#cta-final',
+              path: '/',
+            }}
+            size="lg"
+          >
+            Quero entender meu melhor formato
+          </TrackedLinkButton>
         </div>
       </Container>
     </Section>

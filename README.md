@@ -13,6 +13,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - TypeScript
 - Tailwind CSS 4
 - Prisma + PostgreSQL
+- Supabase Auth / Storage
 - Zod
 - JWT via `jose`
 - Upstash Redis REST
@@ -24,6 +25,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - leitura de dados em `lib/data`
 - mutacoes em `lib/actions`
 - dominio institucional em `lib/institutional`
+- contrato de ambiente em `lib/env`
 - infraestrutura server-side em `lib/server`
 - regras de negocio compartilhadas em `lib/core`
 - intents de contato em `lib/contact`
@@ -33,29 +35,19 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 ## Estado tecnico atual
 - home componentizada por secao
 - pagina `Sobre` administravel em `/admin/sobre` e publicada em `/sobre`
-- catalogos paginados
-- catalogos com busca e filtros
-- detalhes de produto com URL por tipo
+- catalogos com busca, filtros e detalhe por tipo
 - CTA por produto configuravel: WhatsApp ou link externo
 - flags comerciais por produto: `featured` e `bestSeller`
-- analytics de conversao persistidos em `AnalyticsEvent`
+- analytics persistidos em `AnalyticsEvent` com agregado diario em `AnalyticsDailyAggregate`
 - captura alternativa de lead persistida em `Lead`
 - dashboard comercial no admin
-- dashboard comercial usando eventos recentes + historico agregado diario
-- SEO estruturado com `FAQPage`, `Article` e `Product`
-- `getSiteIdentity()` com cache explicito
-- intents de WhatsApp centralizadas em `lib/contact/whatsapp-intents.ts`
-- `Config` e `About` centralizados em `lib/institutional/*`
-- fontes principais via `next/font`
-- icones locais em SVG via `components/ui/Icon.tsx`
-- politica editorial centralizada para `featured` e `bestSeller`
-- QA visual automatizado com snapshots Playwright
-- upload persistente em Supabase obrigatorio em producao
-- rate limit distribuido obrigatorio em producao
-- CSP dinamica com nonce por request
-- `style-src` endurecida, sem `unsafe-inline` para blocos `<style>`
-- fallback de migrations via `scripts/db-deploy.mjs`
+- ingestao publica endurecida com same-origin, rate limit e allowlist de sources
 - login admin via Google OAuth com whitelist de emails
+- upload persistente em Supabase obrigatorio em producao
+- CSP dinamica com nonce por request
+- fallback resiliente de migrations via `scripts/db-deploy.mjs`
+- home do branch atual em revisao visual/comercial
+- desktop da home mais estavel do que o mobile no branch local
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:
@@ -83,7 +75,6 @@ npm install
 
 ### 2. Banco local ou remoto
 Opcao A - banco local via Docker:
-
 ```bash
 docker compose up -d
 ```
@@ -108,7 +99,6 @@ Observacao:
 - isso evita o crash de Turbopack observado no Windows deste projeto
 
 ## Scripts principais
-
 ```bash
 npm run dev
 npm run build
@@ -124,118 +114,56 @@ npm run db:seed
 npm run analytics:maintain
 ```
 
-## Prisma e migrations
-- `db:deploy` usa `node scripts/db-deploy.mjs`
-- fluxo:
-  1. tenta `prisma migrate deploy`
-  2. se o engine falhar no ambiente local, cai para um runner SQL controlado
-
-## Upload de imagens
-- rota: `app/api/upload/route.ts`
-- autenticacao obrigatoria de admin
-- tipos aceitos: JPEG, PNG, WebP, AVIF, GIF
-- tamanho maximo: 5 MB
-- storage:
-  - producao: Supabase obrigatorio
-  - desenvolvimento: Supabase ou fallback local em `public/uploads`
-
-Importante:
-- em producao serverless, configure `SUPABASE_*`
-- nao dependa de `public/uploads` como persistencia final
-
-## Analytics e leads
-- tracking centralizado em `app/api/track/route.ts`
-- eventos persistidos em `AnalyticsEvent`
-- historico agregado em `AnalyticsDailyAggregate`
-- retencao de eventos brutos antigos via `npm run analytics:maintain`
-- formulario de contato alternativo persistido em `Lead`
-- dashboard admin mostra metricas comerciais, top produtos e leads recentes
-
 ## Seguranca operacional
 - CSP aplicada via `proxy.ts` com nonce por request
 - `script-src 'unsafe-inline'` removido
 - login admin exige Upstash configurado em producao
 - upload exige Supabase configurado em producao
+- login por senha foi removido; o painel e Google-only
 - `SUPABASE_SERVICE_ROLE_KEY` continua sendo credencial sensivel; se for exposta, precisa ser trocada operacionalmente
+- analytics e lead capture usam rate limit publico; sem Redis disponivel, o fallback atual e memoria local
 
-## CTA por produto
-- configuracao no admin em `/admin/produtos`
-- cada produto pode usar:
-  - `WHATSAPP`
-  - `EXTERNAL`
-- campos persistidos em banco:
-  - `ctaMode`
-  - `ctaUrl`
-  - `ctaLabel`
-- regra central em:
-  - `lib/core/product-cta.ts`
-
-Comportamento:
-- `servicos`: CTA do card e da pagina de detalhe respeitam o modo configurado
-- `cursos`: card abre link externo quando configurado; caso contrario segue para detalhe
-- `materiais`: card abre link externo quando configurado; caso contrario segue para detalhe
-
-## Pagina Sobre
-- rota publica: `/sobre`
-- rota admin: `/admin/sobre`
-- entidades persistidas:
-  - `AboutPage`
-  - `AboutMilestone`
-  - `AboutSpecialization`
-  - `AboutCredential`
-
-## Auth admin com Google
-Estado atual:
-- fluxo principal: Google OAuth via Supabase
-- whitelist por `ADMIN_GOOGLE_ALLOWED_EMAILS`
-- login por senha removido
-
-Variaveis usadas:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `ADMIN_GOOGLE_ALLOWED_EMAILS`
-
-Rotas:
-- `app/auth/admin/callback/route.ts`
-- `app/auth/admin/logout/route.ts`
-
-## Testes
-- E2E com Playwright em `tests/e2e`
-- o `webServer` usa `next dev --webpack`
-- para rodar os E2E no Windows, instale os browsers:
-
-```bash
-npx playwright install chromium
-```
-
-## Documentacao
-- documentacao tecnica principal:
-  - `docs/DOCUMENTACAO_TECNICA_ELIANE_MARQUES.md`
-- manual de uso do admin:
-  - `docs/MANUAL_ADMIN_PLATAFORMA.md`
-- politica editorial de destaques:
-  - `docs/POLITICA_EDITORIAL_DESTAQUES.md`
-- auditoria de acessibilidade e performance:
-  - `docs/AUDITORIA_ACESSIBILIDADE_PERFORMANCE.md`
-- backlog operacional:
-  - `docs/BACKLOG_TECNICO_OPERACIONAL.md`
-- arquitetura:
-  - `docs/ARCHITECTURE.md`
-- design tokens:
-  - `docs/DESIGN_TOKENS.md`
+## Pontos fracos atuais
+- a home publica ainda esta em iteracao, principalmente no mobile
+- nao ha suite de testes unitarios para helpers criticos
+- o build agora tenta seguir mesmo sem banco acessivel para queries publicas protegidas por fallback
+- build continua dependente de banco acessivel e pode sofrer lock do Prisma no Windows
 
 ## Estado atual do backlog
 Executado:
 - endurecimento de upload, auth, CSP e rate limit
 - pipeline de imagem
-- home componentizada
 - intents de WhatsApp centralizadas
 - cache explicito de identidade do site
 - padronizacao do admin
 - CTA por produto configuravel
-- favicon e limpeza visual final da home
+- schema unico de ambiente
+- dominio institucional centralizado
+- analytics com agregacao diaria
 
 Pendente principal:
 - rotacao da credencial sensivel do Supabase
 - integracao dos leads com CRM ou automacao comercial
 - CI Linux para migrations
+- agendamento recorrente de `npm run analytics:maintain`
+- fechamento e publicacao da nova rodada visual da home
+
+## Documentacao
+- documentacao tecnica principal:
+  - `docs/DOCUMENTACAO_TECNICA_ELIANE_MARQUES.md`
+- arquitetura:
+  - `docs/ARCHITECTURE.md`
+- backlog operacional:
+  - `docs/BACKLOG_TECNICO_OPERACIONAL.md`
+- auditoria de acessibilidade e performance:
+  - `docs/AUDITORIA_ACESSIBILIDADE_PERFORMANCE.md`
+- manual de uso do admin:
+  - `docs/MANUAL_ADMIN_PLATAFORMA.md`
+- design tokens:
+  - `docs/DESIGN_TOKENS.md`
+- politica editorial de destaques:
+  - `docs/POLITICA_EDITORIAL_DESTAQUES.md`
+- plano de otimizacao da home:
+  - `docs/PLANO_OTIMIZACAO_HOME_CONVERSAO.md`
+- analise geral do projeto:
+  - `docs/ANALISE_GERAL_PROJETO.md`

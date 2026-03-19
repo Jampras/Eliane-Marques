@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { ANALYTICS_EVENT_NAMES, type AnalyticsEventPayload } from '@/lib/analytics/events';
+import {
+  ANALYTICS_EVENT_NAMES,
+  ANALYTICS_SOURCE_NAMES,
+  type AnalyticsEventPayload,
+} from '@/lib/analytics/events';
 import { recordAnalyticsEvent } from '@/lib/analytics/server';
 import { getRequestClientKey } from '@/lib/server/request-client';
 import { checkPublicRateLimit } from '@/lib/server/public-rate-limit';
@@ -8,7 +12,7 @@ import { isSameOriginRequest } from '@/lib/server/request-security';
 
 const analyticsSchema = z.object({
   name: z.enum(ANALYTICS_EVENT_NAMES),
-  source: z.string().trim().min(1).max(100),
+  source: z.enum(ANALYTICS_SOURCE_NAMES),
   path: z.string().trim().max(300).optional(),
   productId: z.string().trim().max(64).optional(),
   productSlug: z.string().trim().max(160).optional(),

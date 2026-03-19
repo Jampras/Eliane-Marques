@@ -3,13 +3,14 @@
 import React from 'react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { trackAnalyticsEvent } from '@/lib/analytics/client';
+import { ANALYTICS_SOURCES, type AnalyticsSource } from '@/lib/analytics/events';
 import { openWhatsAppUrl } from './openWhatsApp';
 
 interface WhatsAppLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
-  analyticsSource?: string;
+  analyticsSource?: AnalyticsSource;
   productTitle?: string;
 }
 
@@ -17,7 +18,7 @@ export const WhatsAppLink: React.FC<WhatsAppLinkProps> = ({
   href,
   children,
   className,
-  analyticsSource = 'whatsapp-link',
+  analyticsSource = ANALYTICS_SOURCES.WHATSAPP_LINK,
   productTitle,
 }) => {
   const { showToast } = useToast();

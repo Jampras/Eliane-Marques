@@ -6,6 +6,7 @@ import { buildProductInquiryWhatsAppUrl } from '@/lib/contact/whatsapp-intents';
 import { useToast } from '@/components/ui/ToastProvider';
 import { Icon } from '@/components/ui/Icon';
 import { trackAnalyticsEvent } from '@/lib/analytics/client';
+import { ANALYTICS_SOURCES, type AnalyticsSource } from '@/lib/analytics/events';
 import { openWhatsAppUrl } from './openWhatsApp';
 
 interface WhatsAppButtonProps {
@@ -17,7 +18,7 @@ interface WhatsAppButtonProps {
   variant?: 'primary' | 'outline';
   className?: string;
   size?: 'sm' | 'md' | 'lg';
-  analyticsSource?: string;
+  analyticsSource?: AnalyticsSource;
 }
 
 export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
@@ -29,7 +30,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   variant = 'primary',
   className = '',
   size = 'md',
-  analyticsSource = 'whatsapp-button',
+  analyticsSource = ANALYTICS_SOURCES.WHATSAPP_BUTTON,
 }) => {
   const { showToast } = useToast();
 
