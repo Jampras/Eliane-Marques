@@ -24,6 +24,7 @@
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "prepare": "husky",
+        "test:unit": "tsx --test tests/unit/**/*.test.ts",
         "test:e2e": "npx playwright test",
         "test:e2e:visual": "npx playwright test tests/e2e/visual.spec.ts"
     },

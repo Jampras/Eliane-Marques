@@ -26,13 +26,15 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 - `analytics:maintain` ainda depende de execucao manual
 
 ### Backend
-- nao ha testes unitarios para modulos criticos
+- a cobertura unitaria dos modulos criticos comecou a ser construída, mas ainda esta longe do ideal
 - rate limit publico agora falha fechado em producao quando Redis falha
+- metadata publica auxiliar ja esta menos acoplada ao Prisma direto
 
 ### Frontend publico
 - a home publica ja esta em producao e agora e administravel via painel
 - o desktop segue mais consistente do que o mobile
 - a secao `Home` do admin ja controla textos, CTA, imagem lateral do hero e imagens por bloco
+- o layout publico agora usa uma camada global de ambientacao para reduzir a sensacao de secoes soltas
 
 ### Documentacao
 - a documentacao tende a ficar atras do branch local entre rodadas intensas
@@ -48,6 +50,7 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 1. adicionar testes unitarios para modulos criticos
 2. validar migrations em CI Linux
 3. revisar limites e mensagens dos endpoints publicos
+4. ampliar a cobertura da nova suite unitaria para actions e validadores
 
 ### P2
 1. integrar leads com CRM ou automacao

@@ -92,3 +92,15 @@ export const getProductBySlug = cache(async (slug?: string) => {
     null
   );
 });
+
+export const getActiveProductsForSitemap = cache(async () => {
+  return safeDataQuery(
+    'getActiveProductsForSitemap',
+    async () =>
+      prisma.product.findMany({
+        where: { active: true },
+        select: { slug: true, type: true, updatedAt: true },
+      }),
+    [] as Array<{ slug: string; type: ProductType; updatedAt: Date }>
+  );
+});

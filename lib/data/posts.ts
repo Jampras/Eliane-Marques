@@ -58,3 +58,15 @@ export const getPostBySlug = cache(async (slug?: string) => {
     null
   );
 });
+
+export const getPublishedPostsForSitemap = cache(async () => {
+  return safeDataQuery(
+    'getPublishedPostsForSitemap',
+    async () =>
+      prisma.post.findMany({
+        where: { published: true },
+        select: { slug: true, updatedAt: true },
+      }),
+    [] as Array<{ slug: string; updatedAt: Date }>
+  );
+});

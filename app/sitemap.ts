@@ -1,7 +1,9 @@
 import type { MetadataRoute } from 'next';
-import prisma from '@/lib/core/prisma';
 import { getPublicSiteUrl } from '@/lib/env/server';
 import { getProductDetailPath } from '@/lib/core/product-paths';
+import { getPublishedPostsForSitemap } from '@/lib/data/posts';
+import { getActiveProductsForSitemap } from '@/lib/data/products';
+import { getPublishedChecklistsForSitemap } from '@/lib/data/checklists';
 
 const BASE_URL = getPublicSiteUrl();
 
@@ -24,41 +26,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1 : 0.8,
   }));
 
-  try {
-    const [posts, products, checklists] = await Promise.all([
-      prisma.post.findMany({ where: { published: true }, select: { slug: true, updatedAt: true } }),
-      prisma.product.findMany({
-        where: { active: true },
-        select: { slug: true, type: true, updatedAt: true },
-      }),
-      prisma.checklist.findMany({
-        where: { published: true },
-        select: { slug: true, updatedAt: true },
-      }),
-    ]);
+  const [posts, products, checklists] = await Promise.all([
+    getPublishedPostsForSitemap(),
+    getActiveProductsForSitemap(),
+    getPublishedChecklistsForSitemap(),
+  ]);
 
-    return [
-      ...staticEntries,
-      ...posts.map((post) => ({
-        url: `${BASE_URL}/conteudos/${post.slug}`,
-        lastModified: post.updatedAt,
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
-      })),
-      ...products.map((product) => ({
-        url: `${BASE_URL}${getProductDetailPath(product.type, product.slug)}`,
-        lastModified: product.updatedAt,
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
-      })),
-      ...checklists.map((checklist) => ({
-        url: `${BASE_URL}/checklists/${checklist.slug}`,
-        lastModified: checklist.updatedAt,
-        changeFrequency: 'monthly' as const,
-        priority: 0.75,
-      })),
-    ];
-  } catch {
-    return staticEntries;
-  }
+  return [
+    ...staticEntries,
+    ...posts.map((post) => ({
+      url: `${BASE_URL}/conteudos/${post.slug}`,
+      lastModified: post.updatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+    ...products.map((product) => ({
+      url: `${BASE_URL}${getProductDetailPath(product.type, product.slug)}`,
+      lastModified: product.updatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+    ...checklists.map((checklist) => ({
+      url: `${BASE_URL}/checklists/${checklist.slug}`,
+      lastModified: checklist.updatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    })),
+  ];
 }

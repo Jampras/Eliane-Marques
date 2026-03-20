@@ -1,14 +1,11 @@
 import 'server-only';
 
 import { z } from 'zod';
-
-const weakSessionSecrets = new Set([
-  'super-secret-session-key-change-me',
-  'changeme',
-  'change-me',
-  'admin',
-  'defina_um_secret_com_32+_caracteres',
-]);
+import {
+  isWeakAdminSessionSecret,
+  parseAllowedAdminEmails,
+  resolveFailFastMode,
+} from './server-helpers';
 
 const optionalTrimmedString = z.preprocess((value) => {
   if (typeof value !== 'string') {
@@ -87,19 +84,11 @@ export function getPublicSiteUrl() {
 }
 
 export function isFailFastEnabled() {
-  if (runtime.DATA_QUERY_FAIL_FAST === 'true') {
-    return true;
-  }
-
-  if (runtime.DATA_QUERY_FAIL_FAST === 'false') {
-    return false;
-  }
-
-  if (isBuildPhase()) {
-    return false;
-  }
-
-  return isProductionEnv();
+  return resolveFailFastMode({
+    dataQueryFailFast: runtime.DATA_QUERY_FAIL_FAST,
+    isBuildPhase: isBuildPhase(),
+    isProductionEnv: isProductionEnv(),
+  });
 }
 
 export function isRateLimitBypassedForTests() {
@@ -112,7 +101,7 @@ export function getAdminSessionSecret() {
   }
 
   const secret = adminSessionEnv.data.ADMIN_SESSION_SECRET;
-  if (weakSessionSecrets.has(secret.trim().toLowerCase())) {
+  if (isWeakAdminSessionSecret(secret)) {
     throw new Error(
       'CRITICAL: ADMIN_SESSION_SECRET is weak. Use a random secret with at least 32 characters.'
     );
@@ -193,8 +182,5 @@ export function requireUpstashEnv() {
 export function getAllowedAdminGoogleEmails() {
   const raw = adminGoogleEnv.ADMIN_GOOGLE_ALLOWED_EMAILS || adminGoogleEnv.ADMIN_ALLOWED_EMAILS || '';
 
-  return raw
-    .split(',')
-    .map((value) => value.trim().toLowerCase())
-    .filter(Boolean);
+  return parseAllowedAdminEmails(raw);
 }

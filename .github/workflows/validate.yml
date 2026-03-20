@@ -31,5 +31,20 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Unit tests
+        run: npm run test:unit
+
       - name: Typecheck
         run: npx tsc --noEmit
+
+      - name: Build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://example.com
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_fake
+          ADMIN_SESSION_SECRET: this-is-a-ci-only-secret-with-more-than-32-characters
+          ADMIN_GOOGLE_ALLOWED_EMAILS: admin@example.com
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+          DIRECT_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+          DATA_QUERY_FAIL_FAST: 'false'
+        run: npm run build

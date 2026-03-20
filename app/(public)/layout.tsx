@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { SiteAmbientCanvas } from '@/components/shared/layout/SiteAmbientCanvas';
 import { Navbar } from '@/components/shared/navigation/Navbar';
 import { FloatingWhatsAppButton } from '@/components/shared/whatsapp/FloatingWhatsAppButton';
 import { Icon } from '@/components/ui/Icon';
@@ -16,7 +17,9 @@ export default async function PublicLayout({ children }: { children: React.React
   });
 
   return (
-    <div className="bg-bg text-text-primary selection:bg-primary flex min-h-screen flex-col font-sans antialiased selection:text-white">
+    <div className="relative isolate bg-bg text-text-primary selection:bg-primary min-h-screen font-sans antialiased selection:text-white">
+      <SiteAmbientCanvas />
+      <div className="relative z-[1] flex min-h-screen flex-col">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:border focus:border-[color:var(--linho)] focus:bg-[color:var(--aveia)] focus:px-4 focus:py-2 focus:text-[10px] focus:uppercase focus:tracking-[0.18em] focus:text-[color:var(--espresso)]"
@@ -103,6 +106,7 @@ export default async function PublicLayout({ children }: { children: React.React
         phone={waConfig.number || CONTACT.defaultPhone}
         message={waConfig.defaultMessage || CONTACT.defaultMessage}
       />
+      </div>
     </div>
   );
 }

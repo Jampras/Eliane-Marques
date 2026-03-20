@@ -1,6 +1,7 @@
 import prisma from '@/lib/core/prisma';
 import { getAnalyticsRawRetentionCutoff } from './aggregation';
 import type { AnalyticsEventName } from './events';
+import { getWindowBounds, mergeTopProductCounts } from './reporting-helpers';
 
 type AnalyticsFilters = {
   rangeStart?: Date;
@@ -18,26 +19,11 @@ type DashboardAnalyticsSummary = {
   }>;
 };
 
-function getWindowBounds(rangeStart?: Date) {
-  const rawCutoff = getAnalyticsRawRetentionCutoff();
-
-  if (!rangeStart) {
-    return {
-      aggregateStartInclusive: undefined as Date | undefined,
-      aggregateEndExclusive: rawCutoff,
-      rawStartInclusive: rawCutoff,
-    };
-  }
-
-  return {
-    aggregateStartInclusive: rangeStart < rawCutoff ? rangeStart : undefined,
-    aggregateEndExclusive: rawCutoff,
-    rawStartInclusive: rangeStart > rawCutoff ? rangeStart : rawCutoff,
-  };
-}
-
 async function getAggregatedCount(filters: AnalyticsFilters & { name?: AnalyticsEventName; externalOnly?: boolean }) {
-  const { aggregateStartInclusive, aggregateEndExclusive } = getWindowBounds(filters.rangeStart);
+  const { aggregateStartInclusive, aggregateEndExclusive } = getWindowBounds(
+    filters.rangeStart,
+    getAnalyticsRawRetentionCutoff()
+  );
 
   if (!aggregateStartInclusive) {
     return 0;
@@ -60,7 +46,7 @@ async function getAggregatedCount(filters: AnalyticsFilters & { name?: Analytics
 }
 
 async function getRawCount(filters: AnalyticsFilters & { name?: AnalyticsEventName; externalOnly?: boolean }) {
-  const { rawStartInclusive } = getWindowBounds(filters.rangeStart);
+  const { rawStartInclusive } = getWindowBounds(filters.rangeStart, getAnalyticsRawRetentionCutoff());
 
   return prisma.analyticsEvent.count({
     where: {
@@ -74,7 +60,8 @@ async function getRawCount(filters: AnalyticsFilters & { name?: AnalyticsEventNa
 
 async function getTopProducts(filters: AnalyticsFilters) {
   const { aggregateStartInclusive, aggregateEndExclusive, rawStartInclusive } = getWindowBounds(
-    filters.rangeStart
+    filters.rangeStart,
+    getAnalyticsRawRetentionCutoff()
   );
 
   const [aggregateRows, rawRows] = await Promise.all([
@@ -103,38 +90,7 @@ async function getTopProducts(filters: AnalyticsFilters) {
     }),
   ]);
 
-  const combined = new Map<string, { productSlug: string | null; productTitle: string | null; count: number }>();
-
-  for (const row of aggregateRows
-    .sort((a, b) => (b._sum.count ?? 0) - (a._sum.count ?? 0))
-    .slice(0, 20)) {
-    const key = `${row.productSlugKey}::${row.productTitleKey}`;
-    combined.set(key, {
-      productSlug: row.productSlugKey || null,
-      productTitle: row.productTitleKey || null,
-      count: row._sum.count ?? 0,
-    });
-  }
-
-  for (const row of rawRows
-    .sort((a, b) => (b._count?._all ?? 0) - (a._count?._all ?? 0))
-    .slice(0, 20)) {
-    const key = `${row.productSlug ?? ''}::${row.productTitle ?? ''}`;
-    const current = combined.get(key);
-
-    if (current) {
-      current.count += row._count?._all ?? 0;
-      continue;
-    }
-
-    combined.set(key, {
-      productSlug: row.productSlug,
-      productTitle: row.productTitle,
-      count: row._count?._all ?? 0,
-    });
-  }
-
-  return [...combined.values()].sort((a, b) => b.count - a.count).slice(0, 5);
+  return mergeTopProductCounts(aggregateRows, rawRows);
 }
 
 export async function getDashboardAnalyticsSummary(

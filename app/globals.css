@@ -115,6 +115,13 @@
   --theme-admin-mobile-bar-bg: color-mix(in srgb, var(--color-bg) 97%, transparent);
   --theme-admin-mobile-bar-shadow: 0 -10px 24px color-mix(in srgb, var(--color-deep) 10%, transparent);
   --theme-toast-shadow: 2px 8px 18px color-mix(in srgb, var(--color-deep) 12%, transparent);
+  --theme-page-orb-top: color-mix(in srgb, var(--color-accent) 54%, transparent);
+  --theme-page-orb-center: color-mix(in srgb, var(--color-primary-light) 22%, transparent);
+  --theme-page-orb-bottom: color-mix(in srgb, var(--color-accent-warm) 16%, transparent);
+  --theme-page-ribbon-primary: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  --theme-page-ribbon-secondary: color-mix(in srgb, var(--color-primary-light) 12%, transparent);
+  --theme-page-axis: color-mix(in srgb, var(--color-gold) 16%, transparent);
+  --theme-page-axis-soft: color-mix(in srgb, var(--color-border) 34%, transparent);
 }
 
 :root[data-theme='classico'] {
@@ -436,6 +443,113 @@
   .section-padding {
     @apply px-6 py-16 lg:px-12 lg:py-24;
   }
+
+  .site-ambient-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: clip;
+    pointer-events: none;
+  }
+
+  .site-ambient-orb,
+  .site-ambient-ribbon,
+  .site-ambient-axis {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .site-ambient-orb {
+    filter: blur(42px);
+    opacity: 0.72;
+  }
+
+  .site-ambient-orb--top {
+    left: -10vw;
+    top: 4rem;
+    width: 42vw;
+    height: 28rem;
+    background: radial-gradient(circle, var(--theme-page-orb-top), transparent 70%);
+  }
+
+  .site-ambient-orb--center {
+    right: -8vw;
+    top: 32vh;
+    width: 34vw;
+    height: 42rem;
+    background: radial-gradient(circle, var(--theme-page-orb-center), transparent 72%);
+  }
+
+  .site-ambient-orb--bottom {
+    left: 18vw;
+    bottom: 8rem;
+    width: 40vw;
+    height: 24rem;
+    background: radial-gradient(circle, var(--theme-page-orb-bottom), transparent 74%);
+  }
+
+  .site-ambient-ribbon {
+    border-radius: 999px;
+    filter: blur(18px);
+    opacity: 0.55;
+    transform: rotate(-7deg);
+  }
+
+  .site-ambient-ribbon--primary {
+    left: 58%;
+    top: 7rem;
+    width: min(16rem, 20vw);
+    height: calc(100vh + 18rem);
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--theme-page-ribbon-primary) 18%,
+      var(--theme-page-ribbon-primary) 72%,
+      transparent 100%
+    );
+  }
+
+  .site-ambient-ribbon--secondary {
+    left: 12%;
+    top: 42vh;
+    width: min(11rem, 12vw);
+    height: 52vh;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--theme-page-ribbon-secondary) 22%,
+      var(--theme-page-ribbon-secondary) 78%,
+      transparent 100%
+    );
+    opacity: 0.34;
+    transform: rotate(8deg);
+  }
+
+  .site-ambient-axis {
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--theme-page-axis) 18%,
+      var(--theme-page-axis-soft) 50%,
+      var(--theme-page-axis) 82%,
+      transparent 100%
+    );
+    opacity: 0.34;
+  }
+
+  .site-ambient-axis--right {
+    right: 13%;
+    top: 6rem;
+    height: calc(100% - 10rem);
+  }
+
+  .site-ambient-axis--left {
+    left: 7%;
+    top: 32vh;
+    height: 44vh;
+    opacity: 0.18;
+  }
 }
 
 @media (max-width: 767px) {
@@ -447,6 +561,52 @@
   .paper-card::before,
   .glass-panel::before {
     opacity: 0.06;
+  }
+
+  .site-ambient-orb {
+    filter: blur(34px);
+    opacity: 0.58;
+  }
+
+  .site-ambient-orb--top {
+    left: -18vw;
+    top: 5rem;
+    width: 72vw;
+    height: 18rem;
+  }
+
+  .site-ambient-orb--center {
+    right: -20vw;
+    top: 28vh;
+    width: 68vw;
+    height: 28rem;
+  }
+
+  .site-ambient-orb--bottom {
+    left: 0;
+    bottom: 10rem;
+    width: 82vw;
+    height: 18rem;
+  }
+
+  .site-ambient-ribbon--primary {
+    left: 66%;
+    top: 7rem;
+    width: 20vw;
+    height: calc(100vh + 10rem);
+    opacity: 0.42;
+  }
+
+  .site-ambient-ribbon--secondary,
+  .site-ambient-axis--left {
+    display: none;
+  }
+
+  .site-ambient-axis--right {
+    right: 7%;
+    top: 7rem;
+    height: calc(100% - 12rem);
+    opacity: 0.22;
   }
 }
 

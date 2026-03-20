@@ -71,3 +71,15 @@ export const getChecklistBySlug = cache(async (slug?: string) => {
     null
   );
 });
+
+export const getPublishedChecklistsForSitemap = cache(async () => {
+  return safeDataQuery(
+    'getPublishedChecklistsForSitemap',
+    async () =>
+      prisma.checklist.findMany({
+        where: { published: true },
+        select: { slug: true, updatedAt: true },
+      }),
+    [] as Array<{ slug: string; updatedAt: Date }>
+  );
+});

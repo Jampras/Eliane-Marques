@@ -50,6 +50,8 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - fallback resiliente de migrations via `scripts/db-deploy.mjs`
 - home publica ligada ao dominio institucional com conteudo administravel no backoffice
 - tema global selecionavel no admin por paletas fechadas, aplicado em navegacao, hero, cards, footer, overlays, paginas publicas secundarias e telas administrativas
+- fundo publico continuo e theme-aware via camada global de ambientacao no layout publico
+- `sitemap.xml` agora consome a camada `lib/data`, com fallback seguro e sem query Prisma direta na rota
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:
@@ -106,6 +108,7 @@ npm run dev
 npm run build
 npm run start
 npm run lint
+npm run test:unit
 npx tsc --noEmit
 npm run test:e2e
 npm run test:e2e:visual
@@ -127,9 +130,10 @@ npm run analytics:maintain
 
 ## Pontos fracos atuais
 - a home publica foi publicada, mas ainda depende de refinamento visual continuo, principalmente no mobile
-- nao ha suite de testes unitarios para helpers criticos
+- agora existe uma suite unit test leve para helpers criticos, mas a cobertura ainda precisa crescer
 - o build agora tenta seguir mesmo sem banco acessivel para queries publicas protegidas por fallback
 - build continua dependente de banco acessivel e pode sofrer lock do Prisma no Windows
+- metadata publica auxiliar tambem passa pela camada de dados, reduzindo acoplamento direto ao banco
 
 ## Estado atual do backlog
 Executado:

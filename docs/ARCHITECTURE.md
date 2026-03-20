@@ -43,6 +43,7 @@ flowchart TD
 - `lib/institutional` centraliza `Config`, `About` e `Home`
 - `lib/env` centraliza o contrato de ambiente
 - `lib/core/theme-presets.ts` centraliza as paletas fechadas do site
+- helpers puros de modulos criticos foram extraidos para arquivos dedicados quando o modulo principal depende de `server-only` ou Prisma
 
 ### Mutacoes
 - `lib/actions/admin-crud.ts` centraliza produto, post e checklist
@@ -113,8 +114,19 @@ docs/
 - o tema do site e controlado por `themePreset` em `SiteConfig`
 - `app/layout.tsx` aplica `data-theme` no elemento raiz
 - `app/globals.css` resolve CSS variables por paleta e tambem tokens semanticos de superficie
+- `app/(public)/layout.tsx` injeta `components/shared/layout/SiteAmbientCanvas.tsx` para continuidade visual entre secoes
 - navegacao, navbar em scroll, hero, footer, overlays, sombras, botoes, toasts, catalogos publicos, paginas internas e login admin consomem esses tokens
 - o admin escolhe apenas entre paletas fechadas; nao existe color picker livre
+
+### Metadata publica
+- `app/sitemap.ts` nao consulta mais Prisma diretamente
+- posts, produtos e checklists para sitemap passam por `lib/data/*`
+- a rota continua resiliente a falha de banco por usar `safeDataQuery` com fallback
+
+### Testes e validacao
+- E2E continua em `tests/e2e`
+- cobertura unitaria leve agora existe em `tests/unit`
+- a pipeline `validate.yml` roda lint, unit tests, typecheck e build com ambiente sintetico em Linux
 
 ### CTA de produto
 - regra central em `lib/core/product-cta.ts`
@@ -144,6 +156,7 @@ docs/
 - endpoints publicos sensiveis falham fechado em producao se Redis estiver indisponivel
 - nao existe suite de testes unitarios para regras criticas
 - a home publica ja esta publicada, mas ainda depende de refinamento visual/comercial continuo
+- o build ainda depende de Prisma Client gerado localmente, embora o runner resiliente ja trate o lock do engine no Windows
 
 ## 6. Regras de evolucao
 - manter Server Components por padrao

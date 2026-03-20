@@ -73,6 +73,13 @@ docs/
 - o conteudo institucional da home vem de `lib/institutional/home.ts`
 - `/admin/home` controla hero, imagem lateral do hero, audiencia, leitura de valor, metodo, FAQ e CTA final
 - cards de audiencia, leitura de valor e metodo aceitam imagem por item
+- o layout publico injeta uma camada global de ambientacao para manter continuidade visual entre as secoes
+- a rota `sitemap.xml` agora usa a camada `lib/data`, sem consulta Prisma direta
+
+### Testes
+- `tests/e2e` cobre fluxo funcional e visual
+- `tests/unit` cobre helpers criticos de ambiente, seguranca de request, analytics/reporting e CTA de produto
+- a pipeline de validacao Linux executa lint, unit tests, typecheck e build
 
 ### Admin
 - painel em `app/(admin)/admin`
