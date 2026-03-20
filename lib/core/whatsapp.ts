@@ -13,8 +13,8 @@ interface BuildWhatsAppUrlParams {
 }
 
 /**
- * Constrói URLs de WhatsApp de forma resiliente.
- * Remove caracteres não numéricos e injeta variáveis de contexto no template.
+ * Constroi URLs de WhatsApp de forma resiliente.
+ * Remove caracteres nao numericos e injeta variaveis de contexto no template.
  */
 export function buildWhatsAppUrl({
   number = CONTACT.defaultPhone,
@@ -35,7 +35,7 @@ export function buildWhatsAppUrl({
 
   const cleanNumber = number.replace(/\D/g, '');
 
-  // Garante que o número tenha o código do país se faltar
+  // Garante que o numero tenha o codigo do pais se faltar
   const finalNumber = cleanNumber.length === 11 ? `55${cleanNumber}` : cleanNumber;
 
   return `https://wa.me/${finalNumber}?text=${encodeURIComponent(message)}`;

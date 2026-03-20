@@ -42,6 +42,7 @@ flowchart TD
 - `lib/data` centraliza queries e cache
 - `lib/institutional` centraliza `Config`, `About` e `Home`
 - `lib/env` centraliza o contrato de ambiente
+- `lib/core/theme-presets.ts` centraliza as paletas fechadas do site
 
 ### Mutacoes
 - `lib/actions/admin-crud.ts` centraliza produto, post e checklist
@@ -108,6 +109,12 @@ docs/
 - itens de audiencia, leitura de valor e metodo podem carregar imagem propria
 - `Investimentos` e `Formatos` continuam dinamicos a partir de produtos ativos
 
+### Tema global
+- o tema do site e controlado por `themePreset` em `SiteConfig`
+- `app/layout.tsx` aplica `data-theme` no elemento raiz
+- `app/globals.css` resolve CSS variables por paleta
+- o admin escolhe apenas entre paletas fechadas; nao existe color picker livre
+
 ### CTA de produto
 - regra central em `lib/core/product-cta.ts`
 - nao espalhar regra comercial fora desse modulo
@@ -133,7 +140,7 @@ docs/
 - o build ainda depende de um Prisma Client gerado, mas as queries publicas protegidas por fallback nao bloqueiam mais a compilacao sem banco
 
 ### Importantes
-- endpoints publicos degradam para rate limit em memoria se Redis estiver indisponivel
+- endpoints publicos sensiveis falham fechado em producao se Redis estiver indisponivel
 - nao existe suite de testes unitarios para regras criticas
 - a home publica ja esta publicada, mas ainda depende de refinamento visual/comercial continuo
 

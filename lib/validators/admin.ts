@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { THEME_PRESET_KEYS } from '@/lib/core/theme-presets';
 
 const slugSchema = z
   .string()
@@ -122,8 +123,6 @@ export const configSchema = z
     whatsappNumber: z.string().trim().max(30).optional(),
     whatsappDefaultMessage: z.string().trim().max(400).optional(),
     contactEmail: z.union([z.string().trim().email('Email invalido'), z.literal('')]).optional(),
-    heroHeadline: z.string().trim().max(200).optional(),
-    heroSubheadline: z.string().trim().max(400).optional(),
     siteName: z.string().trim().max(120).optional(),
     instagramLink: z
       .union([
@@ -138,6 +137,7 @@ export const configSchema = z
         z.literal(''),
       ])
       .optional(),
+    themePreset: z.enum(THEME_PRESET_KEYS).optional(),
   })
   .strict();
 

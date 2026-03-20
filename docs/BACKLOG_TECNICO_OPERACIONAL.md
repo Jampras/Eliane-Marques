@@ -25,12 +25,12 @@
 - **Objetivo:** garantir previsibilidade do schema fora do Windows.
 - **Impacto:** medio.
 
-#### BT-024 - Definir estrategia de fallback do rate limit publico
-- **Objetivo:** decidir se analytics e lead capture podem continuar degradando para memoria local quando Redis falhar.
-- **Impacto:** medio.
-
 #### BT-025 - Adicionar testes unitarios para modulos criticos
 - **Objetivo:** cobrir `lib/env`, `lib/core/product-cta`, analytics e seguranca de requests.
+- **Impacto:** medio.
+
+#### BT-027 - Revisar limites e mensagens dos endpoints publicos
+- **Objetivo:** calibrar retry, UX e observabilidade de analytics e lead capture quando houver bloqueio.
 - **Impacto:** medio.
 
 ### P2
@@ -68,7 +68,7 @@
 - [ ] automatizar `npm run analytics:maintain`
 - [ ] integrar leads com CRM ou automacao comercial
 - [ ] validar migrations em CI Linux
-- [ ] decidir estrategia do fallback de rate limit publico
 - [ ] adicionar testes unitarios para modulos criticos
 - [ ] evoluir dashboard com filtros temporais mais avancados
 - [ ] refinar visual e usabilidade da home publicada
+- [ ] revisar limites e mensagens dos endpoints publicos

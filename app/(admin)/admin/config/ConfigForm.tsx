@@ -14,11 +14,13 @@ import {
   ADMIN_TEXTAREA_CLASS,
 } from '@/components/features/admin/formStyles';
 import { useToast } from '@/components/ui/ToastProvider';
+import { THEME_PRESETS } from '@/lib/core/theme-presets';
 
 export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<string, string> }) {
   const formId = 'admin-config-form';
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState(initialConfigs.themePreset || 'classico');
   const [feedback, setFeedback] = useState<{
     variant: 'success' | 'error';
     title: string;
@@ -89,8 +91,6 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
       type: 'text',
       placeholder: 'contato@seudominio.com',
     },
-    { key: 'heroHeadline', label: 'Titulo Hero (Home)', type: 'textarea' },
-    { key: 'heroSubheadline', label: 'Subtitulo Hero (Home)', type: 'textarea' },
     { key: 'siteName', label: 'Nome da Marca', type: 'text' },
     { key: 'instagramLink', label: 'Instagram URL', type: 'text' },
   ] as const;
@@ -130,6 +130,63 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
             )}
           </div>
         ))}
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className={ADMIN_LABEL_CLASS}>Paleta global do site</label>
+            <Text className="text-sm">
+              Escolha um esquema fechado. O site inteiro passa a usar essa paleta.
+            </Text>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {THEME_PRESETS.map((preset) => {
+              const checked = selectedTheme === preset.key;
+
+              return (
+                <label
+                  key={preset.key}
+                  className="group relative cursor-pointer rounded-[2px] border border-border-soft bg-surface p-4 transition hover:border-border hover:shadow-[0_8px_20px_rgba(58,36,24,0.06)]"
+                >
+                  <input
+                    type="radio"
+                    name="themePreset"
+                    value={preset.key}
+                    defaultChecked={checked}
+                    onChange={() => setSelectedTheme(preset.key)}
+                    className="sr-only"
+                  />
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-text-2">
+                        {preset.label}
+                      </div>
+                      <div className="mt-1 text-xs uppercase tracking-[0.14em] text-text-muted">
+                        {preset.mood}
+                      </div>
+                    </div>
+                    <span className="rounded-full border border-border-soft px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-text-2 group-has-[:checked]:border-primary group-has-[:checked]:text-primary">
+                      {checked ? 'Ativo' : 'Selecionar'}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 flex gap-2">
+                    {preset.swatches.map((swatch) => (
+                      <span
+                        key={swatch}
+                        aria-hidden="true"
+                        className="h-8 flex-1 rounded-[2px] border border-black/5"
+                        style={{ backgroundColor: swatch }}
+                      />
+                    ))}
+                  </div>
+
+                  <p className="mt-4 text-sm leading-6 text-text-2">{preset.description}</p>
+                </label>
+              );
+            })}
+          </div>
+        </div>
 
         {feedback && (
           <AdminInlineNotice

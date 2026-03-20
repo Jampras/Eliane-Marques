@@ -49,6 +49,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - CSP dinamica com nonce por request
 - fallback resiliente de migrations via `scripts/db-deploy.mjs`
 - home publica ligada ao dominio institucional com conteudo administravel no backoffice
+- tema global selecionavel no admin por paletas fechadas
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:
@@ -122,7 +123,7 @@ npm run analytics:maintain
 - upload exige Supabase configurado em producao
 - login por senha foi removido; o painel e Google-only
 - `SUPABASE_SERVICE_ROLE_KEY` continua sendo credencial sensivel; se for exposta, precisa ser trocada operacionalmente
-- analytics e lead capture usam rate limit publico; sem Redis disponivel, o fallback atual e memoria local
+- analytics e lead capture usam rate limit publico; em producao, se Redis falhar ou estiver ausente, os endpoints falham fechado
 
 ## Pontos fracos atuais
 - a home publica foi publicada, mas ainda depende de refinamento visual continuo, principalmente no mobile

@@ -1,6 +1,6 @@
 import 'server-only';
 import { Redis } from '@upstash/redis';
-import { getUpstashEnv } from '@/lib/env/server';
+import { getUpstashEnv, isProductionEnv } from '@/lib/env/server';
 
 type PublicRateLimitWindow = {
   count: number;
@@ -103,12 +103,20 @@ export async function checkPublicRateLimit(
   options: PublicRateLimitOptions
 ): Promise<PublicRateLimitResult> {
   if (!redis) {
+    if (isProductionEnv()) {
+      return { allowed: false, retryAfterMs: options.windowMs };
+    }
+
     return checkMemoryPublicRateLimit(key, options);
   }
 
   try {
     return await checkRedisPublicRateLimit(key, options);
   } catch {
+    if (isProductionEnv()) {
+      return { allowed: false, retryAfterMs: options.windowMs };
+    }
+
     return checkMemoryPublicRateLimit(key, options);
   }
 }

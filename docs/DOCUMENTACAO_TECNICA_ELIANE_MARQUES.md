@@ -83,6 +83,7 @@ docs/
 ### Dominio institucional
 - `Config` e `About` foram centralizados em `lib/institutional`
 - padrao recomendado para futuros singletons do projeto
+- `Config` agora tambem controla a paleta global do site via `themePreset`
 
 ## 4. Integracoes externas
 
@@ -93,7 +94,7 @@ docs/
 
 ### Upstash Redis
 - rate limit distribuido do login admin
-- suporte ao rate limit publico quando disponivel
+- rate limit publico obrigatorio em producao; se Redis falhar, endpoints publicos sensiveis falham fechado
 
 ### WhatsApp
 - intents centralizadas em `lib/contact/whatsapp-intents.ts`
@@ -109,7 +110,6 @@ docs/
 ### Pendencias reais
 - rotacao da `SUPABASE_SERVICE_ROLE_KEY`
 - agendamento recorrente de `analytics:maintain`
-- definicao da estrategia para fallback do rate limit publico sem Redis
 
 ## 6. Pontos fracos atuais
 
@@ -128,7 +128,7 @@ docs/
 ### Em seguida
 1. adicionar testes unitarios para modulos criticos
 2. validar migrations em CI Linux
-3. decidir politica do fallback de rate limit publico
+3. revisar periodicamente os limites publicos e mensagens de erro
 
 ### Depois
 1. integrar leads com CRM ou automacao

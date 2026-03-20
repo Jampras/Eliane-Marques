@@ -3,6 +3,11 @@ import { unstable_cache } from 'next/cache';
 import prisma from '@/lib/core/prisma';
 import { safeDataQuery } from '@/lib/data/safe-query';
 import { SITE_CONFIGS_TAG } from '@/lib/institutional/shared';
+import {
+  DEFAULT_THEME_PRESET,
+  isThemePresetKey,
+  type ThemePresetKey,
+} from '@/lib/core/theme-presets';
 
 const getSiteConfigsEntries = unstable_cache(
   async () => prisma.siteConfig.findMany(),
@@ -29,4 +34,9 @@ export const getWhatsAppConfig = cache(async () => {
       configs.whatsappDefaultMessage ||
       'Ola Eliane! Gostaria de saber mais sobre seus servicos.',
   };
+});
+
+export const getThemePreset = cache(async (): Promise<ThemePresetKey> => {
+  const configs = await getSiteConfigs();
+  return isThemePresetKey(configs.themePreset) ? configs.themePreset : DEFAULT_THEME_PRESET;
 });

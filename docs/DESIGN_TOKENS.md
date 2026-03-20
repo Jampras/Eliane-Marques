@@ -45,3 +45,18 @@ Documento de referencia rapida para o sistema visual atual.
 - icones locais em SVG
 - tipografia carregada via `next/font`
 - direcao da home mais homogenea entre desktop e mobile, com refinamento continuo em producao
+
+## 6. Paletas globais
+
+O site agora trabalha com paletas fechadas selecionadas no admin:
+
+- `classico`
+- `brisa-fria`
+- `terracota-editorial`
+- `savia-dourada`
+- `neblina-mineral`
+
+Regras:
+- as paletas trocam apenas CSS variables globais
+- layout e comportamento visual continuam no codigo
+- o admin nao escolhe cor livre por secao ou item

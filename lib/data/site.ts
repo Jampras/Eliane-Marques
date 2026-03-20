@@ -9,7 +9,5 @@ export const getSiteIdentity = cache(async () => {
     siteName: configs.siteName || BRAND.name,
     contactEmail: configs.contactEmail || BRAND.email,
     instagramUrl: configs.instagramLink || BRAND.instagram,
-    heroHeadline: configs.heroHeadline,
-    heroSubheadline: configs.heroSubheadline,
   };
 });

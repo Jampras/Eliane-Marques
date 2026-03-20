@@ -272,20 +272,27 @@ Observacao:
 - `WhatsApp (com DDD)`
 - `Mensagem padrao WhatsApp`
 - `Email de contato`
-- `Titulo Hero (Home)`
-- `Subtitulo Hero (Home)`
 - `Nome da marca`
 - `Instagram URL`
+- `Paleta global do site`
 
 ### Quando usar
 - trocar numero de WhatsApp
 - ajustar a mensagem padrao de atendimento
-- alterar textos principais da home
 - atualizar dados institucionais da marca
+- trocar a paleta visual global do site
 
 ### Cuidado
 - alteracoes aqui impactam varias paginas ao mesmo tempo
 - revise URLs e numero de WhatsApp antes de salvar
+- a paleta e global: ela afeta paginas publicas e telas administrativas
+
+### Paletas disponiveis
+- `Classico`
+- `Brisa Fria`
+- `Terracota Editorial`
+- `Savia Dourada`
+- `Neblina Mineral`
 
 ---
 
@@ -393,7 +400,7 @@ O site possui um formulario alternativo de contato alem do WhatsApp.
 
 ### Ao editar configuracoes
 - altere com cuidado o WhatsApp e links sociais
-- revise textos da home para evitar quebrar layout
+- revise a paleta e os dados institucionais antes de salvar
 
 ### Ao editar a home
 - prefira frases curtas e claras

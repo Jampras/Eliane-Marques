@@ -39,5 +39,5 @@ export function isSameOriginRequest(requestHeaders: Headers) {
     return referrerOrigin === expectedOrigin;
   }
 
-  return true;
+  return false;
 }

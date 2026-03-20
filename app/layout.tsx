@@ -6,6 +6,7 @@ import { ToastProvider } from '@/components/ui/ToastProvider';
 import { BRAND } from '@/lib/core/constants';
 import { getSiteIdentity } from '@/lib/data/site';
 import { getPublicSiteUrl } from '@/lib/env/server';
+import { getThemePreset } from '@/lib/institutional/config';
 
 const SITE_URL = getPublicSiteUrl();
 const DEFAULT_DESCRIPTION =
@@ -69,7 +70,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { siteName, instagramUrl } = await getSiteIdentity();
+  const [{ siteName, instagramUrl }, themePreset] = await Promise.all([
+    getSiteIdentity(),
+    getThemePreset(),
+  ]);
   const nonce = (await headers()).get('x-nonce') || undefined;
   const brandName = siteName || BRAND.name;
   const organizationJsonLd = {
@@ -81,7 +85,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" data-theme={themePreset}>
       <head>
         <script
           suppressHydrationWarning

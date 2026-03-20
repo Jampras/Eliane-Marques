@@ -27,7 +27,7 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 
 ### Backend
 - nao ha testes unitarios para modulos criticos
-- rate limit publico degrada para memoria local quando Redis falha
+- rate limit publico agora falha fechado em producao quando Redis falha
 
 ### Frontend publico
 - a home publica ja esta em producao e agora e administravel via painel
@@ -47,7 +47,7 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 ### P1
 1. adicionar testes unitarios para modulos criticos
 2. validar migrations em CI Linux
-3. decidir politica do fallback de rate limit publico
+3. revisar limites e mensagens dos endpoints publicos
 
 ### P2
 1. integrar leads com CRM ou automacao

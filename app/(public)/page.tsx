@@ -10,26 +10,25 @@ import { PricingSection } from '@/components/features/home/PricingSection';
 import { FaqSection } from '@/components/features/home/FaqSection';
 import { FinalCtaSection } from '@/components/features/home/FinalCtaSection';
 import { getHomeServices } from '@/lib/data/home';
-import { getSiteConfigs, getWhatsAppConfig } from '@/lib/data/config';
+import { getWhatsAppConfig } from '@/lib/data/config';
 import { getHomePage } from '@/lib/institutional/home';
 import { getAboutPage } from '@/lib/institutional/about';
 
 export default async function LandingPage() {
-  const [services, wa, configs, about, home] = await Promise.all([
+  const [services, wa, about, home] = await Promise.all([
     getHomeServices(),
     getWhatsAppConfig(),
-    getSiteConfigs(),
     getAboutPage(),
     getHomePage(),
   ]);
 
   return (
     <div>
-      <HeroSection
+        <HeroSection
         waConfig={wa}
         eyebrow={home.heroEyebrow ?? undefined}
-        headline={home.heroTitle || configs.heroHeadline}
-        subheadline={home.heroSubtitle || configs.heroSubheadline}
+        headline={home.heroTitle}
+        subheadline={home.heroSubtitle ?? undefined}
         primaryCtaLabel={home.heroPrimaryCtaLabel ?? undefined}
         secondaryCtaLabel={home.heroSecondaryCtaLabel ?? undefined}
         trustText={home.heroTrustText ?? undefined}

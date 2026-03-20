@@ -33,7 +33,7 @@ O projeto esta em estado operacional bom, mas ainda sem automacao formal de aces
 - integracao de leads com CRM externo
 - evolucao do dashboard comercial
 - automatizacao recorrente de `analytics:maintain`
-- decidir se o fallback em memoria para rate limit publico e aceitavel em producao
+- revisar limites publicos e mensagem de indisponibilidade quando Redis falhar
 
 ### Baixa
 - auditoria formal com Lighthouse ou axe em pipeline CI
