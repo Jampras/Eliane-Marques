@@ -286,6 +286,7 @@ Observacao:
 - alteracoes aqui impactam varias paginas ao mesmo tempo
 - revise URLs e numero de WhatsApp antes de salvar
 - a paleta e global: ela afeta paginas publicas e telas administrativas
+- a troca de paleta altera fundo, cards, textos, navegacao, hero, footer, overlays, catalogos, paginas internas, toasts e telas administrativas
 
 ### Paletas disponiveis
 - `Classico`

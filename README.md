@@ -49,7 +49,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - CSP dinamica com nonce por request
 - fallback resiliente de migrations via `scripts/db-deploy.mjs`
 - home publica ligada ao dominio institucional com conteudo administravel no backoffice
-- tema global selecionavel no admin por paletas fechadas
+- tema global selecionavel no admin por paletas fechadas, aplicado em navegacao, hero, cards, footer, overlays, paginas publicas secundarias e telas administrativas
 
 ## Variaveis de ambiente
 Copie `.env.example` para `.env` e preencha:

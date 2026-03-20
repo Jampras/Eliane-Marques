@@ -45,10 +45,10 @@ let toastCounter = 0;
 
 const variantStyles: Record<ToastVariant, string> = {
   success:
-    'border-[color:rgba(168,184,154,0.55)] bg-[color:var(--manteiga)] text-[color:var(--espresso)]',
+    'border-[color:var(--theme-state-success-border)] bg-[color:var(--manteiga)] text-[color:var(--theme-state-success-text)]',
   error:
-    'border-[color:rgba(160,106,89,0.55)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)]',
-  info: 'border-[color:var(--linho)] bg-[color:var(--aveia)] text-[color:var(--espresso)]',
+    'border-[color:var(--theme-state-error-border)] bg-[color:var(--creme-rosa)] text-[color:var(--theme-state-error-text)]',
+  info: 'border-[color:var(--theme-state-info-border)] bg-[color:var(--aveia)] text-[color:var(--theme-state-info-text)]',
 };
 
 const variantIcon: Record<ToastVariant, IconName> = {
@@ -129,7 +129,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           {toasts.map((toast) => (
             <div
               key={toast.id}
-              className={`pointer-events-auto border px-4 py-4 shadow-[2px_8px_18px_rgba(58,36,24,0.12)] ${variantStyles[toast.variant]}`}
+              className={`pointer-events-auto border px-4 py-4 shadow-[var(--theme-toast-shadow)] ${variantStyles[toast.variant]}`}
             >
               <div className="flex items-start gap-3">
                 <Icon

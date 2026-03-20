@@ -67,7 +67,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 className="fade-up group block"
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >
-                <article className="border border-[color:var(--linho)] bg-[color:var(--aveia)] p-3 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:p-4 lg:p-5">
+                <article className="border border-[color:var(--linho)] bg-[color:var(--aveia)] p-3 shadow-[var(--theme-card-shadow)] sm:p-4 lg:p-5">
                   <div className="relative aspect-[16/10] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)]">
                     <Image
                       src={imageSrc}

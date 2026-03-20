@@ -47,8 +47,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(180deg,rgba(236,227,217,0.98),rgba(226,214,203,0.96))] p-6">
-      <div className="w-full max-w-[560px] border border-[color:var(--linho)] bg-[rgba(243,233,223,0.94)] p-6 shadow-[0_18px_42px_rgba(88,69,52,0.12)] transition-all duration-500 sm:p-8 lg:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-[image:var(--theme-admin-login-bg)] p-6">
+      <div className="w-full max-w-[560px] border border-[color:var(--linho)] bg-[color:var(--theme-admin-login-panel)] p-6 shadow-[var(--theme-admin-login-shadow)] transition-all duration-500 sm:p-8 lg:p-10">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[color:var(--argila)]">
             <Icon name="admin_panel_settings" className="text-[24px]" />
@@ -62,7 +62,7 @@ export default function LoginPage() {
         </div>
 
         <div className="grid gap-5">
-          <div className="border border-[color:var(--linho)] bg-[rgba(249,243,237,0.7)] p-5 sm:p-6">
+          <div className="border border-[color:var(--linho)] bg-[color:var(--theme-admin-login-panel-soft)] p-5 sm:p-6">
             <div className="flex items-start gap-4">
               <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[color:var(--linho)] bg-[color:var(--aveia)] text-[color:var(--argila)]">
                 <Icon name="check_circle" className="text-[18px]" />
@@ -97,19 +97,19 @@ export default function LoginPage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            <div className="border border-[color:var(--linho)] bg-[rgba(249,243,237,0.66)] px-4 py-4 text-center">
+            <div className="border border-[color:var(--linho)] bg-[color:var(--theme-admin-login-panel-soft)] px-4 py-4 text-center">
               <Icon name="admin_panel_settings" className="text-[18px] text-[color:var(--argila)]" />
               <p className="mt-3 text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                 Contas liberadas
               </p>
             </div>
-            <div className="border border-[color:var(--linho)] bg-[rgba(249,243,237,0.66)] px-4 py-4 text-center">
+            <div className="border border-[color:var(--linho)] bg-[color:var(--theme-admin-login-panel-soft)] px-4 py-4 text-center">
               <Icon name="check_circle" className="text-[18px] text-[color:var(--argila)]" />
               <p className="mt-3 text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                 Sessao validada
               </p>
             </div>
-            <div className="border border-[color:var(--linho)] bg-[rgba(249,243,237,0.66)] px-4 py-4 text-center">
+            <div className="border border-[color:var(--linho)] bg-[color:var(--theme-admin-login-panel-soft)] px-4 py-4 text-center">
               <Icon name="settings" className="text-[18px] text-[color:var(--argila)]" />
               <p className="mt-3 text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                 Ambiente interno

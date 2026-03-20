@@ -112,7 +112,8 @@ docs/
 ### Tema global
 - o tema do site e controlado por `themePreset` em `SiteConfig`
 - `app/layout.tsx` aplica `data-theme` no elemento raiz
-- `app/globals.css` resolve CSS variables por paleta
+- `app/globals.css` resolve CSS variables por paleta e tambem tokens semanticos de superficie
+- navegacao, navbar em scroll, hero, footer, overlays, sombras, botoes, toasts, catalogos publicos, paginas internas e login admin consomem esses tokens
 - o admin escolhe apenas entre paletas fechadas; nao existe color picker livre
 
 ### CTA de produto

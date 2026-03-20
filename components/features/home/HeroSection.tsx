@@ -170,7 +170,7 @@ export function HeroSection({
   return (
     <section
       id="hero"
-      className="relative overflow-hidden bg-[radial-gradient(ellipse_at_80%_20%,#E8D5C4,transparent_55%),radial-gradient(ellipse_at_10%_80%,rgba(168,184,154,0.15),transparent_50%),var(--aveia)]"
+      className="relative overflow-hidden bg-[image:var(--theme-hero-bg)]"
     >
       <div className="relative mx-auto max-w-[1160px] px-4 py-[28px] sm:px-5 sm:py-[34px] md:px-8 md:py-[44px] lg:px-10 lg:py-[56px] xl:px-12 xl:py-[72px]">
         <div
@@ -183,7 +183,7 @@ export function HeroSection({
         <div className="grid gap-6 lg:hidden">
           <div className="grid grid-cols-[minmax(0,1fr)_132px] items-start gap-4 sm:grid-cols-[minmax(0,1fr)_176px] sm:gap-5">
             <div className="fade-up" style={{ '--delay': '0s' } as CSSProperties}>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--linho)] bg-[rgba(255,255,255,0.34)] px-3 py-2 text-center sm:gap-3 sm:px-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--linho)] bg-[color:var(--theme-panel-soft)] px-3 py-2 text-center sm:gap-3 sm:px-4">
                 <span className="h-[6px] w-[6px] rounded-full bg-[color:var(--argila)]" />
                 <span className="text-[8px] uppercase tracking-[0.16em] text-[color:var(--taupe)] sm:text-[9px] sm:tracking-[0.18em]">
                   {resolvedEyebrow}
@@ -196,8 +196,8 @@ export function HeroSection({
             </div>
 
             <div className="fade-up min-w-0" style={{ '--delay': '0.18s' } as CSSProperties}>
-              <div className="relative ml-auto w-full overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-2.5 shadow-[2px_8px_24px_rgba(58,36,24,0.08)] sm:p-4">
-                <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 translate-x-6 -translate-y-6 bg-[radial-gradient(circle,rgba(184,132,90,0.22),transparent_68%)] blur-2xl" />
+              <div className="relative ml-auto w-full overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-2.5 shadow-[var(--theme-card-shadow-strong)] sm:p-4">
+                <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 translate-x-6 -translate-y-6 bg-[radial-gradient(circle,var(--theme-hero-image-glow),transparent_68%)] blur-2xl" />
                 <div className="relative aspect-[4/5] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)]">
                   {heroImage ? (
                     <Image
@@ -209,7 +209,7 @@ export function HeroSection({
                       priority
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_50%_25%,rgba(232,213,196,0.7),transparent_45%),var(--aveia)] px-4 text-center">
+                    <div className="flex h-full items-center justify-center bg-[image:var(--theme-hero-image-bg)] px-4 text-center">
                       <div>
                         <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
                           Presenca executiva
@@ -221,7 +221,7 @@ export function HeroSection({
                     </div>
                   )}
                 </div>
-                <div className="mt-2.5 border border-[color:var(--linho)] bg-[rgba(255,255,255,0.34)] px-3 py-3 sm:mt-4 sm:px-4 sm:py-4">
+                <div className="mt-2.5 border border-[color:var(--linho)] bg-[color:var(--theme-panel-soft)] px-3 py-3 sm:mt-4 sm:px-4 sm:py-4">
                   <p className="text-[8px] uppercase tracking-[0.16em] text-[color:var(--argila)] sm:text-[9px] sm:tracking-[0.18em]">
                     Consultoria autoral
                   </p>
@@ -262,7 +262,7 @@ export function HeroSection({
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] shadow-[0_8px_18px_rgba(58,36,24,0.08)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)] sm:w-auto"
+                className="w-full border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] shadow-[var(--theme-button-outline-shadow)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)] sm:w-auto"
                 onClick={() => {
                   trackAnalyticsEvent({
                     name: 'cta_click',
@@ -309,7 +309,7 @@ export function HeroSection({
         <div className="hidden lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)] lg:items-center lg:gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(360px,460px)]">
           <div className="min-w-0">
             <div className="fade-up" style={{ '--delay': '0s' } as CSSProperties}>
-              <div className="inline-flex items-center gap-3 rounded-full border border-[color:var(--linho)] bg-[rgba(255,255,255,0.34)] px-4 py-2 text-center">
+              <div className="inline-flex items-center gap-3 rounded-full border border-[color:var(--linho)] bg-[color:var(--theme-panel-soft)] px-4 py-2 text-center">
                 <span className="h-[6px] w-[6px] rounded-full bg-[color:var(--argila)]" />
                 <span className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                   {resolvedEyebrow}
@@ -349,7 +349,7 @@ export function HeroSection({
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] shadow-[0_8px_18px_rgba(58,36,24,0.08)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)] sm:w-auto"
+                className="w-full border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] shadow-[var(--theme-button-outline-shadow)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)] sm:w-auto"
                 onClick={() => {
                   trackAnalyticsEvent({
                     name: 'cta_click',
@@ -393,8 +393,8 @@ export function HeroSection({
           </div>
 
           <div className="fade-up min-w-0" style={{ '--delay': '0.18s' } as CSSProperties}>
-            <div className="relative ml-auto w-full max-w-[420px] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-5 shadow-[2px_8px_24px_rgba(58,36,24,0.08)]">
-              <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 translate-x-6 -translate-y-6 bg-[radial-gradient(circle,rgba(184,132,90,0.22),transparent_68%)] blur-2xl" />
+            <div className="relative ml-auto w-full max-w-[420px] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-5 shadow-[var(--theme-card-shadow-strong)]">
+              <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 translate-x-6 -translate-y-6 bg-[radial-gradient(circle,var(--theme-hero-image-glow),transparent_68%)] blur-2xl" />
               <div className="relative aspect-[4/5] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)]">
                 {heroImage ? (
                   <Image
@@ -406,7 +406,7 @@ export function HeroSection({
                     priority
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_50%_25%,rgba(232,213,196,0.7),transparent_45%),var(--aveia)] px-8 text-center">
+                  <div className="flex h-full items-center justify-center bg-[image:var(--theme-hero-image-bg)] px-8 text-center">
                     <div>
                       <p className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
                         Presenca executiva
@@ -418,7 +418,7 @@ export function HeroSection({
                   </div>
                 )}
               </div>
-              <div className="mt-4 border border-[color:var(--linho)] bg-[rgba(255,255,255,0.34)] px-4 py-4">
+              <div className="mt-4 border border-[color:var(--linho)] bg-[color:var(--theme-panel-soft)] px-4 py-4">
                 <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
                   Consultoria autoral
                 </p>

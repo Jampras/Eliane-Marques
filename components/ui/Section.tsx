@@ -21,7 +21,7 @@ export const Section: React.FC<SectionProps> = ({
     black: 'section-shell section-shell--black theme-dark',
   };
 
-  const borderClasses = borderY ? 'border-y border-white/8' : '';
+  const borderClasses = borderY ? 'border-y border-[color:var(--theme-footer-border)]' : '';
 
   return (
     <section

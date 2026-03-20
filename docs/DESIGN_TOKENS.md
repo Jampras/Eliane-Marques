@@ -57,6 +57,17 @@ O site agora trabalha com paletas fechadas selecionadas no admin:
 - `neblina-mineral`
 
 Regras:
-- as paletas trocam apenas CSS variables globais
+- as paletas trocam CSS variables globais e tokens semanticos de superficie
 - layout e comportamento visual continuam no codigo
 - o admin nao escolhe cor livre por secao ou item
+
+Cobertura atual:
+- fundo base e glows globais
+- navbar e navbar em scroll
+- overlay do menu mobile
+- hero e paines auxiliares
+- cards, badges, botoes e sombras principais
+- footer e secoes escuras
+- login admin e wrappers institucionais
+- toasts, tabelas/admin notices e barras fixas do admin
+- catalogos publicos, detalhe de produto, contato, blog, checklists e pagina Sobre

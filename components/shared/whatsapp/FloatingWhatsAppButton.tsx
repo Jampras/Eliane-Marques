@@ -48,7 +48,7 @@ export const FloatingWhatsAppButton: React.FC<{ phone: string; message: string }
       onClick={handleClick}
       aria-label="Falar no WhatsApp"
       className={cn(
-        'fixed right-5 bottom-5 z-[60] inline-flex h-12 w-12 items-center justify-center rounded-[2px] border border-[rgba(221,208,188,0.3)] bg-[color:var(--cacau)] text-[color:var(--aveia)] shadow-[2px_6px_18px_rgba(58,36,24,0.18)] transition-colors hover:bg-[color:var(--espresso)] md:right-6 md:bottom-6',
+        'fixed right-5 bottom-5 z-[60] inline-flex h-12 w-12 items-center justify-center rounded-[2px] border border-[color:var(--theme-footer-border)] bg-[color:var(--cacau)] text-[color:var(--aveia)] shadow-[var(--theme-card-shadow-strong)] transition-colors hover:bg-[color:var(--espresso)] md:right-6 md:bottom-6',
         pathname === '/' && 'hidden md:inline-flex'
       )}
     >

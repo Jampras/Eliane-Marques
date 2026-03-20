@@ -61,7 +61,7 @@ export const ChecklistClient: React.FC<ChecklistClientProps> = ({
       </div>
 
       {isCompleted && (
-        <div className="mt-10 border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] px-4 py-6 text-center shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:px-6 sm:py-8 lg:px-8">
+        <div className="mt-10 border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] px-4 py-6 text-center shadow-[var(--theme-card-shadow)] sm:px-6 sm:py-8 lg:px-8">
           <Badge className="mb-5">Checklist concluido</Badge>
           <Heading as="h3" className="text-[2rem] lg:text-[2.4rem]">
             Excelente, voce concluiu esta etapa.

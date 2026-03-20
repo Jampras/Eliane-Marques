@@ -81,7 +81,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       }`}
     >
       <div
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(58,36,24,0.98),rgba(40,24,16,0.98))]"
+        className="absolute inset-0 bg-[image:var(--theme-overlay-strong)]"
         onClick={onClose}
       />
 
@@ -90,7 +90,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           type="button"
           onClick={onClose}
           aria-label="Fechar menu"
-          className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/4 text-[color:var(--taupe)] transition-colors hover:border-[color:var(--argila)] hover:text-[color:var(--aveia)] sm:right-5 sm:top-5"
+          className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] text-[color:var(--taupe)] transition-colors hover:border-[color:var(--argila)] hover:text-[color:var(--aveia)] sm:right-5 sm:top-5"
         >
           <Icon name="close" className="text-[24px]" />
         </button>
@@ -103,11 +103,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           {brandName}
         </Link>
 
-        <div className="mt-7 shrink-0 border border-white/8 bg-white/[0.03] px-4 py-4 text-center">
+        <div className="mt-7 shrink-0 border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] px-4 py-4 text-center">
           <p className="text-[9px] uppercase tracking-[0.2em] text-[color:var(--taupe)]">
             Navegacao principal
           </p>
-          <p className="mt-2 text-[12px] leading-[1.75] text-white/68">
+          <p className="mt-2 text-[12px] leading-[1.75] text-[color:var(--theme-footer-text)]">
             Acesse rapidamente o conteudo institucional, formatos e materiais.
           </p>
         </div>
@@ -125,11 +125,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 });
                 onClose();
               }}
-              className="fade-up group border border-white/8 bg-white/[0.02] px-4 py-4 transition-all duration-300 hover:border-[color:var(--argila)] hover:bg-white/[0.04]"
+              className="fade-up group border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] px-4 py-4 transition-all duration-300 hover:border-[color:var(--argila)] hover:bg-[color:var(--theme-surface-overlay-soft)]"
               style={{ '--delay': `${index * 0.08}s` } as React.CSSProperties}
             >
               <div className="flex items-start gap-4">
-                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/4 text-[color:var(--argila)] transition-colors group-hover:border-[color:var(--argila)] group-hover:text-[color:var(--mel)]">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] text-[color:var(--argila)] transition-colors group-hover:border-[color:var(--argila)] group-hover:text-[color:var(--mel)]">
                   <Icon name={mobileNavMeta[link.href]?.icon ?? 'info'} className="text-[18px]" />
                 </span>
                 <span className="min-w-0">
@@ -139,7 +139,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                   <span className="mt-1 block font-display text-[1.45rem] leading-[1.05] text-[color:var(--aveia)]">
                     {link.name}
                   </span>
-                  <span className="mt-2 block text-[11px] leading-[1.65] text-white/62">
+                  <span className="mt-2 block text-[11px] leading-[1.65] text-[color:var(--theme-footer-text)]">
                     {mobileNavMeta[link.href]?.description ?? ''}
                   </span>
                 </span>
@@ -148,9 +148,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           ))}
         </nav>
 
-        <div className="mt-6 shrink-0 border border-white/8 bg-white/[0.03] px-4 py-4">
+        <div className="mt-6 shrink-0 border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] px-4 py-4">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/4 text-[color:var(--argila)]">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] text-[color:var(--argila)]">
               <Icon name="admin_panel_settings" className="text-[17px]" />
             </span>
             <div>
@@ -164,7 +164,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           <Link
             href="/admin/login"
             onClick={onClose}
-            className="mt-4 inline-flex w-full items-center justify-center rounded-[2px] border border-white/10 bg-white/[0.02] px-4 py-3 text-[10px] uppercase tracking-[0.18em] text-[color:var(--aveia)] transition-all hover:border-[color:var(--argila)] hover:text-[color:var(--mel)]"
+            className="mt-4 inline-flex w-full items-center justify-center rounded-[2px] border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] px-4 py-3 text-[10px] uppercase tracking-[0.18em] text-[color:var(--aveia)] transition-all hover:border-[color:var(--argila)] hover:text-[color:var(--mel)]"
           >
             Entrar no painel
           </Link>
@@ -182,7 +182,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               onClose();
               router.push('/contato');
             }}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-[2px] border border-[color:var(--argila)] bg-[rgba(184,132,90,0.08)] px-6 py-3 text-[10px] uppercase tracking-[0.18em] text-[color:var(--mel)] transition-all hover:bg-[rgba(184,132,90,0.14)]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-[2px] border border-[color:var(--argila)] bg-[color:var(--theme-button-ghost-hover)] px-6 py-3 text-[10px] uppercase tracking-[0.18em] text-[color:var(--mel)] transition-all hover:bg-[color:var(--theme-button-outline-hover-bg)]"
           >
             <Icon name="chat" className="text-[16px]" />
             Agendar consultoria

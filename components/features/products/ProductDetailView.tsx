@@ -42,7 +42,7 @@ export function ProductDetailView({ product, waConfig }: ProductDetailViewProps)
       <Container>
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-[420px_minmax(0,1fr)] xl:gap-12">
           <div>
-            <div className="border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] xl:sticky xl:top-28">
+            <div className="border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-4 shadow-[var(--theme-card-shadow)] xl:sticky xl:top-28">
               <div className="relative aspect-[3/4] border border-[color:var(--linho)] bg-[color:var(--aveia)]">
                 {product.coverImage ? (
                   <Image

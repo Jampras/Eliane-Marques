@@ -78,7 +78,7 @@ export default async function MaterialsPage({ searchParams }: MaterialsPageProps
             return (
               <article
                 key={item.id}
-                className="fade-up flex h-full flex-col border border-[color:var(--linho)] bg-[color:var(--aveia)] shadow-[2px_3px_12px_rgba(58,36,24,0.06)]"
+                className="fade-up flex h-full flex-col border border-[color:var(--linho)] bg-[color:var(--aveia)] shadow-[var(--theme-card-shadow)]"
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >
                 <div className="relative aspect-[3/4] border-b border-[color:var(--linho)] bg-[color:var(--manteiga)]">

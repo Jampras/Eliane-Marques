@@ -61,7 +61,7 @@ export default async function ChecklistsPage({ searchParams }: ChecklistsPagePro
               className="fade-up block"
               style={{ '--delay': `${index * 0.08}s` } as React.CSSProperties}
             >
-              <article className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-5 py-6 sm:px-6 sm:py-7 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-colors hover:border-[color:var(--argila)] lg:px-8 lg:py-9">
+              <article className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-5 py-6 sm:px-6 sm:py-7 shadow-[var(--theme-card-shadow)] transition-colors hover:border-[color:var(--argila)] lg:px-8 lg:py-9">
                 <Badge variant="outline" className="mb-5">
                   {checklist._count.items} itens
                 </Badge>

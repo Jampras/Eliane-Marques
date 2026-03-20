@@ -81,10 +81,10 @@ export function ServicesSection({ services }: ServicesSectionProps) {
             return (
               <article
                 key={service.slug ?? service.title}
-                className={`fade-up-card relative border border-[color:var(--linho)] px-5 py-6 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-all duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
+                className={`fade-up-card relative border border-[color:var(--linho)] px-5 py-6 shadow-[var(--theme-card-shadow)] transition-all duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
                   featured
                     ? 'bg-[color:var(--creme-rosa)]'
-                    : 'bg-[color:var(--aveia)] lg:hover:shadow-[2px_8px_18px_rgba(58,36,24,0.08)] xl:hover:-translate-y-[5px] xl:hover:rotate-[-0.3deg]'
+                    : 'bg-[color:var(--aveia)] lg:hover:shadow-[var(--theme-card-shadow-hover)] xl:hover:-translate-y-[5px] xl:hover:rotate-[-0.3deg]'
                 }`}
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >

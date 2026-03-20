@@ -113,7 +113,7 @@ export default async function AboutPage() {
               </div>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)]">
+                <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)]">
                   <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                     Especializacoes
                   </p>
@@ -121,7 +121,7 @@ export default async function AboutPage() {
                     {specializationCount}
                   </p>
                 </div>
-                <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)]">
+                <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)]">
                   <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                     Credenciais
                   </p>
@@ -129,7 +129,7 @@ export default async function AboutPage() {
                     {credentialCount}
                   </p>
                 </div>
-                <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)]">
+                <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)]">
                   <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
                     Marcos
                   </p>
@@ -140,8 +140,8 @@ export default async function AboutPage() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-5 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:p-6">
-              <div className="pointer-events-none absolute top-0 right-0 h-28 w-28 translate-x-10 -translate-y-10 bg-[radial-gradient(circle,rgba(184,132,90,0.18),transparent_70%)] blur-2xl" />
+            <div className="relative overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] p-5 shadow-[var(--theme-card-shadow)] sm:p-6">
+              <div className="pointer-events-none absolute top-0 right-0 h-28 w-28 translate-x-10 -translate-y-10 bg-[radial-gradient(circle,var(--theme-hero-image-glow),transparent_70%)] blur-2xl" />
               <div className="relative aspect-[4/5] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)]">
                 {about.heroImage ? (
                   <Image
@@ -175,7 +175,7 @@ export default async function AboutPage() {
       <Section variant="surface" className="border-y border-[color:var(--linho)]/60">
         <Container>
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-            <article className="border border-[color:var(--linho)] bg-[color:var(--aveia)] p-6 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:p-8">
+            <article className="border border-[color:var(--linho)] bg-[color:var(--aveia)] p-6 shadow-[var(--theme-card-shadow)] sm:p-8">
               <Badge className="mb-4">Introducao</Badge>
               <Heading as="h2" className="text-[2rem] sm:text-[2.4rem]">
                 {about.introTitle || 'Quem esta por tras da assinatura'}
@@ -183,7 +183,7 @@ export default async function AboutPage() {
               <Text className="mt-4 text-[14px] text-[color:var(--taupe)]">{about.introBody}</Text>
             </article>
 
-            <article className="border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] p-6 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:p-8">
+            <article className="border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] p-6 shadow-[var(--theme-card-shadow)] sm:p-8">
               <Badge className="mb-4">Manifesto</Badge>
               <Heading as="h2" className="text-[2rem] sm:text-[2.4rem]">
                 {about.manifestoTitle || 'Base tecnica e visao'}
@@ -214,7 +214,7 @@ export default async function AboutPage() {
             {about.specializations.map((item, index) => (
               <article
                 key={`${item.title}-${item.sortOrder}`}
-                className="relative border border-[color:var(--linho)] bg-[color:var(--aveia)] p-6 shadow-[2px_3px_12px_rgba(58,36,24,0.06)]"
+                className="relative border border-[color:var(--linho)] bg-[color:var(--aveia)] p-6 shadow-[var(--theme-card-shadow)]"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
@@ -257,7 +257,7 @@ export default async function AboutPage() {
             {about.milestones.map((item, index) => (
               <article
                 key={`${item.title}-${item.sortOrder}`}
-                className="grid gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] p-5 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] lg:grid-cols-[140px_minmax(0,1fr)] lg:items-start"
+                className="grid gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] p-5 shadow-[var(--theme-card-shadow)] lg:grid-cols-[140px_minmax(0,1fr)] lg:items-start"
               >
                 <div className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
                   {item.year || `Marco ${index + 1}`}
@@ -294,7 +294,7 @@ export default async function AboutPage() {
             {about.credentials.map((item) => (
               <article
                 key={`${item.title}-${item.sortOrder}`}
-                className="overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] shadow-[2px_3px_12px_rgba(58,36,24,0.06)]"
+                className="overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] shadow-[var(--theme-card-shadow)]"
               >
                 <div className="relative aspect-[4/3] border-b border-[color:var(--linho)] bg-[color:var(--aveia)]">
                   {item.imageUrl ? (
@@ -335,7 +335,7 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      <Section variant="black" className="border-y border-white/8">
+      <Section variant="black" className="border-y border-[color:var(--theme-footer-border)]">
         <Container>
           <div className="mx-auto max-w-4xl text-center">
             <Badge className="mb-5 border-[color:var(--mel)] bg-transparent text-[color:var(--mel)]">
@@ -345,7 +345,7 @@ export default async function AboutPage() {
               Se sua presenca precisa refletir sua ambicao com mais nitidez, este e o momento de
               conversar.
             </Heading>
-            <Text className="mx-auto mt-5 max-w-[42rem] text-[14px] text-white/70 sm:text-[15px]">
+            <Text className="mx-auto mt-5 max-w-[42rem] text-[14px] text-[color:var(--theme-footer-text)] sm:text-[15px]">
               A pagina Sobre deve reforcar a autoridade. O proximo passo precisa abrir a conversa
               certa para o seu momento profissional.
             </Text>

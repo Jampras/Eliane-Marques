@@ -14,7 +14,7 @@ export const Badge: React.FC<{
   return (
     <span
       className={cn(
-        'inline-flex max-w-full items-center justify-center rounded-full border px-3 py-1.5 text-center text-[9px] font-[500] tracking-[0.2em] uppercase shadow-[0_4px_10px_rgba(58,36,24,0.04)] sm:px-4 sm:text-[10px]',
+        'inline-flex max-w-full items-center justify-center rounded-full border px-3 py-1.5 text-center text-[9px] font-[500] tracking-[0.2em] uppercase shadow-[var(--theme-badge-shadow)] sm:px-4 sm:text-[10px]',
         variantStyles,
         className
       )}

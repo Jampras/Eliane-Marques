@@ -27,7 +27,7 @@ export function HomeFaqAccordion({ items }: HomeFaqAccordionProps) {
             className={cn(
               'fade-up overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)] transition-all duration-300',
               isOpen
-                ? 'shadow-[2px_8px_18px_rgba(58,36,24,0.08)]'
+                ? 'shadow-[var(--theme-card-shadow-hover)]'
                 : 'hover:border-[color:var(--argila)]/55'
             )}
             style={{ '--delay': `${index * 0.06}s` } as React.CSSProperties}

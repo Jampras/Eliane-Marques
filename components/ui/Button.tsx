@@ -17,11 +17,11 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const variants = {
     primary:
-      'relative overflow-hidden border border-[color:var(--cacau)] bg-[color:var(--cacau)] text-[color:var(--aveia)] shadow-[0_8px_18px_rgba(122,78,56,0.14)] after:absolute after:inset-y-0 after:left-[-130%] after:w-[48%] after:-skew-x-12 after:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)] after:transition-[left] after:duration-500 hover:border-[color:var(--espresso)] hover:bg-[color:var(--espresso)] hover:shadow-[0_12px_24px_rgba(58,36,24,0.2)] hover:after:left-[130%]',
+      'relative overflow-hidden border border-[color:var(--cacau)] bg-[color:var(--cacau)] text-[color:var(--aveia)] shadow-[var(--theme-button-primary-shadow)] after:absolute after:inset-y-0 after:left-[-130%] after:w-[48%] after:-skew-x-12 after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-text-inverse)_12%,transparent),transparent)] after:transition-[left] after:duration-500 hover:border-[color:var(--espresso)] hover:bg-[color:var(--espresso)] hover:shadow-[var(--theme-button-primary-shadow-strong)] hover:after:left-[130%]',
     outline:
-      'border border-[color:var(--argila)]/55 bg-[color:var(--manteiga)]/72 text-[color:var(--cacau)] shadow-[0_4px_12px_rgba(58,36,24,0.05)] hover:border-[color:var(--argila)] hover:bg-[color:var(--creme-rosa)] hover:text-[color:var(--espresso)]',
+      'border border-[color:var(--argila)]/55 bg-[color:var(--theme-button-outline-bg)] text-[color:var(--cacau)] shadow-[var(--theme-button-outline-shadow)] hover:border-[color:var(--argila)] hover:bg-[color:var(--theme-button-outline-hover-bg)] hover:text-[color:var(--espresso)]',
     ghost:
-      'border border-transparent bg-transparent text-text-2 hover:text-[color:var(--espresso)]',
+      'border border-transparent bg-transparent text-text-2 hover:bg-[color:var(--theme-button-ghost-hover)] hover:text-[color:var(--espresso)]',
   };
 
   const sizes = {

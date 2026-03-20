@@ -21,7 +21,7 @@ export default function AdminLayoutWrapper({
   const isLoginPage = pathname === '/admin/login';
 
   return (
-    <div className="bg-[linear-gradient(180deg,rgba(236,227,217,0.96),rgba(228,216,205,0.96))] selection:bg-primary flex min-h-screen text-text-1 selection:text-white">
+    <div className="bg-[image:var(--theme-admin-login-bg)] selection:bg-primary flex min-h-screen text-text-1 selection:text-white">
       {!isLoginPage && (
         <>
           <AdminSidebar adminIdentity={adminIdentity} />

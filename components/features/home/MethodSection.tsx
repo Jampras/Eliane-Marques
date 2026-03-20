@@ -73,7 +73,7 @@ export function MethodSection({ title, subtitle, ctaLabel, steps }: MethodSectio
               }}
               variant="outline"
               size="lg"
-              className="border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] shadow-[0_8px_18px_rgba(58,36,24,0.08)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)]"
+              className="border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] shadow-[var(--theme-button-outline-shadow)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)]"
             >
               {ctaLabel?.trim() || 'Ver formatos que aplicam esse metodo'}
             </TrackedLinkButton>

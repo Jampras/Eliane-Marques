@@ -35,6 +35,86 @@
   --color-sage: var(--sage);
   --bg-glow-1: rgba(232, 213, 196, 0.95);
   --bg-glow-2: rgba(168, 184, 154, 0.15);
+  --theme-selection: color-mix(in srgb, var(--color-accent-warm) 22%, transparent);
+  --theme-focus-inner: color-mix(in srgb, var(--color-bg) 90%, transparent);
+  --theme-focus-outer: color-mix(in srgb, var(--color-accent-warm) 55%, transparent);
+  --theme-surface-overlay: color-mix(in srgb, white 32%, transparent);
+  --theme-surface-overlay-soft: color-mix(in srgb, white 18%, transparent);
+  --theme-card-shadow: 2px 3px 12px color-mix(in srgb, var(--color-deep) 12%, transparent);
+  --theme-card-shadow-strong: 2px 8px 24px color-mix(in srgb, var(--color-deep) 16%, transparent);
+  --theme-card-shadow-hover: 2px 8px 18px color-mix(in srgb, var(--color-deep) 18%, transparent);
+  --theme-dark-shadow: 2px 3px 16px color-mix(in srgb, black 16%, transparent);
+  --theme-hero-glow: color-mix(in srgb, var(--color-accent-warm) 22%, transparent);
+  --theme-hero-image-glow: color-mix(in srgb, var(--color-accent-warm) 24%, transparent);
+  --theme-hero-panel-glow: color-mix(in srgb, var(--color-accent) 70%, transparent);
+  --theme-section-surface-glow: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --theme-divider-strong: color-mix(in srgb, var(--color-gold) 24%, transparent);
+  --theme-nav-bg: var(--color-deep);
+  --theme-nav-bg-scrolled: color-mix(in srgb, var(--color-deep) 94%, transparent);
+  --theme-nav-divider: color-mix(in srgb, var(--color-gold) 30%, transparent);
+  --theme-nav-shadow: 0 2px 20px color-mix(in srgb, black 15%, transparent);
+  --theme-overlay-strong: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-deep) 98%, transparent),
+    color-mix(in srgb, var(--color-primary-hover) 98%, transparent)
+  );
+  --theme-overlay-surface: color-mix(in srgb, white 3%, transparent);
+  --theme-overlay-border: color-mix(in srgb, white 10%, transparent);
+  --theme-footer-bg: var(--color-deep);
+  --theme-footer-divider: color-mix(in srgb, var(--color-gold) 20%, transparent);
+  --theme-footer-border: color-mix(in srgb, white 6%, transparent);
+  --theme-footer-text: color-mix(in srgb, var(--color-text-inverse) 72%, var(--color-text-2));
+  --theme-footer-muted: color-mix(in srgb, var(--color-text-inverse) 42%, var(--color-text-2));
+  --theme-footer-strong: var(--color-text-inverse);
+  --theme-footer-accent: var(--color-gold);
+  --theme-admin-login-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-bg) 94%, white),
+    color-mix(in srgb, var(--color-surface) 96%, white)
+  );
+  --theme-admin-login-panel: color-mix(in srgb, var(--color-surface) 92%, white);
+  --theme-admin-login-panel-soft: color-mix(in srgb, var(--color-bg) 86%, white);
+  --theme-admin-login-shadow: 0 18px 42px color-mix(in srgb, var(--color-deep) 14%, transparent);
+  --theme-hero-bg: radial-gradient(
+      ellipse at 80% 20%,
+      color-mix(in srgb, var(--color-accent) 72%, white),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 10% 80%,
+      color-mix(in srgb, var(--color-primary-light) 24%, transparent),
+      transparent 50%
+    ),
+    var(--color-bg);
+  --theme-hero-image-bg: radial-gradient(
+      circle at 50% 25%,
+      color-mix(in srgb, var(--color-accent) 70%, transparent),
+      transparent 45%
+    ),
+    var(--color-bg);
+  --theme-panel-soft: color-mix(in srgb, white 34%, var(--color-surface));
+  --theme-button-primary-shadow: 0 8px 18px color-mix(in srgb, var(--color-primary) 18%, transparent);
+  --theme-button-primary-shadow-strong: 0 12px 24px color-mix(in srgb, var(--color-deep) 22%, transparent);
+  --theme-button-outline-bg: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  --theme-button-outline-hover-bg: color-mix(in srgb, var(--color-accent) 75%, var(--color-surface));
+  --theme-button-outline-shadow: 0 4px 12px color-mix(in srgb, var(--color-deep) 8%, transparent);
+  --theme-button-ghost-hover: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  --theme-badge-shadow: 0 4px 10px color-mix(in srgb, var(--color-deep) 6%, transparent);
+  --theme-state-success-border: color-mix(in srgb, var(--color-state-success) 55%, transparent);
+  --theme-state-success-bg: color-mix(in srgb, var(--color-state-success) 16%, transparent);
+  --theme-state-success-text: color-mix(in srgb, var(--color-state-success) 58%, var(--color-deep));
+  --theme-state-error-border: color-mix(in srgb, var(--color-state-error) 55%, transparent);
+  --theme-state-error-bg: color-mix(in srgb, var(--color-state-error) 16%, transparent);
+  --theme-state-error-text: color-mix(in srgb, var(--color-state-error) 62%, var(--color-deep));
+  --theme-state-info-border: color-mix(in srgb, var(--color-border) 90%, var(--color-accent));
+  --theme-state-info-bg: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  --theme-state-info-text: var(--color-deep);
+  --theme-admin-surface-soft: color-mix(in srgb, var(--color-bg) 70%, transparent);
+  --theme-admin-table-head: color-mix(in srgb, var(--color-border) 22%, transparent);
+  --theme-admin-table-hover: color-mix(in srgb, var(--color-border) 14%, transparent);
+  --theme-admin-mobile-bar-bg: color-mix(in srgb, var(--color-bg) 97%, transparent);
+  --theme-admin-mobile-bar-shadow: 0 -10px 24px color-mix(in srgb, var(--color-deep) 10%, transparent);
+  --theme-toast-shadow: 2px 8px 18px color-mix(in srgb, var(--color-deep) 12%, transparent);
 }
 
 :root[data-theme='classico'] {
@@ -150,7 +230,7 @@
 
   *:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(247, 240, 230, 0.9), 0 0 0 4px rgba(184, 132, 90, 0.55);
+    box-shadow: 0 0 0 2px var(--theme-focus-inner), 0 0 0 4px var(--theme-focus-outer);
   }
 
   h1,
@@ -177,8 +257,8 @@
   }
 
   ::selection {
-    background-color: rgba(184, 132, 90, 0.22);
-    color: var(--espresso);
+    background-color: var(--theme-selection);
+    color: var(--color-text-1);
   }
 }
 
@@ -214,14 +294,14 @@
 
   .section-shell--surface {
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(232, 213, 196, 0.12), transparent 62%),
+      radial-gradient(ellipse at 50% 0%, var(--theme-section-surface-glow), transparent 62%),
       transparent;
   }
 
   .section-shell--black {
     background:
-      linear-gradient(to right, transparent, rgba(200, 146, 58, 0.24), transparent) top/100% 1px no-repeat,
-      var(--espresso);
+      linear-gradient(to right, transparent, var(--theme-divider-strong), transparent) top/100% 1px no-repeat,
+      var(--theme-footer-bg);
   }
 
   .glass-panel,
@@ -230,7 +310,7 @@
     background: var(--manteiga);
     border: 1px solid var(--linho);
     border-radius: 2px;
-    box-shadow: 2px 3px 12px rgba(58, 36, 24, 0.06);
+    box-shadow: var(--theme-card-shadow);
   }
 
   .glass-panel::before,
@@ -240,17 +320,17 @@
     inset: 0;
     pointer-events: none;
     opacity: 0.12;
-    background-image: linear-gradient(180deg, rgba(255,255,255,0.26), transparent 48%);
+    background-image: linear-gradient(180deg, var(--theme-surface-overlay), transparent 48%);
   }
 
   .glass-panel-strong,
   .paper-card-dark {
     position: relative;
-    background: var(--espresso);
-    color: var(--aveia);
-    border: 1px solid rgba(221, 208, 188, 0.18);
+    background: var(--theme-footer-bg);
+    color: var(--theme-footer-strong);
+    border: 1px solid var(--theme-footer-border);
     border-radius: 2px;
-    box-shadow: 2px 3px 16px rgba(32, 20, 14, 0.16);
+    box-shadow: var(--theme-dark-shadow);
   }
 
   .glass-panel-strong::before,
@@ -260,7 +340,7 @@
     inset: 0;
     pointer-events: none;
     opacity: 0.12;
-    background-image: linear-gradient(180deg, rgba(247, 240, 230, 0.06), transparent 50%);
+    background-image: linear-gradient(180deg, var(--theme-surface-overlay-soft), transparent 50%);
   }
 
   .glass-outline {
@@ -361,7 +441,7 @@
 @media (max-width: 767px) {
   .paper-card,
   .glass-panel {
-    box-shadow: 0 1px 0 rgba(58, 36, 24, 0.06);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--color-deep) 6%, transparent);
   }
 
   .paper-card::before,
@@ -381,13 +461,13 @@
   0% {
     opacity: 0;
     transform: translateY(22px) scale(0.985);
-    box-shadow: 0 0 0 rgba(58, 36, 24, 0);
+    box-shadow: 0 0 0 color-mix(in srgb, var(--color-deep) 0%, transparent);
   }
 
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
-    box-shadow: 2px 8px 18px rgba(58, 36, 24, 0.08);
+    box-shadow: var(--theme-card-shadow-hover);
   }
 }
 

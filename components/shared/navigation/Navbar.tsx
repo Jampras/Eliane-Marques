@@ -52,7 +52,9 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName = 'Eliane Marques', in
       <header className="fixed inset-x-0 top-0 z-50">
         <div
           className={`transition-all duration-300 ${
-            scrolled ? 'bg-[rgba(58,36,24,0.96)] shadow-[0_2px_20px_rgba(0,0,0,0.15)] backdrop-blur-[8px]' : 'bg-[color:var(--espresso)]'
+            scrolled
+              ? 'bg-[color:var(--theme-nav-bg-scrolled)] shadow-[var(--theme-nav-shadow)] backdrop-blur-[8px]'
+              : 'bg-[color:var(--theme-nav-bg)]'
           }`}
         >
           <Container className="relative flex h-[56px] items-center justify-between md:h-[64px]">
@@ -102,7 +104,7 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName = 'Eliane Marques', in
                   });
                   router.push('/contato');
                 }}
-                className="inline-flex rounded-[2px] border border-[color:var(--argila)] px-[18px] py-[8px] text-[11px] font-[400] uppercase tracking-[0.18em] text-[color:var(--argila)] transition-colors hover:bg-[rgba(184,132,90,0.08)]"
+                className="inline-flex rounded-[2px] border border-[color:var(--argila)] px-[18px] py-[8px] text-[11px] font-[400] uppercase tracking-[0.18em] text-[color:var(--argila)] transition-colors hover:bg-[color:var(--theme-button-ghost-hover)]"
               >
                 Agendar consultoria
               </button>
@@ -128,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName = 'Eliane Marques', in
               <span className="h-px w-5 bg-[color:var(--taupe)]" />
             </button>
           </Container>
-          <div className="h-px bg-[linear-gradient(to_right,transparent,rgba(200,146,58,0.3),transparent)]" />
+          <div className="h-px bg-[linear-gradient(to_right,transparent,var(--theme-nav-divider),transparent)]" />
         </div>
       </header>
 

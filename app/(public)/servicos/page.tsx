@@ -80,7 +80,7 @@ export default async function ServicesPage({ searchParams }: ServicesPageProps) 
             return (
               <article
                 key={service.id}
-                className="fade-up relative overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)] shadow-[2px_3px_12px_rgba(58,36,24,0.06)]"
+                className="fade-up relative overflow-hidden border border-[color:var(--linho)] bg-[color:var(--aveia)] shadow-[var(--theme-card-shadow)]"
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
               >
                 <span className="absolute inset-x-0 top-0 h-[3px] bg-[color:var(--argila)]" />

@@ -50,7 +50,7 @@ export default async function ChecklistDetailPage({ params }: ChecklistPageProps
           </Text>
         </div>
 
-        <div className="mt-10 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-5 py-6 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] lg:px-8 lg:py-8">
+        <div className="mt-10 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-5 py-6 shadow-[var(--theme-card-shadow)] lg:px-8 lg:py-8">
           <ChecklistClient
             slug={checklist.slug}
             title={checklist.title}

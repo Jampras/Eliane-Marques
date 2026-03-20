@@ -47,7 +47,7 @@ export default async function ContactPage() {
               </Text>
 
               <div className="mt-8 space-y-5 sm:mt-10 sm:space-y-6">
-                <div className="flex items-start gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:px-5 sm:py-5">
+                <div className="flex items-start gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)] sm:px-5 sm:py-5">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[color:var(--argila)]">
                     <Icon name="mail" className="!text-[18px]" />
                   </div>
@@ -57,7 +57,7 @@ export default async function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:px-5 sm:py-5">
+                <div className="flex items-start gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)] sm:px-5 sm:py-5">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] text-[color:var(--argila)]">
                     <Icon name="alternate_email" className="!text-[18px]" />
                   </div>
@@ -76,8 +76,8 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] px-4 py-6 text-center shadow-[2px_3px_12px_rgba(58,36,24,0.06)] sm:px-6 sm:py-8 lg:px-8 lg:py-10">
-              <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 translate-x-12 -translate-y-12 bg-[radial-gradient(circle,rgba(184,132,90,0.18),transparent_70%)] blur-2xl" />
+            <div className="relative overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] px-4 py-6 text-center shadow-[var(--theme-card-shadow)] sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+              <div className="pointer-events-none absolute top-0 right-0 h-24 w-24 translate-x-12 -translate-y-12 bg-[radial-gradient(circle,var(--theme-hero-image-glow),transparent_70%)] blur-2xl" />
 
               <Heading as="h2" className="text-[1.9rem] sm:text-[2.3rem]">
                 Canal direto

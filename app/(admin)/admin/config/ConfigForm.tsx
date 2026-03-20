@@ -146,7 +146,7 @@ export default function ConfigForm({ initialConfigs }: { initialConfigs: Record<
               return (
                 <label
                   key={preset.key}
-                  className="group relative cursor-pointer rounded-[2px] border border-border-soft bg-surface p-4 transition hover:border-border hover:shadow-[0_8px_20px_rgba(58,36,24,0.06)]"
+                  className="group relative cursor-pointer rounded-[2px] border border-border-soft bg-surface p-4 transition hover:border-border hover:shadow-[var(--theme-card-shadow-strong)]"
                 >
                   <input
                     type="radio"

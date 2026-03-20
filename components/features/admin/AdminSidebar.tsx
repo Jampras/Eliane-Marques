@@ -35,7 +35,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           Admin Panel
         </p>
 
-        <div className="mt-8 border border-border-soft bg-bg/70 px-5 py-5 text-left shadow-[2px_3px_12px_rgba(58,36,24,0.04)]">
+        <div className="mt-8 border border-border-soft bg-[color:var(--theme-admin-surface-soft)] px-5 py-5 text-left shadow-[var(--theme-badge-shadow)]">
           <p className="text-text-secondary text-[9px] tracking-[0.32em] uppercase opacity-70">
             Sessao ativa
           </p>
@@ -73,7 +73,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           >
             {(currentPath === item.href ||
               (item.href !== '/admin' && currentPath?.startsWith(item.href))) && (
-              <span className="bg-primary absolute top-0 bottom-0 left-0 w-1 shadow-[0_0_15px_rgba(0,0,0,0.15)]" />
+              <span className="bg-primary absolute top-0 bottom-0 left-0 w-1 shadow-[0_0_15px_color-mix(in_srgb,black_15%,transparent)]" />
             )}
             <Icon
               name={item.icon as IconName}

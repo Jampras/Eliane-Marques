@@ -84,6 +84,7 @@ docs/
 - `Config` e `About` foram centralizados em `lib/institutional`
 - padrao recomendado para futuros singletons do projeto
 - `Config` agora tambem controla a paleta global do site via `themePreset`
+- as paletas usam tokens semanticos e agora cobrem navbar, hero, footer, overlays, sombras, catalogos publicos, paginas internas, toasts e login admin
 
 ## 4. Integracoes externas
 

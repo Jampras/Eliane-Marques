@@ -14,7 +14,7 @@ export const Card: React.FC<CardProps> = ({ children, className = '', hoverEffec
       style={style}
       className={cn(
         'paper-card rounded-[2px] p-8',
-        hoverEffect && 'transition-transform duration-300 hover:-translate-y-1 hover:shadow-[2px_6px_16px_rgba(58,36,24,0.08)]',
+        hoverEffect && 'transition-transform duration-300 hover:-translate-y-1 hover:shadow-[var(--theme-card-shadow-hover)]',
         className
       )}
     >

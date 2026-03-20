@@ -81,7 +81,7 @@ export default async function PostDetail({ params }: PostPageProps) {
         </Container>
 
         <Container className="mt-8 md:mt-10 lg:mt-12">
-          <div className="relative aspect-[16/9] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] shadow-[2px_3px_12px_rgba(58,36,24,0.06)]">
+          <div className="relative aspect-[16/9] overflow-hidden border border-[color:var(--linho)] bg-[color:var(--manteiga)] shadow-[var(--theme-card-shadow)]">
             <Image
               src={imageSrc}
               alt={post.title}

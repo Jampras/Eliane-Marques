@@ -6,10 +6,10 @@ interface AdminInlineNoticeProps {
 
 const variantClasses = {
   success:
-    'border-[color:rgba(168,184,154,0.45)] bg-[color:rgba(168,184,154,0.12)] text-[color:var(--espresso)]',
+    'border-[color:var(--theme-state-success-border)] bg-[color:var(--theme-state-success-bg)] text-[color:var(--theme-state-success-text)]',
   error:
-    'border-[color:rgba(184,132,90,0.35)] bg-[color:rgba(184,132,90,0.12)] text-[color:var(--espresso)]',
-  info: 'border-border-soft bg-[color:rgba(221,208,188,0.16)] text-[color:var(--espresso)]',
+    'border-[color:var(--theme-state-error-border)] bg-[color:var(--theme-state-error-bg)] text-[color:var(--theme-state-error-text)]',
+  info: 'border-[color:var(--theme-state-info-border)] bg-[color:var(--theme-state-info-bg)] text-[color:var(--theme-state-info-text)]',
 } as const;
 
 export function AdminInlineNotice({

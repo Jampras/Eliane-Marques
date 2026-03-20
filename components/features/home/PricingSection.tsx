@@ -62,7 +62,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
   return (
     <Section
       id="investimentos"
-      className="bg-[radial-gradient(ellipse_at_50%_100%,rgba(232,213,196,0.3),transparent_70%),var(--aveia)]"
+      className="bg-[radial-gradient(ellipse_at_50%_100%,var(--theme-section-surface-glow),transparent_70%),var(--aveia)]"
     >
       <Container>
         <div className="mb-8 grid gap-4 md:mb-10 xl:grid-cols-[minmax(0,1fr)_260px] xl:items-end">
@@ -79,7 +79,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
             O formato certo nao e o mais longo. E o que resolve seu momento com mais precisao.
           </Text>
           <div
-            className="fade-up border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] px-5 py-4 shadow-[2px_3px_12px_rgba(58,36,24,0.06)]"
+            className="fade-up border border-[color:var(--linho)] bg-[color:var(--creme-rosa)] px-5 py-4 shadow-[var(--theme-card-shadow)]"
             style={{ '--delay': '0.14s' } as CSSProperties}
           >
             <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
@@ -104,9 +104,9 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
             return (
               <article
                 key={service.slug ?? service.title}
-                className={`fade-up-card relative flex h-full flex-col border px-6 py-7 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] transition-transform duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
+                className={`fade-up-card relative flex h-full flex-col border px-6 py-7 shadow-[var(--theme-card-shadow)] transition-transform duration-300 sm:px-6 sm:py-7 lg:px-7 lg:py-8 ${
                   featured
-                    ? 'border-[rgba(221,208,188,0.18)] bg-[color:var(--espresso)] text-[color:var(--aveia)] xl:mt-2 xl:-translate-y-1'
+                    ? 'border-[color:var(--theme-footer-border)] bg-[color:var(--theme-footer-bg)] text-[color:var(--theme-footer-strong)] xl:mt-2 xl:-translate-y-1'
                     : 'border-[color:var(--linho)] bg-[color:var(--manteiga)] lg:hover:-translate-y-1'
                 }`}
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
@@ -120,7 +120,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                 <div
                   className={`border-b pb-4 text-[9px] uppercase tracking-[0.18em] ${
                     featured
-                      ? 'border-[rgba(221,208,188,0.18)] text-[color:var(--taupe)]'
+                      ? 'border-[color:var(--theme-footer-border)] text-[color:var(--theme-footer-muted)]'
                       : 'border-[color:var(--linho)] text-[color:var(--taupe)]'
                   }`}
                 >
@@ -148,7 +148,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                 </p>
                 <Text
                   className={`mt-4 max-w-[28ch] text-[12px] ${
-                    featured ? 'text-white/72' : 'text-[color:var(--taupe)]'
+                    featured ? 'text-[color:var(--theme-footer-text)]' : 'text-[color:var(--taupe)]'
                   }`}
                 >
                   {service.desc}
@@ -185,7 +185,7 @@ export function PricingSection({ services, waConfig }: PricingSectionProps) {
                     <span
                       className={`inline-flex w-full justify-center rounded-[1px] border px-5 py-3 text-[9px] uppercase tracking-[0.18em] transition-colors sm:w-auto ${
                         featured
-                          ? 'border-[color:var(--mel)] bg-[rgba(200,146,58,0.08)] text-[color:var(--mel)] hover:bg-[rgba(200,146,58,0.14)]'
+                          ? 'border-[color:var(--mel)] bg-[color:var(--theme-button-ghost-hover)] text-[color:var(--mel)] hover:bg-[color:var(--theme-button-outline-hover-bg)]'
                           : 'border-[color:var(--argila)] bg-[color:var(--creme-rosa)] text-[color:var(--espresso)] hover:border-[color:var(--cacau)] hover:bg-[color:var(--manteiga)]'
                       }`}
                     >

@@ -76,7 +76,7 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
             return (
               <article
                 key={course.id}
-                className={`fade-up relative flex h-full flex-col border px-0 py-0 shadow-[2px_3px_12px_rgba(58,36,24,0.06)] ${
+                className={`fade-up relative flex h-full flex-col border px-0 py-0 shadow-[var(--theme-card-shadow)] ${
                   highlighted ? 'bg-[color:var(--creme-rosa)]' : 'bg-[color:var(--aveia)]'
                 }`}
                 style={{ '--delay': `${index * 0.08}s` } as CSSProperties}
