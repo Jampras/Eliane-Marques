@@ -150,9 +150,13 @@ Executado:
 Pendente principal:
 - rotacao da credencial sensivel do Supabase
 - integracao dos leads com CRM ou automacao comercial
-- CI Linux para migrations
 - agendamento recorrente de `npm run analytics:maintain`
 - refinamento visual recorrente da home publicada
+
+CI atual:
+- o workflow `validate.yml` sobe PostgreSQL 15 em Linux
+- aplica `npm run db:deploy` em banco efemero
+- roda lint, unit tests, typecheck e build sobre esse estado
 
 ## Documentacao
 - documentacao tecnica principal:

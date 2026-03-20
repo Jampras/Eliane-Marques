@@ -48,7 +48,7 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 
 ### P1
 1. adicionar testes unitarios para modulos criticos
-2. validar migrations em CI Linux
+2. evoluir a validacao de migrations em CI Linux para incluir cenarios de rollback/erro controlado
 3. revisar limites e mensagens dos endpoints publicos
 4. ampliar a cobertura da nova suite unitaria para actions e validadores
 

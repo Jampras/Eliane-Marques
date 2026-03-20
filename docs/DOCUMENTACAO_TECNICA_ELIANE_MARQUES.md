@@ -79,7 +79,7 @@ docs/
 ### Testes
 - `tests/e2e` cobre fluxo funcional e visual
 - `tests/unit` cobre helpers criticos de ambiente, seguranca de request, analytics/reporting, CTA de produto, validators do admin e helpers institucionais
-- a pipeline de validacao Linux executa lint, unit tests, typecheck e build
+- a pipeline de validacao Linux executa lint, unit tests, `db:deploy`, typecheck e build sobre PostgreSQL efemero
 
 ### Admin
 - painel em `app/(admin)/admin`

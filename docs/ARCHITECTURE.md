@@ -142,6 +142,7 @@ docs/
 - `npm run db:deploy` usa `scripts/db-deploy.mjs`
 - tenta `prisma migrate deploy`
 - cai para fallback SQL controlado se o engine falhar localmente
+- em CI Linux, `validate.yml` sobe um PostgreSQL efemero e executa `npm run db:deploy`
 
 ### Auth admin
 - Google OAuth via Supabase
