@@ -8,8 +8,8 @@ import {
   ABOUT_PAGE_TAG,
   ABOUT_SINGLETON_KEY,
   INSTITUTIONAL_REVALIDATE_PATHS,
-  normalizeOptionalInstitutionalText,
 } from '@/lib/institutional/shared';
+import { buildAboutBaseData, buildAboutNestedCollections } from '@/lib/institutional/about-helpers';
 
 export async function upsertInstitutionalAboutPage(data: unknown): Promise<ActionResponse> {
   return runAdminMutation({
@@ -19,91 +19,37 @@ export async function upsertInstitutionalAboutPage(data: unknown): Promise<Actio
     mutation: async () => {
       await requireAdmin();
       const validated = aboutPageSchema.parse(data);
+      const baseData = buildAboutBaseData(validated);
+      const nestedCollections = buildAboutNestedCollections(validated);
 
       await prisma.aboutPage.upsert({
         where: { singletonKey: ABOUT_SINGLETON_KEY },
         create: {
           singletonKey: ABOUT_SINGLETON_KEY,
-          heroTitle: validated.heroTitle,
-          heroSubtitle: normalizeOptionalInstitutionalText(validated.heroSubtitle),
-          introTitle: normalizeOptionalInstitutionalText(validated.introTitle),
-          introBody: normalizeOptionalInstitutionalText(validated.introBody),
-          manifestoTitle: normalizeOptionalInstitutionalText(validated.manifestoTitle),
-          manifestoBody: normalizeOptionalInstitutionalText(validated.manifestoBody),
-          heroImage: normalizeOptionalInstitutionalText(validated.heroImage),
-          ctaMode: validated.ctaMode,
-          ctaUrl: normalizeOptionalInstitutionalText(validated.ctaUrl),
-          ctaLabel: normalizeOptionalInstitutionalText(validated.ctaLabel),
-          whatsappMessageTemplate: normalizeOptionalInstitutionalText(
-            validated.whatsappMessageTemplate
-          ),
+          ...baseData,
           milestones: {
-            create: validated.milestones.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              year: normalizeOptionalInstitutionalText(item.year) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.milestones,
           },
           specializations: {
-            create: validated.specializations.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              sortOrder: index,
-            })),
+            create: nestedCollections.specializations,
           },
           credentials: {
-            create: validated.credentials.map((item, index) => ({
-              title: item.title,
-              issuer: normalizeOptionalInstitutionalText(item.issuer) ?? null,
-              year: normalizeOptionalInstitutionalText(item.year) ?? null,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              kind: item.kind,
-              sortOrder: index,
-            })),
+            create: nestedCollections.credentials,
           },
         },
         update: {
-          heroTitle: validated.heroTitle,
-          heroSubtitle: normalizeOptionalInstitutionalText(validated.heroSubtitle),
-          introTitle: normalizeOptionalInstitutionalText(validated.introTitle),
-          introBody: normalizeOptionalInstitutionalText(validated.introBody),
-          manifestoTitle: normalizeOptionalInstitutionalText(validated.manifestoTitle),
-          manifestoBody: normalizeOptionalInstitutionalText(validated.manifestoBody),
-          heroImage: normalizeOptionalInstitutionalText(validated.heroImage),
-          ctaMode: validated.ctaMode,
-          ctaUrl: normalizeOptionalInstitutionalText(validated.ctaUrl),
-          ctaLabel: normalizeOptionalInstitutionalText(validated.ctaLabel),
-          whatsappMessageTemplate: normalizeOptionalInstitutionalText(
-            validated.whatsappMessageTemplate
-          ),
+          ...baseData,
           milestones: {
             deleteMany: {},
-            create: validated.milestones.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              year: normalizeOptionalInstitutionalText(item.year) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.milestones,
           },
           specializations: {
             deleteMany: {},
-            create: validated.specializations.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              sortOrder: index,
-            })),
+            create: nestedCollections.specializations,
           },
           credentials: {
             deleteMany: {},
-            create: validated.credentials.map((item, index) => ({
-              title: item.title,
-              issuer: normalizeOptionalInstitutionalText(item.issuer) ?? null,
-              year: normalizeOptionalInstitutionalText(item.year) ?? null,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              kind: item.kind,
-              sortOrder: index,
-            })),
+            create: nestedCollections.credentials,
           },
         },
       });

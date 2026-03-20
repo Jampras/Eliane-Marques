@@ -48,6 +48,7 @@ flowchart TD
 ### Mutacoes
 - `lib/actions/admin-crud.ts` centraliza produto, post e checklist
 - `lib/institutional/*-actions.ts` centraliza singletons institucionais
+- mapeamentos de payload institucional foram extraidos para helpers puros em `lib/institutional/*-helpers.ts`
 
 ### Analytics e leads
 - eventos entram por `app/api/track/route.ts`
@@ -126,6 +127,7 @@ docs/
 ### Testes e validacao
 - E2E continua em `tests/e2e`
 - cobertura unitaria leve agora existe em `tests/unit`
+- validators do admin e helpers institucionais principais agora possuem testes dedicados
 - a pipeline `validate.yml` roda lint, unit tests, typecheck e build com ambiente sintetico em Linux
 
 ### CTA de produto

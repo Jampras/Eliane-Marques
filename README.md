@@ -130,7 +130,7 @@ npm run analytics:maintain
 
 ## Pontos fracos atuais
 - a home publica foi publicada, mas ainda depende de refinamento visual continuo, principalmente no mobile
-- agora existe uma suite unit test leve para helpers criticos, mas a cobertura ainda precisa crescer
+- agora existe uma suite unit test leve para helpers criticos, schemas do admin e mapeadores institucionais, mas a cobertura ainda precisa crescer
 - o build agora tenta seguir mesmo sem banco acessivel para queries publicas protegidas por fallback
 - build continua dependente de banco acessivel e pode sofrer lock do Prisma no Windows
 - metadata publica auxiliar tambem passa pela camada de dados, reduzindo acoplamento direto ao banco

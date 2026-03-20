@@ -8,6 +8,7 @@ import {
   INSTITUTIONAL_REVALIDATE_PATHS,
   SITE_CONFIGS_TAG,
 } from '@/lib/institutional/shared';
+import { buildConfigEntries } from '@/lib/institutional/config-helpers';
 
 export async function updateInstitutionalConfigs(
   data: Record<string, string>
@@ -19,9 +20,7 @@ export async function updateInstitutionalConfigs(
     mutation: async () => {
       await requireAdmin();
       const validated = configSchema.parse(data);
-      const entries = Object.entries(validated).filter(([, value]) => value !== undefined) as Array<
-        [keyof typeof validated, string]
-      >;
+      const entries = buildConfigEntries(validated);
 
       if (entries.length === 0) {
         return;

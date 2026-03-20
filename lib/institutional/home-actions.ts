@@ -8,8 +8,8 @@ import {
   HOME_PAGE_TAG,
   HOME_SINGLETON_KEY,
   INSTITUTIONAL_REVALIDATE_PATHS,
-  normalizeOptionalInstitutionalText,
 } from '@/lib/institutional/shared';
+import { buildHomeBaseData, buildHomeNestedCollections } from '@/lib/institutional/home-helpers';
 
 export async function upsertInstitutionalHomePage(data: unknown): Promise<ActionResponse> {
   return runAdminMutation({
@@ -19,31 +19,8 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
     mutation: async () => {
       await requireAdmin();
       const validated = homePageSchema.parse(data);
-
-      const baseData = {
-        heroEyebrow: normalizeOptionalInstitutionalText(validated.heroEyebrow),
-        heroPanelImage: normalizeOptionalInstitutionalText(validated.heroPanelImage),
-        heroTitle: validated.heroTitle,
-        heroSubtitle: normalizeOptionalInstitutionalText(validated.heroSubtitle),
-        heroPrimaryCtaLabel: normalizeOptionalInstitutionalText(validated.heroPrimaryCtaLabel),
-        heroSecondaryCtaLabel: normalizeOptionalInstitutionalText(validated.heroSecondaryCtaLabel),
-        heroTrustText: normalizeOptionalInstitutionalText(validated.heroTrustText),
-        audienceTitle: normalizeOptionalInstitutionalText(validated.audienceTitle),
-        audienceSubtitle: normalizeOptionalInstitutionalText(validated.audienceSubtitle),
-        valueTitle: normalizeOptionalInstitutionalText(validated.valueTitle),
-        valueSubtitle: normalizeOptionalInstitutionalText(validated.valueSubtitle),
-        valueCtaLabel: normalizeOptionalInstitutionalText(validated.valueCtaLabel),
-        methodTitle: normalizeOptionalInstitutionalText(validated.methodTitle),
-        methodSubtitle: normalizeOptionalInstitutionalText(validated.methodSubtitle),
-        methodCtaLabel: normalizeOptionalInstitutionalText(validated.methodCtaLabel),
-        faqTitle: normalizeOptionalInstitutionalText(validated.faqTitle),
-        faqSubtitle: normalizeOptionalInstitutionalText(validated.faqSubtitle),
-        finalCtaTitle: normalizeOptionalInstitutionalText(validated.finalCtaTitle),
-        finalCtaSubtitle: normalizeOptionalInstitutionalText(validated.finalCtaSubtitle),
-        finalCtaScarcityText: normalizeOptionalInstitutionalText(validated.finalCtaScarcityText),
-        finalCtaLabel: normalizeOptionalInstitutionalText(validated.finalCtaLabel),
-        finalWhatsappMessage: normalizeOptionalInstitutionalText(validated.finalWhatsappMessage),
-      };
+      const baseData = buildHomeBaseData(validated);
+      const nestedCollections = buildHomeNestedCollections(validated);
 
       await prisma.homePage.upsert({
         where: { singletonKey: HOME_SINGLETON_KEY },
@@ -51,79 +28,35 @@ export async function upsertInstitutionalHomePage(data: unknown): Promise<Action
           singletonKey: HOME_SINGLETON_KEY,
           ...baseData,
           audienceItems: {
-            create: validated.audienceItems.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              icon: normalizeOptionalInstitutionalText(item.icon) ?? null,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.audienceItems,
           },
           valueItems: {
-            create: validated.valueItems.map((item, index) => ({
-              badge: normalizeOptionalInstitutionalText(item.badge) ?? null,
-              title: item.title,
-              bullets: item.bullets,
-              tone: item.tone,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.valueItems,
           },
           methodSteps: {
-            create: validated.methodSteps.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.methodSteps,
           },
           faqItems: {
-            create: validated.faqItems.map((item, index) => ({
-              question: item.question,
-              answer: item.answer,
-              sortOrder: index,
-            })),
+            create: nestedCollections.faqItems,
           },
         },
         update: {
           ...baseData,
           audienceItems: {
             deleteMany: {},
-            create: validated.audienceItems.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              icon: normalizeOptionalInstitutionalText(item.icon) ?? null,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.audienceItems,
           },
           valueItems: {
             deleteMany: {},
-            create: validated.valueItems.map((item, index) => ({
-              badge: normalizeOptionalInstitutionalText(item.badge) ?? null,
-              title: item.title,
-              bullets: item.bullets,
-              tone: item.tone,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.valueItems,
           },
           methodSteps: {
             deleteMany: {},
-            create: validated.methodSteps.map((item, index) => ({
-              title: item.title,
-              description: item.description,
-              imageUrl: normalizeOptionalInstitutionalText(item.imageUrl) ?? null,
-              sortOrder: index,
-            })),
+            create: nestedCollections.methodSteps,
           },
           faqItems: {
             deleteMany: {},
-            create: validated.faqItems.map((item, index) => ({
-              question: item.question,
-              answer: item.answer,
-              sortOrder: index,
-            })),
+            create: nestedCollections.faqItems,
           },
         },
       });

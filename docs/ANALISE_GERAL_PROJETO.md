@@ -26,7 +26,7 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 - `analytics:maintain` ainda depende de execucao manual
 
 ### Backend
-- a cobertura unitaria dos modulos criticos comecou a ser construída, mas ainda esta longe do ideal
+- a cobertura unitaria dos modulos criticos, validators do admin e helpers institucionais comecou a ser construída, mas ainda esta longe do ideal
 - rate limit publico agora falha fechado em producao quando Redis falha
 - metadata publica auxiliar ja esta menos acoplada ao Prisma direto
 
