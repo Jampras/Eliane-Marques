@@ -58,8 +58,13 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName = 'Eliane Marques', in
           }`}
         >
           <Container className="relative flex h-[56px] items-center justify-between md:h-[64px]">
-            <Link href="/" className="hidden xl:block font-display text-[18px] italic tracking-[0.08em] text-[color:var(--mel)]">
-              {brandName}
+            <Link
+              href="/"
+              aria-label="Voltar para a pagina inicial"
+              className="hidden xl:inline-flex items-center gap-2 font-display text-[18px] italic tracking-[0.08em] text-[color:var(--mel)]"
+            >
+              <Icon name="home" className="text-[15px] not-italic opacity-85" />
+              <span>{brandName}</span>
             </Link>
 
             <nav className="hidden items-center gap-6 xl:flex">
@@ -112,9 +117,11 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName = 'Eliane Marques', in
 
             <Link
               href="/"
-              className="absolute left-1/2 -translate-x-1/2 font-display text-[16px] italic tracking-[0.08em] text-[color:var(--mel)] md:text-[17px] xl:hidden"
+              aria-label="Voltar para a pagina inicial"
+              className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 font-display text-[16px] italic tracking-[0.08em] text-[color:var(--mel)] md:text-[17px] xl:hidden"
             >
-              {brandName}
+              <Icon name="home" className="text-[14px] not-italic opacity-85" />
+              <span>{brandName}</span>
             </Link>
 
             <button

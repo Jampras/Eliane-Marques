@@ -8,6 +8,7 @@ import { Icon, type IconName } from '@/components/ui/Icon';
 import { adminMenuItems } from './adminMenuItems';
 
 const pageTitleByPrefix: Record<string, string> = {
+  '/admin/home': 'Home',
   '/admin/produtos': 'Produtos',
   '/admin/conteudos': 'Conteudo',
   '/admin/checklists': 'Checklists',

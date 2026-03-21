@@ -98,9 +98,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
         <Link
           href="/"
           onClick={onClose}
-          className="mx-auto mt-1 font-display text-[18px] italic tracking-[0.08em] text-[color:var(--mel)]"
+          aria-label="Voltar para a pagina inicial"
+          className="mx-auto mt-1 inline-flex items-center gap-2 font-display text-[18px] italic tracking-[0.08em] text-[color:var(--mel)]"
         >
-          {brandName}
+          <Icon name="home" className="text-[15px] not-italic opacity-85" />
+          <span>{brandName}</span>
         </Link>
 
         <div className="mt-7 shrink-0 border border-[color:var(--theme-overlay-border)] bg-[color:var(--theme-overlay-surface)] px-4 py-4 text-center">

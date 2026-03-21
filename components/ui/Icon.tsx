@@ -18,6 +18,7 @@ export type IconName =
   | 'error'
   | 'expand_less'
   | 'expand_more'
+  | 'home'
   | 'image'
   | 'info'
   | 'logout'
@@ -141,6 +142,14 @@ function Path({ name }: { name: IconName }) {
           <rect {...commonProps} x="4" y="5" width="16" height="14" />
           <path {...commonProps} d="m7 15 3-3 2 2 3-4 2 2 1 3" />
           <circle {...commonProps} cx="9" cy="9" r="1" />
+        </>
+      );
+    case 'home':
+      return (
+        <>
+          <path {...commonProps} d="M4 10.5 12 4l8 6.5" />
+          <path {...commonProps} d="M6 9.5V20h12V9.5" />
+          <path {...commonProps} d="M10 20v-5h4v5" />
         </>
       );
     case 'expand_less':
