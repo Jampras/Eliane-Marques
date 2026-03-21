@@ -44,6 +44,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - captura alternativa de lead persistida em `Lead`
 - dashboard comercial no admin
 - ingestao publica endurecida com same-origin, rate limit e allowlist de sources
+- endpoints publicos retornam erros explicitos e `Retry-After` quando aplicavel
 - login admin via Google OAuth com whitelist de emails
 - upload persistente em Supabase obrigatorio em producao
 - CSP dinamica com nonce por request
@@ -131,6 +132,7 @@ npm run analytics:maintain
 ## Pontos fracos atuais
 - a home publica foi publicada, mas ainda depende de refinamento visual continuo, principalmente no mobile
 - agora existe uma suite unit test leve para helpers criticos, schemas do admin e mapeadores institucionais, mas a cobertura ainda precisa crescer
+- `safeDataQuery` e formatacao de rate limit publico agora tambem tem helpers puros cobertos por unit test
 - o build agora tenta seguir mesmo sem banco acessivel para queries publicas protegidas por fallback
 - build continua dependente de banco acessivel e pode sofrer lock do Prisma no Windows
 - metadata publica auxiliar tambem passa pela camada de dados, reduzindo acoplamento direto ao banco

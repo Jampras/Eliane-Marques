@@ -56,6 +56,7 @@ flowchart TD
 - historico agregado em `AnalyticsDailyAggregate`
 - manutencao por `scripts/analytics-maintenance.mjs`
 - lead capture persiste em `Lead`
+- `track` e `lead capture` retornam mensagens operacionais mais explicitas sob erro de origem, payload e rate limit
 
 ### Midia
 - upload autenticado em `app/api/upload/route.ts`
@@ -128,6 +129,7 @@ docs/
 - E2E continua em `tests/e2e`
 - cobertura unitaria leve agora existe em `tests/unit`
 - validators do admin e helpers institucionais principais agora possuem testes dedicados
+- helpers puros de `safeDataQuery` e `public-rate-limit` tambem estao cobertos
 - a pipeline `validate.yml` roda lint, unit tests, typecheck e build com ambiente sintetico em Linux
 
 ### CTA de produto

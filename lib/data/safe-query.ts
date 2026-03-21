@@ -1,4 +1,5 @@
 import { isBuildPhase, isFailFastEnabled, isProductionEnv } from '@/lib/env/server';
+import { resolveSafeDataQueryPolicy } from './safe-query-helpers';
 
 export async function safeDataQuery<T>(
   context: string,
@@ -8,18 +9,25 @@ export async function safeDataQuery<T>(
   try {
     return await query();
   } catch (error) {
-    const message = `[${context}] data query failed`;
+    const policy = resolveSafeDataQueryPolicy({
+      context,
+      isBuildPhase: isBuildPhase(),
+      isProductionEnv: isProductionEnv(),
+      isFailFastEnabled: isFailFastEnabled(),
+    });
 
-    if (isBuildPhase()) {
-      console.warn(message);
-    } else if (isProductionEnv()) {
-      console.error(message);
+    if (policy.logMode === 'summary') {
+      if (isBuildPhase()) {
+        console.warn(policy.message);
+      } else {
+        console.error(policy.message);
+      }
     } else {
       console.error(`[${context}]`, error);
     }
 
-    if (isFailFastEnabled()) {
-      throw new Error(message, { cause: error });
+    if (policy.shouldThrow) {
+      throw new Error(policy.message, { cause: error });
     }
 
     return fallback;

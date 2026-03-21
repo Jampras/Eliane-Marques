@@ -8,6 +8,12 @@ import { mapServerErrorToMessage, logServerError } from '@/lib/server/errors';
 import { checkPublicRateLimit } from '@/lib/server/public-rate-limit';
 import { getRequestClientKey } from '@/lib/server/request-client';
 import { isSameOriginRequest } from '@/lib/server/request-security';
+import { formatRetryAfterLabel } from '@/lib/server/public-rate-limit-helpers';
+
+const LEAD_RATE_LIMIT = {
+  limit: 4,
+  windowMs: 15 * 60 * 1000,
+} as const;
 
 export type LeadActionResponse = {
   success: boolean;
@@ -28,15 +34,12 @@ export async function createLead(data: unknown): Promise<LeadActionResponse> {
     }
 
     const clientKey = await getRequestClientKey();
-    const rateLimit = await checkPublicRateLimit(`lead:${clientKey}`, {
-      limit: 4,
-      windowMs: 15 * 60 * 1000,
-    });
+    const rateLimit = await checkPublicRateLimit(`lead:${clientKey}`, LEAD_RATE_LIMIT);
 
     if (!rateLimit.allowed) {
       return {
         success: false,
-        error: `Muitas tentativas. Aguarde ${Math.ceil(rateLimit.retryAfterMs / 1000)}s.`,
+        error: `Muitas tentativas. Aguarde ${formatRetryAfterLabel(rateLimit.retryAfterMs)}.`,
       };
     }
 

@@ -29,6 +29,7 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 - a cobertura unitaria dos modulos criticos, validators do admin e helpers institucionais comecou a ser construída, mas ainda esta longe do ideal
 - rate limit publico agora falha fechado em producao quando Redis falha
 - metadata publica auxiliar ja esta menos acoplada ao Prisma direto
+- endpoints publicos criticos passaram a responder com erros e retry mais previsiveis
 
 ### Frontend publico
 - a home publica ja esta em producao e agora e administravel via painel
