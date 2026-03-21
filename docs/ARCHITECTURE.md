@@ -62,6 +62,8 @@ flowchart TD
 - upload autenticado em `app/api/upload/route.ts`
 - producao usa Supabase Storage
 - fallback local so fora de producao
+- validacao de arquivo e mapeamento de extensao foram extraidos para `lib/server/upload-helpers.ts`
+- a interface administrativa de upload recebe mensagens previsiveis desse endpoint e reutiliza a mesma regra de tipo e tamanho
 
 ## 3. Estrutura
 
@@ -130,6 +132,7 @@ docs/
 - cobertura unitaria leve agora existe em `tests/unit`
 - validators do admin e helpers institucionais principais agora possuem testes dedicados
 - helpers puros de `safeDataQuery` e `public-rate-limit` tambem estao cobertos
+- validacao de upload e mapeamento de extensao tambem possuem cobertura unitaria
 - a pipeline `validate.yml` roda lint, unit tests, typecheck e build com ambiente sintetico em Linux
 
 ### CTA de produto
@@ -159,7 +162,7 @@ docs/
 
 ### Importantes
 - endpoints publicos sensiveis falham fechado em producao se Redis estiver indisponivel
-- nao existe suite de testes unitarios para regras criticas
+- a suite unitaria ainda nao cobre todo o projeto, mas ja cobre ambiente, seguranca de request, analytics/reporting, CTA de produto, validators do admin, helpers institucionais, `safeDataQuery`, rate limit publico e upload
 - a home publica ja esta publicada, mas ainda depende de refinamento visual/comercial continuo
 - o build ainda depende de Prisma Client gerado localmente, embora o runner resiliente ja trate o lock do engine no Windows
 

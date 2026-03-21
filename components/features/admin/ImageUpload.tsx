@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -36,33 +36,36 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     [onValueChange]
   );
 
-  const uploadFile = useCallback(async (file: File) => {
-    setError('');
-    setUploading(true);
+  const uploadFile = useCallback(
+    async (file: File) => {
+      setError('');
+      setUploading(true);
 
-    const formData = new FormData();
-    formData.append('file', file);
+      const formData = new FormData();
+      formData.append('file', file);
 
-    try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.error || 'Erro ao enviar imagem');
-        return;
+        if (!res.ok) {
+          setError(data.error || 'Erro ao enviar imagem');
+          return;
+        }
+
+        updateUrl(data.url);
+      } catch {
+        setError('Falha na conexao. Tente novamente.');
+      } finally {
+        setUploading(false);
       }
-
-      updateUrl(data.url);
-    } catch {
-      setError('Falha na conexao. Tente novamente.');
-    } finally {
-      setUploading(false);
-    }
-  }, [updateUrl]);
+    },
+    [updateUrl]
+  );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -132,7 +135,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               <span className="text-text-2 text-xs font-medium">
                 Toque para escolher ou arraste
               </span>
-              <span className="text-text-muted mt-1 text-[10px]">JPG, PNG, WebP · max 5MB</span>
+              <span className="text-text-muted mt-1 text-[10px]">JPG, PNG, WebP - max 5MB</span>
             </>
           )}
 

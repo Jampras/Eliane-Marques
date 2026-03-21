@@ -1,12 +1,12 @@
-# Analise Geral do Projeto
+﻿# Analise Geral do Projeto
 
-**Versao:** 1.0  
-**Data:** 19/03/2026  
+**Versao:** 1.1  
+**Data:** 20/03/2026  
 **Escopo:** estrutura de pastas, codigo, seguranca, operacao e manutencao
 
 ## 1. Resumo
 
-O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda depende de fechamento operacional e de simplificacao da camada publica antes de uma estabilizacao real.
+O projeto esta funcional, publicado e mais previsivel do que no inicio, mas ainda depende de fechamento operacional e de aumento gradual da cobertura de testes para estabilizacao real.
 
 ## 2. Pontos fortes
 
@@ -14,8 +14,9 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 - `lib/env` centraliza o contrato de ambiente
 - `lib/institutional` centraliza o conteudo singleton
 - auth admin migrado para Google-only
-- ingestao publica endurecida em analytics e leads
+- ingestao publica endurecida em analytics, leads e upload
 - dashboard comercial com agregado diario
+- paletas globais e ambientacao visual agora cobrem o site inteiro de forma coerente
 
 ## 3. Pontos fracos reais
 
@@ -26,10 +27,11 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 - `analytics:maintain` ainda depende de execucao manual
 
 ### Backend
-- a cobertura unitaria dos modulos criticos, validators do admin e helpers institucionais comecou a ser construída, mas ainda esta longe do ideal
+- a cobertura unitaria dos modulos criticos, validators do admin, helpers institucionais, `safeDataQuery`, rate limit publico e upload avancou, mas ainda esta longe do ideal
 - rate limit publico agora falha fechado em producao quando Redis falha
 - metadata publica auxiliar ja esta menos acoplada ao Prisma direto
 - endpoints publicos criticos passaram a responder com erros e retry mais previsiveis
+- upload administrativo agora usa validacao centralizada com mensagens consistentes do endpoint ate a UI
 
 ### Frontend publico
 - a home publica ja esta em producao e agora e administravel via painel
@@ -38,7 +40,7 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 - o layout publico agora usa uma camada global de ambientacao para reduzir a sensacao de secoes soltas
 
 ### Documentacao
-- a documentacao tende a ficar atras do branch local entre rodadas intensas
+- a documentacao esta mais alinhada do que antes, mas continua exigindo manutencao frequente porque o projeto segue em iteracao intensa
 
 ## 4. Prioridade recomendada
 
@@ -48,10 +50,10 @@ O projeto esta funcional e bem melhor estruturado do que no inicio, mas ainda de
 3. continuar refinamento visual da home publicada
 
 ### P1
-1. adicionar testes unitarios para modulos criticos
+1. adicionar testes unitarios para modulos criticos com efeito colateral
 2. evoluir a validacao de migrations em CI Linux para incluir cenarios de rollback/erro controlado
 3. revisar limites e mensagens dos endpoints publicos
-4. ampliar a cobertura da nova suite unitaria para actions e validadores
+4. ampliar a cobertura da nova suite unitaria para actions e validadores com persistencia
 
 ### P2
 1. integrar leads com CRM ou automacao

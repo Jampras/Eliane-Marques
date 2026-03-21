@@ -3,16 +3,11 @@ import { requireAdmin } from '@/lib/server/admin-auth';
 import { UnauthorizedError } from '@/lib/server/errors';
 import { isSameOriginRequest } from '@/lib/server/request-security';
 import { uploadImage } from '@/lib/server/upload-storage';
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'];
-const EXTENSION_BY_TYPE: Record<string, string> = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-  'image/webp': 'webp',
-  'image/avif': 'avif',
-  'image/gif': 'gif',
-};
+import {
+  getUploadExtension,
+  UploadValidationError,
+  validateUploadFile,
+} from '@/lib/server/upload-helpers';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,26 +19,12 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file');
-
-    if (!(file instanceof File)) {
-      return NextResponse.json({ error: 'Nenhum arquivo enviado' }, { status: 400 });
-    }
-
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json(
-        { error: 'Tipo nao permitido. Use: JPG, PNG, WebP, AVIF ou GIF' },
-        { status: 400 }
-      );
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: 'Arquivo muito grande. Maximo: 5MB' }, { status: 400 });
-    }
+    validateUploadFile(file);
 
     const bytes = await file.arrayBuffer();
     const uploaded = await uploadImage({
       buffer: Buffer.from(bytes),
-      extension: EXTENSION_BY_TYPE[file.type] ?? 'jpg',
+      extension: getUploadExtension(file.type),
       contentType: file.type,
     });
 
@@ -55,6 +36,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json({ error: 'Nao autorizado' }, { status: 401 });
+    }
+
+    if (error instanceof UploadValidationError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
     }
 
     console.error('Upload error:', error);

@@ -36,6 +36,7 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - home componentizada por secao
 - home administravel em `/admin/home` para hero, imagem lateral do hero, audiencia, leitura de valor, metodo, FAQ e CTA final
 - cards de `Para quem e`, `Leitura de valor` e `Metodo` aceitam imagem por item no painel
+- o card lateral do hero aceita imagem propria no painel da home e exibe estado vazio orientado quando nao configurado
 - pagina `Sobre` administravel em `/admin/sobre` e publicada em `/sobre`
 - catalogos com busca, filtros e detalhe por tipo
 - CTA por produto configuravel: WhatsApp ou link externo
@@ -45,6 +46,8 @@ Site institucional e comercial da marca Eliane Marques, com foco em consultoria 
 - dashboard comercial no admin
 - ingestao publica endurecida com same-origin, rate limit e allowlist de sources
 - endpoints publicos retornam erros explicitos e `Retry-After` quando aplicavel
+- upload administrativo agora valida tipo/tamanho por helper dedicado e retorna erros mais precisos ao cliente
+- a UI de upload administrativo foi alinhada ao endpoint e exibe mensagens consistentes para payload invalido, tipo nao permitido e limite de 5MB
 - login admin via Google OAuth com whitelist de emails
 - upload persistente em Supabase obrigatorio em producao
 - CSP dinamica com nonce por request
@@ -131,7 +134,7 @@ npm run analytics:maintain
 
 ## Pontos fracos atuais
 - a home publica foi publicada, mas ainda depende de refinamento visual continuo, principalmente no mobile
-- agora existe uma suite unit test leve para helpers criticos, schemas do admin e mapeadores institucionais, mas a cobertura ainda precisa crescer
+- agora existe uma suite unit test leve para helpers criticos, schemas do admin, mapeadores institucionais, `safeDataQuery`, formatacao de rate limit publico e upload, mas a cobertura ainda precisa crescer
 - `safeDataQuery` e formatacao de rate limit publico agora tambem tem helpers puros cobertos por unit test
 - o build agora tenta seguir mesmo sem banco acessivel para queries publicas protegidas por fallback
 - build continua dependente de banco acessivel e pode sofrer lock do Prisma no Windows

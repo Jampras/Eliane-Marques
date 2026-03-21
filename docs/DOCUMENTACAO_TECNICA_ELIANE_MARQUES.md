@@ -73,12 +73,13 @@ docs/
 - o conteudo institucional da home vem de `lib/institutional/home.ts`
 - `/admin/home` controla hero, imagem lateral do hero, audiencia, leitura de valor, metodo, FAQ e CTA final
 - cards de audiencia, leitura de valor e metodo aceitam imagem por item
+- o card lateral do hero aceita imagem propria configurada em `/admin/home`
 - o layout publico injeta uma camada global de ambientacao para manter continuidade visual entre as secoes
 - a rota `sitemap.xml` agora usa a camada `lib/data`, sem consulta Prisma direta
 
 ### Testes
 - `tests/e2e` cobre fluxo funcional e visual
-- `tests/unit` cobre helpers criticos de ambiente, seguranca de request, analytics/reporting, CTA de produto, validators do admin, helpers institucionais, `safeDataQuery` e formatacao de rate limit publico
+- `tests/unit` cobre helpers criticos de ambiente, seguranca de request, analytics/reporting, CTA de produto, validators do admin, helpers institucionais, `safeDataQuery`, formatacao de rate limit publico, validacao de upload e mapeamento de extensao
 - a pipeline de validacao Linux executa lint, unit tests, `db:deploy`, typecheck e build sobre PostgreSQL efemero
 
 ### Admin
@@ -114,6 +115,7 @@ docs/
 - lead capture e analytics com same-origin e rate limit
 - upload persistente obrigatorio em producao
 - fallback de migrations via `scripts/db-deploy.mjs`
+- `/api/upload` valida arquivo por helper dedicado e responde `400` com mensagens claras para payload invalido, tipo nao permitido e limite de tamanho
 
 ### Pendencias reais
 - rotacao da `SUPABASE_SERVICE_ROLE_KEY`
@@ -123,7 +125,7 @@ docs/
 
 - o build ainda depende de um Prisma Client gerado, mas as queries publicas com fallback nao bloqueiam mais a compilacao sem banco
 - no Windows, `prisma generate` ainda pode travar o engine DLL
-- nao ha testes unitarios para regras criticas
+- a cobertura unitaria melhorou, mas ainda nao cobre actions com efeito colateral, integracoes e parte da camada publica
 - a home publica foi publicada, mas ainda recebe refinamento visual continuo, principalmente no mobile
 
 ## 7. Recomendacoes priorizadas
