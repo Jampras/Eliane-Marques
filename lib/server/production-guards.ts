@@ -57,8 +57,8 @@ export function ensureServiceRoleKeyNotCompromised() {
     !hasWarnedAboutCompromisedServiceRoleKey
   ) {
     hasWarnedAboutCompromisedServiceRoleKey = true;
-    console.warn(
-      'SECURITY WARNING: The configured SUPABASE_SERVICE_ROLE_KEY is known to be exposed. Uploads remain enabled by operator decision. Rotate this key as soon as possible.'
+    throw new Error(
+      'CRITICAL: The configured SUPABASE_SERVICE_ROLE_KEY is known to be exposed. Rotate the key before enabling uploads in production.'
     );
   }
 }

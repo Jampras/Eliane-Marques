@@ -33,10 +33,10 @@ export const THEME_PRESETS: Array<{
   },
   {
     key: 'terracota-editorial',
-    label: 'Terracota Editorial',
-    description: 'Mais calor e contraste, sem fugir do tom institucional.',
-    mood: 'Quente',
-    swatches: ['#FAF1E7', '#EED9C5', '#B46C43', '#44271D'],
+    label: 'Ameixa Nobre',
+    description: 'Base rosada suave com acentos ameixa para um tom premium e autoral.',
+    mood: 'Editorial',
+    swatches: ['#F7EFF2', '#E9D9E2', '#8D5C72', '#2F2230'],
   },
   {
     key: 'savia-dourada',
@@ -47,14 +47,14 @@ export const THEME_PRESETS: Array<{
   },
   {
     key: 'neblina-mineral',
-    label: 'Neblina Mineral',
-    description: 'Neutro mineral, elegante e um pouco mais urbano.',
-    mood: 'Neutro',
-    swatches: ['#F4F2EE', '#E4E0D8', '#8B7E74', '#312A28'],
+    label: 'Grafite Dourado',
+    description:
+      'Neutro refinado com grafite quente e ouro queimado para um visual mais contemporaneo.',
+    mood: 'Urbano',
+    swatches: ['#F3F1EE', '#E2DDD6', '#96795C', '#262728'],
   },
 ];
 
 export function isThemePresetKey(value: string | undefined | null): value is ThemePresetKey {
   return THEME_PRESET_KEYS.includes((value ?? '') as ThemePresetKey);
 }
-

@@ -2,16 +2,16 @@
 @config '../tailwind.config.js';
 
 :root {
-  --aveia: #F7F0E6;
-  --manteiga: #EFE5D3;
-  --linho: #DDD0BC;
-  --taupe: #7E6654;
-  --creme-rosa: #E8D5C4;
-  --argila: #B8845A;
-  --mel: #C8923A;
-  --cacau: #7A4E38;
-  --espresso: #3A2418;
-  --sage: #A8B89A;
+  --aveia: #f7f0e6;
+  --manteiga: #efe5d3;
+  --linho: #ddd0bc;
+  --taupe: #7e6654;
+  --creme-rosa: #e8d5c4;
+  --argila: #b8845a;
+  --mel: #c8923a;
+  --cacau: #7a4e38;
+  --espresso: #3a2418;
+  --sage: #a8b89a;
 
   --color-bg: var(--aveia);
   --color-surface: var(--manteiga);
@@ -29,7 +29,7 @@
   --color-border-soft: rgba(196, 176, 154, 0.32);
   --color-text-inverse: var(--aveia);
   --color-state-success: var(--sage);
-  --color-state-error: #A06A59;
+  --color-state-error: #a06a59;
   --color-state-info: var(--taupe);
   --color-deep: var(--espresso);
   --color-sage: var(--sage);
@@ -63,8 +63,8 @@
   --theme-footer-bg: var(--color-deep);
   --theme-footer-divider: color-mix(in srgb, var(--color-gold) 20%, transparent);
   --theme-footer-border: color-mix(in srgb, white 6%, transparent);
-  --theme-footer-text: color-mix(in srgb, var(--color-text-inverse) 72%, var(--color-text-2));
-  --theme-footer-muted: color-mix(in srgb, var(--color-text-inverse) 42%, var(--color-text-2));
+  --theme-footer-text: color-mix(in srgb, var(--color-text-inverse) 82%, var(--color-text-2));
+  --theme-footer-muted: color-mix(in srgb, var(--color-text-inverse) 58%, var(--color-text-2));
   --theme-footer-strong: var(--color-text-inverse);
   --theme-footer-accent: var(--color-gold);
   --theme-admin-login-bg: linear-gradient(
@@ -75,7 +75,8 @@
   --theme-admin-login-panel: color-mix(in srgb, var(--color-surface) 92%, white);
   --theme-admin-login-panel-soft: color-mix(in srgb, var(--color-bg) 86%, white);
   --theme-admin-login-shadow: 0 18px 42px color-mix(in srgb, var(--color-deep) 14%, transparent);
-  --theme-hero-bg: radial-gradient(
+  --theme-hero-bg:
+    radial-gradient(
       ellipse at 80% 20%,
       color-mix(in srgb, var(--color-accent) 72%, white),
       transparent 55%
@@ -86,17 +87,24 @@
       transparent 50%
     ),
     var(--color-bg);
-  --theme-hero-image-bg: radial-gradient(
+  --theme-hero-image-bg:
+    radial-gradient(
       circle at 50% 25%,
       color-mix(in srgb, var(--color-accent) 70%, transparent),
       transparent 45%
     ),
     var(--color-bg);
   --theme-panel-soft: color-mix(in srgb, white 34%, var(--color-surface));
-  --theme-button-primary-shadow: 0 8px 18px color-mix(in srgb, var(--color-primary) 18%, transparent);
-  --theme-button-primary-shadow-strong: 0 12px 24px color-mix(in srgb, var(--color-deep) 22%, transparent);
+  --theme-button-primary-shadow: 0 8px 18px
+    color-mix(in srgb, var(--color-primary) 18%, transparent);
+  --theme-button-primary-shadow-strong: 0 12px 24px
+    color-mix(in srgb, var(--color-deep) 22%, transparent);
   --theme-button-outline-bg: color-mix(in srgb, var(--color-surface) 72%, transparent);
-  --theme-button-outline-hover-bg: color-mix(in srgb, var(--color-accent) 75%, var(--color-surface));
+  --theme-button-outline-hover-bg: color-mix(
+    in srgb,
+    var(--color-accent) 75%,
+    var(--color-surface)
+  );
   --theme-button-outline-shadow: 0 4px 12px color-mix(in srgb, var(--color-deep) 8%, transparent);
   --theme-button-ghost-hover: color-mix(in srgb, var(--color-accent) 16%, transparent);
   --theme-badge-shadow: 0 4px 10px color-mix(in srgb, var(--color-deep) 6%, transparent);
@@ -113,7 +121,8 @@
   --theme-admin-table-head: color-mix(in srgb, var(--color-border) 22%, transparent);
   --theme-admin-table-hover: color-mix(in srgb, var(--color-border) 14%, transparent);
   --theme-admin-mobile-bar-bg: color-mix(in srgb, var(--color-bg) 97%, transparent);
-  --theme-admin-mobile-bar-shadow: 0 -10px 24px color-mix(in srgb, var(--color-deep) 10%, transparent);
+  --theme-admin-mobile-bar-shadow: 0 -10px 24px
+    color-mix(in srgb, var(--color-deep) 10%, transparent);
   --theme-toast-shadow: 2px 8px 18px color-mix(in srgb, var(--color-deep) 12%, transparent);
   --theme-page-orb-top: color-mix(in srgb, var(--color-accent) 54%, transparent);
   --theme-page-orb-center: color-mix(in srgb, var(--color-primary-light) 22%, transparent);
@@ -125,83 +134,83 @@
 }
 
 :root[data-theme='classico'] {
-  --aveia: #F7F0E6;
-  --manteiga: #EFE5D3;
-  --linho: #DDD0BC;
-  --taupe: #7E6654;
-  --creme-rosa: #E8D5C4;
-  --argila: #B8845A;
-  --mel: #C8923A;
-  --cacau: #7A4E38;
-  --espresso: #3A2418;
-  --sage: #A8B89A;
+  --aveia: #f7f0e6;
+  --manteiga: #efe5d3;
+  --linho: #ddd0bc;
+  --taupe: #7e6654;
+  --creme-rosa: #e8d5c4;
+  --argila: #b8845a;
+  --mel: #c8923a;
+  --cacau: #7a4e38;
+  --espresso: #3a2418;
+  --sage: #a8b89a;
   --color-border-soft: rgba(196, 176, 154, 0.32);
   --bg-glow-1: rgba(232, 213, 196, 0.95);
   --bg-glow-2: rgba(168, 184, 154, 0.15);
 }
 
 :root[data-theme='brisa-fria'] {
-  --aveia: #F2F5F7;
-  --manteiga: #E3EBEF;
-  --linho: #CBD8DE;
+  --aveia: #f2f5f7;
+  --manteiga: #e3ebef;
+  --linho: #cbd8de;
   --taupe: #687884;
-  --creme-rosa: #D6E3EA;
-  --argila: #7B93A6;
-  --mel: #8FA9BB;
-  --cacau: #5E7688;
-  --espresso: #2D3A44;
-  --sage: #A6B8BF;
+  --creme-rosa: #d6e3ea;
+  --argila: #7b93a6;
+  --mel: #8fa9bb;
+  --cacau: #5e7688;
+  --espresso: #2d3a44;
+  --sage: #a6b8bf;
   --color-border-soft: rgba(123, 147, 166, 0.24);
   --bg-glow-1: rgba(214, 227, 234, 0.9);
   --bg-glow-2: rgba(166, 184, 191, 0.18);
 }
 
 :root[data-theme='terracota-editorial'] {
-  --aveia: #FAF1E7;
-  --manteiga: #EED9C5;
-  --linho: #DABAA2;
-  --taupe: #866353;
-  --creme-rosa: #E8C8B1;
-  --argila: #B46C43;
-  --mel: #D29A56;
-  --cacau: #8C4E31;
-  --espresso: #44271D;
-  --sage: #B49C84;
-  --color-border-soft: rgba(180, 108, 67, 0.22);
-  --bg-glow-1: rgba(232, 200, 177, 0.88);
-  --bg-glow-2: rgba(180, 156, 132, 0.16);
+  --aveia: #f7eff2;
+  --manteiga: #e9d9e2;
+  --linho: #d8c0cb;
+  --taupe: #735b66;
+  --creme-rosa: #ebd4dd;
+  --argila: #8d5c72;
+  --mel: #c79a72;
+  --cacau: #694356;
+  --espresso: #2f2230;
+  --sage: #bba8b3;
+  --color-border-soft: rgba(141, 92, 114, 0.22);
+  --bg-glow-1: rgba(235, 212, 221, 0.86);
+  --bg-glow-2: rgba(187, 168, 179, 0.18);
 }
 
 :root[data-theme='savia-dourada'] {
-  --aveia: #F4F1E8;
-  --manteiga: #E5E0D0;
-  --linho: #D2C9B4;
-  --taupe: #6F6B5E;
-  --creme-rosa: #D9D4C0;
-  --argila: #9AA286;
-  --mel: #B59A58;
-  --cacau: #6F765B;
+  --aveia: #f4f1e8;
+  --manteiga: #e5e0d0;
+  --linho: #d2c9b4;
+  --taupe: #6f6b5e;
+  --creme-rosa: #d9d4c0;
+  --argila: #9aa286;
+  --mel: #b59a58;
+  --cacau: #6f765b;
   --espresso: #354033;
-  --sage: #AAB497;
+  --sage: #aab497;
   --color-border-soft: rgba(154, 162, 134, 0.22);
   --bg-glow-1: rgba(217, 212, 192, 0.85);
   --bg-glow-2: rgba(170, 180, 151, 0.18);
 }
 
 :root[data-theme='neblina-mineral'] {
-  --aveia: #F4F2EE;
-  --manteiga: #E4E0D8;
-  --linho: #D0C8BE;
-  --taupe: #71675F;
-  --creme-rosa: #DDD6CD;
-  --argila: #8B7E74;
-  --mel: #A89170;
-  --cacau: #685A50;
-  --espresso: #312A28;
-  --sage: #A8ACA8;
-  --color-border-soft: rgba(139, 126, 116, 0.22);
-  --bg-glow-1: rgba(221, 214, 205, 0.85);
-  --bg-glow-2: rgba(168, 172, 168, 0.16);
+  --aveia: #f3f1ee;
+  --manteiga: #e2ddd6;
+  --linho: #ccc6be;
+  --taupe: #666059;
+  --creme-rosa: #ddd5cc;
+  --argila: #96795c;
+  --mel: #c3a16c;
+  --cacau: #5a4a3d;
+  --espresso: #262728;
+  --sage: #a6aca2;
+  --color-border-soft: rgba(150, 121, 92, 0.22);
+  --bg-glow-1: rgba(221, 213, 204, 0.84);
+  --bg-glow-2: rgba(166, 172, 162, 0.16);
 }
 
 @layer base {
@@ -217,8 +226,7 @@
     line-height: 1.75;
     background:
       radial-gradient(ellipse at 80% 20%, var(--bg-glow-1), transparent 55%),
-      radial-gradient(ellipse at 10% 80%, var(--bg-glow-2), transparent 50%),
-      var(--aveia);
+      radial-gradient(ellipse at 10% 80%, var(--bg-glow-2), transparent 50%), var(--aveia);
   }
 
   body::after {
@@ -237,7 +245,9 @@
 
   *:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--theme-focus-inner), 0 0 0 4px var(--theme-focus-outer);
+    box-shadow:
+      0 0 0 2px var(--theme-focus-inner),
+      0 0 0 4px var(--theme-focus-outer);
   }
 
   h1,
@@ -270,7 +280,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -307,7 +319,8 @@
 
   .section-shell--black {
     background:
-      linear-gradient(to right, transparent, var(--theme-divider-strong), transparent) top/100% 1px no-repeat,
+      linear-gradient(to right, transparent, var(--theme-divider-strong), transparent) top/100% 1px
+        no-repeat,
       var(--theme-footer-bg);
   }
 
@@ -644,7 +657,8 @@
 }
 
 @keyframes hero-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
 

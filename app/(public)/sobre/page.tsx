@@ -31,7 +31,8 @@ function renderCta(
   ctaMode: 'WHATSAPP' | 'EXTERNAL',
   ctaLabel: string,
   ctaUrl: string | null,
-  whatsAppUrl: string
+  whatsAppUrl: string,
+  className?: string
 ) {
   if (ctaMode === 'EXTERNAL' && ctaUrl) {
     return (
@@ -46,6 +47,7 @@ function renderCta(
           destination: ctaUrl,
         }}
         size="lg"
+        className={className}
       >
         {ctaLabel}
       </TrackedLinkButton>
@@ -64,6 +66,7 @@ function renderCta(
         destination: whatsAppUrl,
       }}
       size="lg"
+      className={className}
     >
       {ctaLabel}
     </TrackedLinkButton>
@@ -114,26 +117,26 @@ export default async function AboutPage() {
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)]">
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
+                  <p className="text-[9px] tracking-[0.18em] text-[color:var(--taupe)] uppercase">
                     Especializacoes
                   </p>
-                  <p className="mt-3 font-display text-[2rem] text-[color:var(--espresso)]">
+                  <p className="font-display mt-3 text-[2rem] text-[color:var(--espresso)]">
                     {specializationCount}
                   </p>
                 </div>
                 <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)]">
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
+                  <p className="text-[9px] tracking-[0.18em] text-[color:var(--taupe)] uppercase">
                     Credenciais
                   </p>
-                  <p className="mt-3 font-display text-[2rem] text-[color:var(--espresso)]">
+                  <p className="font-display mt-3 text-[2rem] text-[color:var(--espresso)]">
                     {credentialCount}
                   </p>
                 </div>
                 <div className="border border-[color:var(--linho)] bg-[color:var(--aveia)] px-4 py-4 shadow-[var(--theme-card-shadow)]">
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
+                  <p className="text-[9px] tracking-[0.18em] text-[color:var(--taupe)] uppercase">
                     Marcos
                   </p>
-                  <p className="mt-3 font-display text-[2rem] text-[color:var(--espresso)]">
+                  <p className="font-display mt-3 text-[2rem] text-[color:var(--espresso)]">
                     {milestoneCount}
                   </p>
                 </div>
@@ -152,14 +155,14 @@ export default async function AboutPage() {
                     unoptimized
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center px-8 text-center text-[12px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
+                  <div className="flex h-full items-center justify-center px-8 text-center text-[12px] tracking-[0.18em] text-[color:var(--taupe)] uppercase">
                     Adicione uma imagem principal no painel admin
                   </div>
                 )}
               </div>
 
               <div className="mt-5 border border-[color:var(--linho)] bg-[color:var(--aveia)] p-5">
-                <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
+                <p className="text-[9px] tracking-[0.18em] text-[color:var(--argila)] uppercase">
                   Assinatura profissional
                 </p>
                 <Text className="mt-3 text-[13px] text-[color:var(--taupe)]">
@@ -207,7 +210,7 @@ export default async function AboutPage() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {specializationCount === 0 ? (
-              <div className="border border-dashed border-[color:var(--linho)] bg-[color:var(--aveia)] p-8 text-center text-[12px] uppercase tracking-[0.18em] text-[color:var(--taupe)] md:col-span-2 xl:col-span-3">
+              <div className="border border-dashed border-[color:var(--linho)] bg-[color:var(--aveia)] p-8 text-center text-[12px] tracking-[0.18em] text-[color:var(--taupe)] uppercase md:col-span-2 xl:col-span-3">
                 Cadastre especializacoes no admin para preencher esta secao
               </div>
             ) : null}
@@ -217,14 +220,14 @@ export default async function AboutPage() {
                 className="relative border border-[color:var(--linho)] bg-[color:var(--aveia)] p-6 shadow-[var(--theme-card-shadow)]"
               >
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
+                  <p className="text-[9px] tracking-[0.18em] text-[color:var(--argila)] uppercase">
                     Especializacao
                   </p>
                   <span className="font-display text-[1.6rem] text-[color:var(--linho)]">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                 </div>
-                <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
+                <p className="text-[9px] tracking-[0.18em] text-[color:var(--argila)] uppercase">
                   Eixo de autoridade
                 </p>
                 <Heading as="h3" className="mt-4 text-[1.6rem]">
@@ -250,7 +253,7 @@ export default async function AboutPage() {
 
           <div className="space-y-4">
             {milestoneCount === 0 ? (
-              <div className="border border-dashed border-[color:var(--linho)] bg-[color:var(--aveia)] p-8 text-center text-[12px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
+              <div className="border border-dashed border-[color:var(--linho)] bg-[color:var(--aveia)] p-8 text-center text-[12px] tracking-[0.18em] text-[color:var(--taupe)] uppercase">
                 Cadastre marcos no admin para preencher esta secao
               </div>
             ) : null}
@@ -259,7 +262,7 @@ export default async function AboutPage() {
                 key={`${item.title}-${item.sortOrder}`}
                 className="grid gap-4 border border-[color:var(--linho)] bg-[color:var(--aveia)] p-5 shadow-[var(--theme-card-shadow)] lg:grid-cols-[140px_minmax(0,1fr)] lg:items-start"
               >
-                <div className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
+                <div className="text-[11px] tracking-[0.18em] text-[color:var(--argila)] uppercase">
                   {item.year || `Marco ${index + 1}`}
                 </div>
                 <div>
@@ -287,7 +290,7 @@ export default async function AboutPage() {
 
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {credentialCount === 0 ? (
-              <div className="border border-dashed border-[color:var(--linho)] bg-[color:var(--manteiga)] p-8 text-center text-[12px] uppercase tracking-[0.18em] text-[color:var(--taupe)] sm:col-span-2 xl:col-span-3">
+              <div className="border border-dashed border-[color:var(--linho)] bg-[color:var(--manteiga)] p-8 text-center text-[12px] tracking-[0.18em] text-[color:var(--taupe)] uppercase sm:col-span-2 xl:col-span-3">
                 Cadastre certificados e selos no admin para preencher esta secao
               </div>
             ) : null}
@@ -306,14 +309,14 @@ export default async function AboutPage() {
                       unoptimized
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center px-6 text-center text-[10px] uppercase tracking-[0.18em] text-[color:var(--taupe)]">
+                    <div className="flex h-full items-center justify-center px-6 text-center text-[10px] tracking-[0.18em] text-[color:var(--taupe)] uppercase">
                       Imagem nao cadastrada
                     </div>
                   )}
                 </div>
 
                 <div className="space-y-3 p-5">
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--argila)]">
+                  <p className="text-[9px] tracking-[0.18em] text-[color:var(--argila)] uppercase">
                     {item.kind === 'SEAL'
                       ? 'Selo'
                       : item.kind === 'SPECIALIZATION'
@@ -341,7 +344,10 @@ export default async function AboutPage() {
             <Badge className="mb-5 border-[color:var(--mel)] bg-transparent text-[color:var(--mel)]">
               Conversa inicial
             </Badge>
-            <Heading as="h2" className="text-[2.4rem] text-[color:var(--aveia)] sm:text-[3.1rem]">
+            <Heading
+              as="h2"
+              className="text-[2.4rem] text-[color:var(--theme-footer-strong)] sm:text-[3.1rem]"
+            >
               Se sua presenca precisa refletir sua ambicao com mais nitidez, este e o momento de
               conversar.
             </Heading>
@@ -355,7 +361,8 @@ export default async function AboutPage() {
                 normalizeCtaMode(about.ctaMode),
                 about.ctaLabel || 'Agendar consultoria',
                 about.ctaUrl,
-                whatsAppUrl
+                whatsAppUrl,
+                'border-[color:var(--theme-footer-accent)] bg-[color:var(--theme-footer-accent)] text-[color:var(--theme-footer-bg)] hover:border-[color:var(--theme-footer-strong)] hover:bg-[color:var(--theme-footer-strong)] hover:text-[color:var(--theme-footer-bg)]'
               )}
             </div>
           </div>

@@ -3,6 +3,7 @@
 Documento de referencia rapida para o sistema visual atual.
 
 ## 1. Fonte de verdade
+
 - tokens visuais: `app/globals.css`
 - mapeamento Tailwind: `tailwind.config.js`
 - fontes principais: `app/layout.tsx`
@@ -10,28 +11,29 @@ Documento de referencia rapida para o sistema visual atual.
 
 ## 2. Paleta atual
 
-| Variavel | Hex | Papel |
-|---|---|---|
-| `--aveia` | `#F7F0E6` | fundo principal |
-| `--manteiga` | `#EFE5D3` | superficies claras |
-| `--linho` | `#DDD0BC` | bordas e divisores |
-| `--taupe` | `#7E6654` | texto secundario |
-| `--creme-rosa` | `#E8D5C4` | destaque suave |
-| `--argila` | `#B8845A` | acento quente |
-| `--mel` | `#C8923A` | assinatura premium |
-| `--cacau` | `#7A4E38` | CTA principal |
-| `--espresso` | `#3A2418` | texto principal e fundos escuros |
-| `--sage` | `#A8B89A` | equilibrio frio e estado positivo |
+| Variavel       | Hex       | Papel                             |
+| -------------- | --------- | --------------------------------- |
+| `--aveia`      | `#F7F0E6` | fundo principal                   |
+| `--manteiga`   | `#EFE5D3` | superficies claras                |
+| `--linho`      | `#DDD0BC` | bordas e divisores                |
+| `--taupe`      | `#7E6654` | texto secundario                  |
+| `--creme-rosa` | `#E8D5C4` | destaque suave                    |
+| `--argila`     | `#B8845A` | acento quente                     |
+| `--mel`        | `#C8923A` | assinatura premium                |
+| `--cacau`      | `#7A4E38` | CTA principal                     |
+| `--espresso`   | `#3A2418` | texto principal e fundos escuros  |
+| `--sage`       | `#A8B89A` | equilibrio frio e estado positivo |
 
 ## 3. Fontes
 
-| Fonte | Uso |
-|---|---|
-| Playfair Display | titulos e marca |
-| Jost | corpo, labels, navegacao e botoes |
-| Cormorant Garamond | ornamentos, subtitulos e precos |
+| Fonte              | Uso                               |
+| ------------------ | --------------------------------- |
+| Playfair Display   | titulos e marca                   |
+| Jost               | corpo, labels, navegacao e botoes |
+| Cormorant Garamond | ornamentos, subtitulos e precos   |
 
 ## 4. Regras visuais
+
 - evitar branco puro como fundo base
 - manter contraste sob controle em `--taupe`, `--argila` e `--linho`
 - priorizar composicao continua em vez de excesso de caixas
@@ -52,16 +54,18 @@ O site agora trabalha com paletas fechadas selecionadas no admin:
 
 - `classico`
 - `brisa-fria`
-- `terracota-editorial`
+- `terracota-editorial` (label atual: Ameixa Nobre)
 - `savia-dourada`
-- `neblina-mineral`
+- `neblina-mineral` (label atual: Grafite Dourado)
 
 Regras:
+
 - as paletas trocam CSS variables globais e tokens semanticos de superficie
 - layout e comportamento visual continuam no codigo
 - o admin nao escolhe cor livre por secao ou item
 
 Cobertura atual:
+
 - fundo base e glows globais
 - navbar e navbar em scroll
 - overlay do menu mobile

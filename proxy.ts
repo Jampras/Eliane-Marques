@@ -2,6 +2,8 @@ import crypto from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { decrypt, SESSION_COOKIE_NAME, updateSession } from '@/lib/core/auth';
 import { getSupabaseStorageEnv, isProductionEnv } from '@/lib/env/server';
+import { isAllowedAdminGoogleEmail } from '@/lib/server/admin-google';
+import { isAuthorizedAdminSessionPayload } from '@/lib/server/admin-auth-helpers';
 
 function getSupabaseHost() {
   try {
@@ -43,11 +45,7 @@ function buildContentSecurityPolicy(nonce: string) {
   ].join('; ');
 }
 
-function applySecurityHeaders(
-  response: NextResponse,
-  nonce: string,
-  pathname: string
-) {
+function applySecurityHeaders(response: NextResponse, nonce: string, pathname: string) {
   response.headers.set('x-nonce', nonce);
   response.headers.set('Content-Security-Policy', buildContentSecurityPolicy(nonce));
   response.headers.set('X-Frame-Options', 'DENY');
@@ -72,6 +70,18 @@ function applySecurityHeaders(
   return response;
 }
 
+function clearAdminSessionCookie(response: NextResponse) {
+  response.cookies.set({
+    name: SESSION_COOKIE_NAME,
+    value: '',
+    expires: new Date(0),
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isProductionEnv(),
+  });
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
@@ -89,12 +99,10 @@ export async function proxy(request: NextRequest) {
     }
 
     const payload = await decrypt(session);
-    if (!payload || !payload.admin || payload.role !== 'admin') {
-      return applySecurityHeaders(
-        NextResponse.redirect(new URL('/admin/login', request.url)),
-        nonce,
-        pathname
-      );
+    if (!isAuthorizedAdminSessionPayload(payload, isAllowedAdminGoogleEmail)) {
+      const response = NextResponse.redirect(new URL('/admin/login', request.url));
+      clearAdminSessionCookie(response);
+      return applySecurityHeaders(response, nonce, pathname);
     }
 
     return applySecurityHeaders(
@@ -108,19 +116,31 @@ export async function proxy(request: NextRequest) {
   if (pathname === '/admin/login') {
     if (session) {
       const payload = await decrypt(session);
-      if (payload?.admin && payload.role === 'admin') {
+      if (isAuthorizedAdminSessionPayload(payload, isAllowedAdminGoogleEmail)) {
         return applySecurityHeaders(
           NextResponse.redirect(new URL('/admin', request.url)),
           nonce,
           pathname
         );
       }
+
+      const response = NextResponse.next({ request: { headers: requestHeaders } });
+      clearAdminSessionCookie(response);
+      return applySecurityHeaders(response, nonce, pathname);
     }
 
-    return applySecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }), nonce, pathname);
+    return applySecurityHeaders(
+      NextResponse.next({ request: { headers: requestHeaders } }),
+      nonce,
+      pathname
+    );
   }
 
-  return applySecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }), nonce, pathname);
+  return applySecurityHeaders(
+    NextResponse.next({ request: { headers: requestHeaders } }),
+    nonce,
+    pathname
+  );
 }
 
 export const config = {

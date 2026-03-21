@@ -7,6 +7,7 @@ import {
   getUploadExtension,
   UploadValidationError,
   validateUploadFile,
+  validateUploadSignature,
 } from '@/lib/server/upload-helpers';
 
 export async function POST(request: NextRequest) {
@@ -22,10 +23,12 @@ export async function POST(request: NextRequest) {
     validateUploadFile(file);
 
     const bytes = await file.arrayBuffer();
+    const buffer = new Uint8Array(bytes);
+    const detectedType = validateUploadSignature(file.type, buffer);
     const uploaded = await uploadImage({
-      buffer: Buffer.from(bytes),
-      extension: getUploadExtension(file.type),
-      contentType: file.type,
+      buffer: Buffer.from(buffer),
+      extension: getUploadExtension(detectedType),
+      contentType: detectedType,
     });
 
     return NextResponse.json({

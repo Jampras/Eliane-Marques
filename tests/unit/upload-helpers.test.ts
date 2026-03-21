@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  detectUploadContentType,
   getUploadExtension,
   UploadValidationError,
   validateUploadFile,
+  validateUploadSignature,
 } from '@/lib/server/upload-helpers';
 
 test('getUploadExtension maps known mime types', () => {
@@ -30,4 +32,28 @@ test('validateUploadFile rejects unsupported mime type', () => {
   const file = new File(['svg'], 'icon.svg', { type: 'image/svg+xml' });
 
   assert.throws(() => validateUploadFile(file), /Tipo nao permitido/);
+});
+
+test('detectUploadContentType identifies png signatures', () => {
+  const pngBytes = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 0]);
+
+  assert.equal(detectUploadContentType(pngBytes), 'image/png');
+});
+
+test('validateUploadSignature rejects spoofed mime types', () => {
+  const pngBytes = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 0]);
+
+  assert.throws(
+    () => validateUploadSignature('image/jpeg', pngBytes),
+    /nao corresponde ao tipo informado/i
+  );
+});
+
+test('validateUploadSignature rejects unknown binary content', () => {
+  const bytes = new Uint8Array([1, 2, 3, 4, 5, 6]);
+
+  assert.throws(
+    () => validateUploadSignature('image/png', bytes),
+    /nao foi possivel validar o conteudo/i
+  );
 });

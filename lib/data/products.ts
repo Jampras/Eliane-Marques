@@ -14,16 +14,18 @@ function buildProductWhere(
   base: { type?: ProductType | { in: ProductType[] }; active: true },
   filters: ProductFilters
 ) {
+  const query = filters.q?.trim();
+
   return {
     ...base,
     ...(filters.audience ? { audience: { in: [filters.audience, 'AMBOS'] } } : {}),
     ...(filters.featured ? { featured: true } : {}),
-    ...(filters.q
+    ...(query
       ? {
           OR: [
-            { title: { contains: filters.q, mode: 'insensitive' as const } },
-            { shortDesc: { contains: filters.q, mode: 'insensitive' as const } },
-            { longDesc: { contains: filters.q, mode: 'insensitive' as const } },
+            { title: { contains: query, mode: 'insensitive' as const } },
+            { shortDesc: { contains: query, mode: 'insensitive' as const } },
+            { longDesc: { contains: query, mode: 'insensitive' as const } },
           ],
         }
       : {}),
@@ -40,7 +42,9 @@ async function paginateProducts(
 
   return safeDataQuery(
     'paginateProducts',
-    async (): Promise<PaginatedResult<Awaited<ReturnType<typeof prisma.product.findMany>>[number]>> => {
+    async (): Promise<
+      PaginatedResult<Awaited<ReturnType<typeof prisma.product.findMany>>[number]>
+    > => {
       const totalItems = await prisma.product.count({ where });
       const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
       const currentPage = Math.min(Math.max(page, 1), totalPages);

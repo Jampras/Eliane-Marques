@@ -7,6 +7,14 @@ const SESSION_AUDIENCE = 'admin-panel';
 const ADMIN_SESSION_SECRET = process.env.ADMIN_SESSION_SECRET ?? '';
 const BASE_URL = 'http://localhost:3000';
 
+function getAllowedAdminEmail() {
+  return (
+    process.env.ADMIN_GOOGLE_ALLOWED_EMAILS?.split(',')[0]?.trim().toLowerCase() ||
+    process.env.ADMIN_ALLOWED_EMAILS?.split(',')[0]?.trim().toLowerCase() ||
+    'admin@example.com'
+  );
+}
+
 function getAdminSessionKey() {
   if (!ADMIN_SESSION_SECRET || ADMIN_SESSION_SECRET.length < 32) {
     throw new Error('ADMIN_SESSION_SECRET is required for E2E admin session seeding.');
@@ -21,7 +29,26 @@ async function buildAdminSessionToken() {
   return new SignJWT({
     admin: true,
     role: 'admin',
-    email: 'e2e-admin@example.com',
+    email: getAllowedAdminEmail(),
+    name: 'E2E Admin',
+    provider: 'google',
+    expires: expires.toISOString(),
+  })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuer(SESSION_ISSUER)
+    .setAudience(SESSION_AUDIENCE)
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(getAdminSessionKey());
+}
+
+export async function createAdminSessionToken(email = getAllowedAdminEmail()) {
+  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  return new SignJWT({
+    admin: true,
+    role: 'admin',
+    email,
     name: 'E2E Admin',
     provider: 'google',
     expires: expires.toISOString(),
